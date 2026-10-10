@@ -77,7 +77,7 @@ select.txt{font-size:16px;height:44px}
 .b.go{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .b:disabled{opacity:.45;cursor:not-allowed}
 .own{grid-column:1/-1;font-size:13px;border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center}
-@media (max-width:700px){.row{grid-template-columns:1fr 1fr}.ctl{grid-column:1/-1;justify-content:flex-start}}
+@media (max-width:700px){.top{flex-wrap:nowrap;align-items:center;padding-block:8px 7px;gap:8px}.top>.who{flex:1 1 0;min-width:0;align-items:center!important}.top .logo{width:36px;height:36px;margin:0}.top .brand,.top .seg,.top .ht,.meta span:nth-child(n+3){display:none}.top .nw{font-size:clamp(20px,6.4vw,26px)}.top .meta{font-size:12px;gap:2px 10px}.top .ctl{flex:none}.top .help{padding:8px 9px}.top .help svg{margin:0!important;width:19px;height:19px}.row{grid-template-columns:1fr 1fr}.ctl{grid-column:1/-1;justify-content:flex-start}}
 .cant{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
 .cant button{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;color:var(--ink);font:400 13px var(--body);cursor:pointer;display:flex;flex-direction:column;gap:2px}
 .cant button b{font:800 17px var(--display)}
@@ -158,7 +158,7 @@ svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
       <div class="meta" id="meta"></div>
       </div>
     </div>
-    <div class="ctl"><button class="help" data-act="tab" data-id="aide" aria-label="Réglages"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="vertical-align:-3px;margin-right:5px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>Réglages</button><div class="seg" role="group" aria-label="Devise d'affichage">
+    <div class="ctl"><button class="help" data-act="tab" data-id="aide" aria-label="Réglages"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="vertical-align:-3px;margin-right:5px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span class="ht">Réglages</span></button><div class="seg" role="group" aria-label="Devise d'affichage">
       <button id="cur-chf" data-act="cur" data-id="CHF">CHF</button>
       <button id="cur-eur" data-act="cur" data-id="EUR">EUR</button>
     </div></div>
@@ -317,7 +317,13 @@ const kidsU=()=>S.kids.filter(b=>(S.m-b)/12<20).length;
 const cp=()=>S.partner?(S.partner.mar?(S.sex==='m'?'votre épouse':'votre mari'):(S.sex==='m'?'votre compagne':'votre compagnon')):'';
 const pn=()=>S.partner?S.partner.n.split(' ')[0]:'';
 const sd_=()=>S.sit&&S.sit.d||{};
+const SICO=[[/amende|radar|police|alcool|pare-brise|douane|contrôle/i,'🚓'],[/voiture|accrochage|expertise|permis/i,'🚗'],[/enfant|crèche|notes|gymnase|coup de pouce|entraîneur/i,'🧒'],[/couple|rencontre|mariage|soirée|demande/i,'❤️'],[/parents|famille|enveloppe|retrouvailles/i,'👪'],[/locataire|voisin|cambriol|fuite|rénov|travaux|appartement|loyer/i,'🏠'],[/marchés|placement|garanti|caisse de pension|crédit|fisc/i,'📈'],[/client|employé|inspection|rachat|entreprise/i,'🏭'],[/dos|santé|malad|accident/i,'🩺'],[/promotion|collègue|étranger|départ|poste|augmentation|heures|chef|vie que je voulais/i,'💼']];
+const sico=s=>(SICO.find(x=>x[0].test(s.t))||[0,'🎲'])[1];
 const SITS=[
+ {id:'debut',cd:9999,c:()=>S.m<=2,t:'Une enveloppe pour vos 16 ans',x:()=>'Vos grands-parents vous glissent une enveloppe : '+money(300)+'. « Fais-en bon usage. » C\'est votre première décision d\'argent.',o:()=>[
+  ['Tout mettre de côté',()=>{Cc(300);return'Vos premières économies : '+money(300)+' sur votre compte. Avant 25 ans, votre banque vous verse un intérêt jeunesse plus élevé.'}],
+  ['S\'offrir la paire de baskets dont vous rêvez',()=>{Jj(5);return'Elles sont superbes. L\'enveloppe est vide, mais vous avez le sourire.'}],
+  ['Moitié plaisir, moitié épargne',()=>{Cc(150);Jj(2);return money(150)+' de côté, et un bon moment avec vos amis. Garder une part pour plus tard, c\'est déjà un budget.'}]]},
  {id:'promo',cd:30,c:()=>!!S.job&&S.pro>=65&&S.job.lvl<qlvl(S.job.f)&&S.job.lvl<6,t:'Une promotion',x:()=>'Votre responsable vous propose le poste au-dessus : '+T(by(FIELDS,S.job.f).t[S.job.lvl+1])+'.',o:()=>{const up=k=>{S.job.lvl++;S.job.sal=Math.round(Math.max(S.job.sal*k,salary(S.job.f,S.job.lvl,1.02))/50)*50;if(S.job.lvl>(S.topLvl||0)){S.topLvl=S.job.lvl;S.topT=jobTitle(S.job)}story('Promotion : '+jobTitle(S.job)+' chez '+S.job.emp)};return[
   ['Accepter',()=>{up(1.06);Jj(-3);return'Vous prenez le poste. Nouveau salaire : '+money(S.job.sal)+'. Plus de responsabilités, et plus de pression.'}],
   ['Accepter, en négociant le salaire',()=>{if(R(.6)){up(1.12);return'Votre responsable accepte vos conditions : '+money(S.job.sal)+' par mois.'}Pp(-3);return'La négociation traîne et le poste revient à un collègue.'}],
@@ -622,7 +628,7 @@ function track(silent){const f=S.sf||(silent=true,S.sf={d:[]}),say=t=>{if(!silen
  if(S.ret&&!f.r)say('Retraite à 65 ans');f.r=S.ret;
  if(S.over&&!f.o)say('Faillite personnelle');f.o=S.over;
  if(!silent&&S.m===588)S.tab='bilan';checkAch()}
-function score(){const v=nw(),a=Math.round(400*clamp(Math.log10(Math.max(v,1e4)/1e4)/Math.log10(500),0,1)),
+function score(){const v=nw()/S.infl,a=Math.round(400*clamp(Math.log10(Math.max(v,2e4)/2e4)/3,0,1)),
  b=Math.round(S.topLvl/6*120+Math.min(80,dipList().length*20)),
  c=Math.round(S.joy*1.2+(S.partner?30:0)+Math.min(2,S.kids.length)*20+Math.min(20,S.net.length)*3),
  d=Math.round(S.pro*.8+(S.record?0:40)+(S.pours||S.owe?0:30));
@@ -632,16 +638,16 @@ function vBilan(){const s=score(),f=S.final,end=!!f||S.over;
  return`<h2>${end?'Le bilan de votre vie':'Ma vie'}</h2><p class="lead">${end?(S.over?'La partie s\'arrête sur une faillite. Voici ce que vous avez construit jusque-là.':'Vous avez 65 ans. Voici ce que quarante-neuf ans de décisions ont donné.'):'Votre score évolue à chaque mois. Le bilan définitif tombe à 65 ans.'}</p>
  <section class="panel score"><div class="ring" style="--p:${s.t/10}"><b class="num">${s.t}</b><span>sur 1000</span></div><div><span class="sub">${S.name?esc(S.name)+' · ':''}${age()} ans · ${C().n}</span><h3 style="margin:2px 0 6px">${s.g}</h3><span class="num">${money(nw())}</span>${S.topT?`<span class="sub">Plus haut poste : ${esc(S.topT)}</span>`:''}</div></section>
  <section class="panel" style="margin-top:12px">${s.p.map(p=>`<div class="sbar"><span>${p[0]}</span><span class="num">${p[1]} / ${p[2]}</span><i><i style="width:${p[1]/p[2]*100}%;background:var(${p[3]})"></i></i></div>`).join('')}
- <p class="sub" style="margin:8px 0 0">La fortune ne pèse que 400 points sur 1000 : une vie réussie compte aussi la carrière, les proches et la réputation.</p></section>
+ <p class="sub" style="margin:8px 0 0">La fortune ne pèse que 400 points sur 1000, et elle est comptée en francs d'aujourd'hui : après ${age()-16} ans de hausse des prix, vos ${money(nw())} valent ${money(nw()/S.infl)} de 2027. Il faut 20 millions pour le maximum.</p></section>
  ${f?`<div class="banner ${f.nw>=f.bm?'win':''}">Face à l'épargnant ETF : ${money(f.nw)} pour vous, ${money(f.bm)} pour lui. ${f.nw>=f.bm?'Vos décisions ont fait mieux que la stratégie la plus simple.':'Verser chaque mois dans un ETF aurait rapporté plus.'}</div>`:''}
  <div class="ctl l" style="margin-top:12px"><button class="b go" data-act="share">Partager mon score</button>${end?`<button class="b" data-act="menu">Rejouer une autre vie</button>`:''}<button class="b" data-act="tab" data-id="succes">Succès · ${ACH.filter(a=>S.ach[a[0]]).length} sur ${ACH.length}</button></div>
  <h2>Votre histoire</h2>${S.story.length?`<ol class="tl">${S.story.map(e=>`<li><span>${16+Math.floor(e.m/12)} ans</span>${esc(e.t)}</li>`).join('')}</ol>`:'<p class="muted">Les grandes étapes de votre vie s\'inscriront ici : diplômes, emplois, rencontres, achats, coups durs.</p>'}`}
 function vSucces(){const all=achAll(),n=ACH.filter(a=>S.ach[a[0]]).length;S.achNew=0;
  return`<h2>Succès</h2><p class="lead">${n} sur ${ACH.length} dans cette partie. Les succès obtenus dans vos parties précédentes restent affichés : aucune vie ne permet de tous les décrocher.</p>
  <div class="achs">${ACH.map(a=>{const now=S.ach[a[0]],old=all[a[0]];return`<div class="ach${now?' on':old?' old':''}"><i>${now||old?'★':'☆'}</i><div><b>${a[1]}</b><span class="sub">${a[2]}${now?' · obtenu à '+(16+Math.floor(now/12))+' ans':old?' · obtenu dans une autre partie':''}</span></div></div>`}).join('')}</div>`}
-function pickSit(){const a=age(),el=SITS.filter(s=>!(S.seen[s.id]>S.m-(s.cd||36))&&s.c()&&Math.random()<(s.w||1));if(!el.length||S.ret)return;const s=rnd(el);S.seen[s.id]=S.m;S.sit={id:s.id,d:s.i?s.i():null,res:null};try{S.sit.x=s.x()}catch(e){S.sit=null}}
+function pickSit(){if(S.m===1&&!S.seen.debut&&!S.sit){S.seen.debut=1;S.sit={id:'debut',d:null,res:null,x:SITS[0].x()};return}const a=age(),el=SITS.filter(s=>!(S.seen[s.id]>S.m-(s.cd||36))&&s.c()&&Math.random()<(s.w||1));if(!el.length||S.ret)return;const s=rnd(el);S.seen[s.id]=S.m;S.sit={id:s.id,d:s.i?s.i():null,res:null};try{S.sit.x=s.x()}catch(e){S.sit=null}}
 function vSit(){const X=S.sit;if(!X)return'';const s=by(SITS,X.id);let op=[];try{if(!X.res)op=s.o()}catch(e){op=null}if(!s||!op||(!X.res&&!op.length)){S.sit=null;return''}
- return`<section class="tut" style="border-color:var(--biz)"><span class="sub">Situation · ${dateLbl(S.m)}</span><h3>${s.t}</h3><p style="margin:0 0 10px;max-width:65ch">${esc(X.x||'')}</p>${X.res?`<p style="margin:0 0 10px;max-width:65ch"><b>${esc(X.res)}</b></p><button class="b go" data-act="sitok">Continuer</button>`:`<div class="list">${op.map((o,i)=>`<button class="b" style="text-align:left;white-space:normal" data-act="sit" data-id="${i}">${esc(o[0])}</button>`).join('')}</div>`}</section>`}
+ return`<section class="tut" style="border-color:var(--biz)"><span class="sub">Situation · ${dateLbl(S.m)}</span><h3><span aria-hidden="true" style="margin-right:8px">${sico(s)}</span>${s.t}</h3><p style="margin:0 0 10px;max-width:65ch">${esc(X.x||'')}</p>${X.res?`<p style="margin:0 0 10px;max-width:65ch"><b>${esc(X.res)}</b></p><button class="b go" data-act="sitok">Continuer</button>`:`<div class="list">${op.map((o,i)=>`<button class="b" style="text-align:left;white-space:normal" data-act="sit" data-id="${i}">${esc(o[0])}</button>`).join('')}</div>`}</section>`}
 const bar=(v,c)=>`<div class="alloc" style="margin-block:4px 10px"><i style="width:${Math.round(v)}%;background:var(${c})"></i></div>`;
 function vPriv(){const a=age(),P_=S.partner,ku=S.kids.map(b=>Math.floor((S.m-b)/12));
  const tr={none:'Sans abonnement',tp:'Abonnement régional',ag:'Abonnement général',car:'Voiture'}[S.trans];
@@ -954,7 +960,9 @@ const fixed=()=>S.rep?S.rep.rent0+S.rep.lam+S.rep.vie+S.rep.tui:500;
 const taxRate=tx=>{const an=tx*12;return Math.min(.4,C().tax*(an<=15000?0:an<=80000?(an-15000)/65000:Math.min(2.6,1+(an-80000)/170000*.88)))};
 const clubOpen=()=>nw()>=1e6||caYear()>=1e6;
 function toast(t,bad){$('toast').textContent=t;$('toast').className=bad?'down':''}
-let saveOk=true,theme='auto',menu=false,autoSave=true,lastV='',flash='';const by2=id=>TABS.find(t=>t[0]===id);
+let saveOk=true,theme='auto',menu=false,autoSave=true,lastV='',flash='',snd=true,AC=null;
+function beep(k){if(!snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const t=AC.currentTime,N={up:[[660,.06],[880,.09]],down:[[330,.13]],sit:[[520,.08],[390,.11]],win:[[523,.09],[659,.09],[784,.18]]}[k]||[];let d=0;N.forEach(([f,l])=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.05,t+d+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d+l);o.connect(g);g.connect(AC.destination);o.start(t+d);o.stop(t+d+l+.03);d+=l})}catch(e){}}
+const by2=id=>TABS.find(t=>t[0]===id);
 const gameLbl=()=>(S.name?S.name+' · ':'')+age()+' ans · '+C().n+' · '+money(nw())+' · '+dateLbl(S.m);
 function setTheme(t){theme=['light','dark'].includes(t)?t:'auto';try{const r=document.documentElement;if(theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',theme);localStorage.setItem('fortune-leman-theme',theme)}catch(e){}}
 function save(force){if(!autoSave&&!force)return;try{localStorage.setItem(KEY,JSON.stringify(S));saveOk=true}catch(e){saveOk=false}}
@@ -1188,7 +1196,7 @@ function vAide(){const on=!!S.canton;
  return`<h2>Réglages</h2>${menu?'<div class="ctl l" style="margin-bottom:10px"><button class="b" data-act="tab" data-id="apercu">‹ Retour au menu</button></div>':on?'<div class="ctl l" style="margin-bottom:10px"><button class="b" data-act="menu">Menu principal : charger ou recommencer</button></div>':'<div class="ctl l" style="margin-bottom:10px"><button class="b" data-act="tab" data-id="apercu">‹ Retour à la création du personnage</button></div>'}
  <div class="panel"><h3>Apparence</h3><div class="ctl l">${[['auto','Automatique'],['light','Clair'],['dark','Sombre']].map(x=>`<button class="b${theme===x[0]?' go':''}" data-act="theme" data-id="${x[0]}">${x[1]}</button>`).join('')}</div><p class="sub" style="margin-top:8px">« Automatique » suit le réglage de votre téléphone.</p>
  <h3 style="margin-top:14px">Devise</h3><div class="ctl l"><button class="b${S.cur==='CHF'?' go':''}" data-act="cur" data-id="CHF">Francs suisses</button><button class="b${S.cur==='EUR'?' go':''}" data-act="cur" data-id="EUR">Euros</button></div></div>
- ${on?`<div class="panel" style="margin-top:12px"><h3>Sauvegarde</h3><div class="ctl l" style="margin-bottom:8px"><button class="b${autoSave?' go':''}" data-act="auto" data-id="on">Automatique</button><button class="b${autoSave?'':' go'}" data-act="auto" data-id="off">Manuelle</button></div>
+ ${on?`<div class="panel" style="margin-top:12px"><h3>Sons</h3><div class="ctl l" style="margin-bottom:8px"><button class="b${snd?' go':''}" data-act="snd" data-id="on">Sons activés</button><button class="b${snd?'':' go'}" data-act="snd" data-id="off">Sons coupés</button></div><p class="sub" style="margin:8px 0 14px">Un son discret marque la fin du mois, une situation ou un succès. Le bouton silencieux de l'iPhone les coupe aussi.</p><h3>Sauvegarde</h3><div class="ctl l" style="margin-bottom:8px"><button class="b${autoSave?' go':''}" data-act="auto" data-id="on">Automatique</button><button class="b${autoSave?'':' go'}" data-act="auto" data-id="off">Manuelle</button></div>
  <p style="margin:0 0 8px;max-width:65ch">${!saveOk?'<span class="down">Ce navigateur bloque l\'enregistrement, par exemple en navigation privée. Votre partie sera perdue à la fermeture : utilisez le code de sauvegarde ci-dessous.</span>':autoSave?'Automatique : votre partie est enregistrée sur cet appareil après chaque action. Vous pouvez quitter le jeu et revenir, elle reprend où vous l\'avez laissée.':'<span class="down">Manuelle : rien n\'est enregistré tant que vous ne touchez pas « Sauvegarder maintenant ». Si vous quittez sans le faire, vous revenez à votre dernière sauvegarde.</span>'}</p>
  <div class="ctl l"><button class="b go" data-act="savenow">Sauvegarder maintenant</button></div>
  <p class="sub" style="margin-top:8px">Safari et l'icône de l'écran d'accueil gardent des parties séparées. Ouvrez toujours le jeu par le même chemin.</p>
@@ -1314,7 +1322,7 @@ function next(){if(S.over||S.sit)return null;S.m++;const mo=cal(),d=dateLbl(S.m)
  if(S.job&&S.pro<15){const e=S.job.emp;fire();log(e+' vous licencie pour faute. Le chômage vous imposera une suspension.','Ressources humaines, '+e,'Résiliation de votre contrat')}
  if(jl&&S.job&&R(.5)){const e=S.job.emp;fire();log(e+' met fin à votre contrat après votre incarcération.','Ressources humaines, '+e,'Résiliation de votre contrat')}
  if(S.joy<12&&a>=18&&!S.ret){S.joy=40;Pp(-4);if(S.job)S.sick=2;S.ot=0;log('Épuisement : votre médecin vous arrête deux mois. Levez le pied : moins d\'heures supplémentaires, un voyage, du temps pour vous.','Votre médecin','Certificat d\'arrêt de travail')}
- if(!S.sit&&!S.ret&&Math.random()<.3)pickSit();
+ if(!S.sit&&!S.ret&&(S.m===1||Math.random()<.3))pickSit();
  S.pend.forEach(q=>{const from=q.hr+', Ressources humaines, '+q.emp;
   if(!S.ret&&Math.random()<Math.min(.95,Math.sqrt(q.p)))mail(from,'Invitation à un entretien · '+q.t,hello()+'Votre dossier a retenu notre attention. Nous souhaitons vous rencontrer pour un entretien au sujet du poste de '+q.t+'. Merci de vous présenter dans les deux mois.\n\nMeilleures salutations\n'+q.hr,'itv',q);
   else mail(from,'Votre candidature · '+q.t,hello()+'Nous vous remercions de l\'intérêt porté à notre entreprise. Malgré la qualité de votre dossier, nous avons retenu des profils correspondant davantage au poste.\n\nNous vous souhaitons plein succès dans vos recherches.\n'+q.hr)});S.pend=[];
@@ -1333,6 +1341,7 @@ function act(a,id){
  else if(a==='share'){const t=shareTxt();try{if(navigator.share)navigator.share({text:t}).catch(()=>{});else navigator.clipboard.writeText(t).then(()=>toast('Score copié : collez-le dans un message.'))}catch(e){toast('Partage indisponible sur cet appareil.',1)}return false}
  else if(a==='cur'){S.cur=id}
  else if(a==='theme'){setTheme(id)}
+ else if(a==='snd'){snd=id==='on';try{localStorage.setItem('fortune-leman-snd',snd?'1':'0')}catch(e){}if(snd)beep('up')}
  else if(a==='menu'){menu=true;S.tab='apercu'}
  else if(a==='mcont'){menu=false}
  else if(a==='mnew'){if(S.canton&&armed!=='mnew')armed='mnew';else{S=fresh();menu=false;armed=false;save(true);toast('Nouvelle partie.')}}
@@ -1369,7 +1378,7 @@ function act(a,id){
  else if(a==='pick'){S.canton=id;S.tut=0;S.tab='apercu';genOffers();S.log.unshift({d:dateLbl(0),t:'Vous avez 16 ans, vous vivez chez vos parents à '+C().city+' et vous terminez l\'école obligatoire.'});toast('Bienvenue à '+C().city+'.')}
  else if(S.over){toast('Partie terminée. Lancez une nouvelle partie.',1)}
  else if(a==='next'||a==='year'){if(S.sit){toast('Répondez d\'abord à la situation en cours, en haut de la page.',1);try{window.scrollTo(0,0)}catch(e){}}
-  else{let t=0,n=a==='year'?12:1;const v0=nw();while(n--&&!S.over&&!S.sit)t+=next().tot;flash=nw()>=v0?'up':'down';
+  else{let t=0,n=a==='year'?12:1;const v0=nw(),a0=S.achNew;while(n--&&!S.over&&!S.sit)t+=next().tot;flash=nw()>=v0?'up':'down';beep(S.achNew>a0?'win':S.sit?'sit':flash);
    toast(S.over?'Partie terminée.':S.sit?'Une situation demande votre décision.':S.cash<0?'Compte à découvert : vendez un actif ou empruntez.':(a==='year'?'Résultat sur 12 mois : ':'Résultat du mois : ')+money(t)+'.',S.over||S.cash<0);if(S.sit)try{window.scrollTo(0,0)}catch(e){}}}
  else if(a==='move'){if(id===S.canton)toast('Vous y habitez déjà.',1);else if(pay(4000,'déménager')){S.canton=id;toast('Vous déménagez à '+C().city+'.')}}
  else if(a==='side'){if(id==='none'){S.side=null;toast('Vous arrêtez votre petit job.')}else{const x=by(SIDE,id);if(x&&age()>=x.min&&!S.job&&!S.ret){S.side=id;toast('Nouveau petit job : '+T(x.n)+', '+money(x.w)+' par mois.')}}}
@@ -1448,7 +1457,7 @@ function act(a,id){
   else if(a==='borrow'){x=Math.min(x,loanCap());if(x<1)toast('Capacité d\'emprunt épuisée.',1);else{S.loan+=x;S.cash+=x;toast('Emprunté : '+money(x)+'.')}}
   else{x=Math.min(x,S.loan,Math.max(0,S.cash));if(x<1)toast('Rien à rembourser avec vos liquidités actuelles.',1);else{S.loan-=x;S.cash-=x;toast('Remboursé : '+money(x)+'.')}}}}
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const k=el.dataset.act,i=el.dataset.id||'';if(armed&&!(armed===true&&k==='new')&&armed!==k&&armed!==k+i)armed=false;if(act(el.dataset.act,el.dataset.id)!==false)render()});
-function start(d){try{setTheme(localStorage.getItem('fortune-leman-theme')||'auto');autoSave=localStorage.getItem('fortune-leman-auto')!=='0'}catch(e){}let s=d&&d.S;if(!s){try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}}
+function start(d){try{setTheme(localStorage.getItem('fortune-leman-theme')||'auto');autoSave=localStorage.getItem('fortune-leman-auto')!=='0';snd=localStorage.getItem('fortune-leman-snd')!=='0'}catch(e){}let s=d&&d.S;if(!s){try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}}
  const f=fresh(),ok=valid(s);S=ok?Object.assign(f,s):f;menu=!d||!d.S;if(menu)S.tab='apercu';if(S.canton&&!S.nat){S.nat='Suisse';S.ch=true;S.born=true;if(S.sex==='m'&&S.m>41)S.mil.st='cr',S.mil.crN=6}if(S.canton&&!S.sf)track(true);render();if(ok&&S.canton&&!menu)toast('Partie reprise : '+(S.name?S.name+', ':'')+age()+' ans, '+dateLbl(S.m)+'.');try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
 window.claude?.hot?.snapshot?.(()=>({S}));
 window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});

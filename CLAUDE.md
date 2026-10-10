@@ -51,3 +51,8 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - `score()` note la vie sur 1000 (fortune 400, carrière 200, vie privée 250, réputation 150). `vBilan()` (onglet « Ma vie ») l'affiche avec l'histoire, ouvert d'office à 65 ans. `shareTxt()` est le texte partagé.
 - Succès : tableau `ACH`, obtenus dans la partie dans `S.ach`, conservés entre les parties dans `localStorage` sous `fortune-leman-ach`.
 - 70 situations dans `SITS`. Une situation peut rester ouverte pendant que le joueur agit ailleurs : chaque choix doit revérifier l'état (exemple : ne jamais faire tomber `co.emp` à 0).
+- Le score compte la fortune en francs de 2027 (`nw()/S.infl`), sur une échelle de CHF 20'000 à 20 millions. Mesure d'octobre 2026 : un CFC en logistique qui épargne sans rien faire d'autre finit vers CHF 1,5 million nominal à 65 ans, 2e pilier compris, soit environ 900'000 en francs de 2027.
+- Situation d'ouverture `debut`, forcée au premier mois par `pickSit()`. `sico()` choisit l'émoji d'une situation d'après son titre (`SICO`).
+- Sons : `beep()` (WebAudio, sans fichier), préférence `fortune-leman-snd` hors état, réglage dans `vAide()`.
+- Sur téléphone (700 px et moins), l'en-tête tient sur une ligne : la devise se règle dans Réglages, le bouton de l'en-tête n'affiche que la roue.
+- Test de toutes les situations : forcer `S.sit` pour chaque entrée de `SITS` dans un état riche (emploi, couple, enfant, entreprise, bien, titres) et exécuter chaque choix.
