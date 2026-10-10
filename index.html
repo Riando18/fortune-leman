@@ -143,16 +143,16 @@ svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
 
 <script>
 const CANT=[
- {id:'VD',n:'Vaud',city:'Lausanne',sal:5900,rent:1650,lam:470,tax:.15,w:.006},
- {id:'GE',n:'Genève',city:'Genève',sal:6400,rent:1950,lam:500,tax:.155,w:.007},
- {id:'FR',n:'Fribourg',city:'Fribourg',sal:5500,rent:1300,lam:400,tax:.14,w:.005},
- {id:'BE',n:'Berne',city:'Berne',sal:5800,rent:1350,lam:440,tax:.16,w:.005},
- {id:'NE',n:'Neuchâtel',city:'Neuchâtel',sal:5500,rent:1150,lam:470,tax:.17,w:.006},
- {id:'ZH',n:'Zurich',city:'Zurich',sal:6600,rent:2100,lam:430,tax:.12,w:.003},
- {id:'BS',n:'Bâle-Ville',city:'Bâle',sal:6400,rent:1600,lam:520,tax:.145,w:.006},
- {id:'VS',n:'Valais',city:'Sion',sal:5300,rent:1200,lam:400,tax:.13,w:.005},
- {id:'TI',n:'Tessin',city:'Lugano',sal:5000,rent:1250,lam:480,tax:.125,w:.004},
- {id:'ZG',n:'Zoug',city:'Zoug',sal:6800,rent:2300,lam:360,tax:.07,w:.002}];
+ {id:'VD',col:1.05,n:'Vaud',city:'Lausanne',sal:5900,rent:1650,lam:470,tax:.15,w:.006},
+ {id:'GE',col:1.12,n:'Genève',city:'Genève',sal:6400,rent:1950,lam:500,tax:.155,w:.007},
+ {id:'FR',col:0.96,n:'Fribourg',city:'Fribourg',sal:5500,rent:1300,lam:400,tax:.14,w:.005},
+ {id:'BE',col:1,n:'Berne',city:'Berne',sal:5800,rent:1350,lam:440,tax:.16,w:.005},
+ {id:'NE',col:0.95,n:'Neuchâtel',city:'Neuchâtel',sal:5500,rent:1150,lam:470,tax:.17,w:.006},
+ {id:'ZH',col:1.12,n:'Zurich',city:'Zurich',sal:6600,rent:2100,lam:430,tax:.12,w:.003},
+ {id:'BS',col:1.05,n:'Bâle-Ville',city:'Bâle',sal:6400,rent:1600,lam:520,tax:.145,w:.006},
+ {id:'VS',col:0.93,n:'Valais',city:'Sion',sal:5300,rent:1200,lam:400,tax:.13,w:.005},
+ {id:'TI',col:0.93,n:'Tessin',city:'Lugano',sal:5000,rent:1250,lam:480,tax:.125,w:.004},
+ {id:'ZG',col:1.1,n:'Zoug',city:'Zoug',sal:6800,rent:2300,lam:360,tax:.07,w:.002}];
 const A=[
  {id:'SMI',k:'s',n:'ETF sur le SMI',hq:'20 plus grandes sociétés suisses',p:125,mu:.0035,sg:.012,dv:.03},
  {id:'NESN',k:'s',n:'Nestlé',hq:'Vevey (VD)',p:80,mu:.003,sg:.035,dv:.038},
@@ -403,7 +403,7 @@ const SITS=[
   ['Une balade au bord du lac',()=>{const n=S.crush;S.crush=null;if(R(.6)){S.partner={n,since:S.m,live:false,mar:false};Jj(10);return'Vous marchez des heures. Vous êtes désormais en couple avec '+n.split(' ')[0]+'.'}return'Vous vous quittez bons amis.'}],
   ['Annuler',()=>{S.crush=null;return'Vous n\'êtes pas prêt'+ee()+' pour ça en ce moment.'}]]},
  {id:'emmenager',cd:18,c:()=>!!S.partner&&!S.partner.live&&S.m-S.partner.since>=8&&!away(),t:'Vivre ensemble',x:()=>pn()+' vous propose d\'emménager ensemble.',o:()=>[
-  ['Oui',()=>{S.partner.live=true;S.home=false;Jj(6);return'Vous partagez désormais le loyer et les courses : vos charges de logement baissent de près de moitié.'}],
+  ['Oui',()=>{S.partner.live=true;S.home=false;S.coloc=false;Jj(6);return'Vous partagez désormais le loyer et les courses : vos charges de logement baissent de près de moitié.'}],
   ['Pas encore',()=>{Jj(-1);return pn()+' comprend, mais reviendra sur le sujet.'}]]},
  {id:'mariage',cd:24,c:()=>!!S.partner&&S.partner.live&&!S.partner.mar&&S.m-S.partner.since>=24,t:'Se marier ?',x:()=>pn()+' aimerait que vous vous mariiez.',o:()=>[
   ['Mariage civil et repas en petit comité · '+money(2500),()=>{Cc(-2500);S.partner.mar=true;Jj(10);return'Une cérémonie simple à l\'état civil, vos proches autour de vous.'}],
@@ -434,6 +434,16 @@ const SITS=[
  {id:'fitness',cd:60,c:()=>age()>=18,t:'L\'abonnement de fitness',x:()=>'Offre de janvier : '+money(79)+' par mois, engagement de 12 mois.',o:()=>[
   ['Signer',()=>{S.subs.push({t:'Abonnement de fitness',amt:79,left:12});Jj(5);return'Vous y allez trois fois par semaine en janvier. '+money(948)+' sur l\'année, que vous y alliez ou non.'}],
   ['Courir dehors',()=>{Jj(3);return'Gratuit, et le bord du lac vaut tous les tapis de course.'}]]},
+ {id:'douane',cd:30,c:()=>!!S.hus.parfum,t:'Colis retenu à la douane',x:()=>'Votre dernier lot de parfums est bloqué : la douane soupçonne des contrefaçons.',o:()=>[
+  ['Abandonner le lot',()=>{Cc(-600);return'Vous perdez les '+money(600)+' du lot. La marchandise est détruite.'}],
+  ['Contester',()=>{if(R(.3)){return'Les parfums étaient authentiques : le colis vous est remis.'}Cc(-600);bill('Amende pour importation de contrefaçons',900,1);return'Ce sont bien des contrefaçons. Lot détruit, et amende de '+money(900)+'. Achetez chez un grossiste sérieux.'}]]},
+ {id:'tuyau',cd:30,c:()=>age()>=18&&S.cash>800,t:'« Un tuyau sûr »',x:()=>'Un ami est formel : le match de dimanche est joué d\'avance. Il vous pousse à miser '+money(500)+'.',o:()=>[
+  ['Miser',()=>{if(R(.35)){Cc(450);S.betTot+=450;return'Le pari passe : '+money(450)+' de gain. La prochaine fois, vous aurez envie de miser plus.'}Cc(-500);S.betTot-=500;return'Le match tourne mal. '+money(500)+' perdus. Il n\'existe pas de tuyau sûr.'}],
+  ['Refuser',()=>'Votre argent reste à sa place.']]},
+ {id:'partenariat',cd:24,c:()=>!!S.hus.contenu&&S.hus.contenu.fol>2000,t:'Une marque vous approche',x:()=>'Un site de paris en ligne vous offre '+money(1500)+' pour une vidéo qui le recommande à vos abonnés.',o:()=>[
+  ['Accepter sans le dire',()=>{Cc(1500);if(R(.4)){S.hus.contenu.fol*=.6;return'Vos abonnés découvrent la publicité cachée. Vous perdez 40 % de votre audience.'}return'Vous encaissez '+money(1500)+'. Personne ne relève.'}],
+  ['Accepter en l\'annonçant comme publicité',()=>{Cc(1200);return'La marque baisse un peu son prix, mais votre audience reste intacte.'}],
+  ['Refuser',()=>{Jj(1);return'Vous gardez la confiance de vos abonnés.'}]]},
  {id:'credit_conso',cd:60,c:()=>age()>=20&&S.cash<2000&&!S.pours,t:'« Besoin d\'argent ? »',x:()=>'Une publicité vous propose '+money(10000)+' « en 24 heures », à rembourser '+money(340)+' par mois pendant 36 mois.',o:()=>[
   ['Signer',()=>{Cc(10000);S.subs.push({t:'Remboursement du crédit à la consommation',amt:340,left:36});return'Vous touchez '+money(10000)+' et en rembourserez '+money(12240)+'. Un mois sans salaire suffit pour que ce crédit vous mène aux poursuites.'}],
   ['Refuser',()=>'Vous revoyez plutôt votre budget.']]}];
@@ -461,7 +471,27 @@ function vPriv(){const a=age(),P_=S.partner,ku=S.kids.map(b=>Math.floor((S.m-b)/
  ${S.record?`<tr class="tot"><td>Casier judiciaire<span class="sub">Ferme la police et la banque, réduit vos chances ailleurs</span></td><td>Inscrit</td></tr>`:''}</table></div>`:'<p class="muted">Rien à signaler : ni facture en attente, ni dette, ni casier.</p>'}
  <h2>Votre réseau</h2><p class="lead">Chaque contact professionnel augmente vos chances d'embauche dans sa branche, jusqu'à 15 points. Un contact peut aussi vous recommander.</p>
  ${S.net.length?`<ul class="log">${S.net.map(c=>`<li><b>${esc(c.n)}</b><span>${c.k==='ami'?'Ami':'Contact professionnel'} · ${by(FIELDS,c.f).n}</span></li>`).join('')}</ul>`:'<p class="muted">Personne pour l\'instant. Soirées, clubs et mariages sont l\'occasion de rencontrer du monde.</p>'}`}
-const LM=[.78,.86,1,1.18,1.42,1.75,2.3];
+const LM=[.7,.86,1,1.18,1.42,1.75,2.3];
+const BLACK=[{id:'chant',n:'Chantier payé de la main à la main',w:2600},{id:'plonge',n:'Plonge dans un restaurant, sans contrat',w:2100},{id:'menage',n:'Ménages non déclarés',w:1700},{id:'demen',n:'Déménagements le week-end',w:700}];
+const HUS=[
+ {id:'parfum',n:'Revente de parfums en ligne',c:800,min:16,d:'Vous achetez des lots et les revendez sur les réseaux. Revenus irréguliers, et le stock peut vous rester sur les bras.'},
+ {id:'scoot',n:'Location de votre scooter',c:2500,min:18,d:'Vous achetez un scooter et le louez entre particuliers. Assez régulier, mais les réparations sont pour vous.'},
+ {id:'contenu',n:'Création de contenu',c:600,min:16,d:'Des vidéos sur les réseaux. Presque rien pendant des mois, puis parfois une vidéo qui décolle.'},
+ {id:'montage',n:'Montage vidéo pour créateurs',c:1500,min:16,d:'Vous montez les vidéos des autres, payé à la commande. Vos tarifs montent avec l\'expérience.'}];
+function husInc(id,h){const x=Math.random();h.m++;
+ if(id==='parfum')return R(.05)?-300:Math.round(Math.min(900,(150+60*Math.sqrt(h.m))*(.3+1.4*x)));
+ if(id==='scoot')return R(.05)?-600:Math.round(220+260*x);
+ if(id==='contenu'){h.fol=(h.fol||50)*(1.02+.08*x)+40*Math.random();if(R(.03))h.fol=h.fol*3+500;return h.fol<1000?0:Math.round(Math.min(6000,h.fol*.012*(.6+.8*Math.random())))}
+ return Math.round(Math.min(2200,(300+90*Math.sqrt(h.m))*(.7+.6*x)))}
+const nHus=()=>Object.keys(S.hus).length;
+const xpEq=()=>S.xp+(S.dip.cfc?12:0);
+const whyNot=o=>qlvl(o.f)<o.lvl?'qualification insuffisante':xpEq()<(o.rx||0)?'expérience insuffisante':'profil écarté';
+function homeBox(){const c=C(),a=age(),rent=c.rent*S.infl,g=gross();
+ if(!S.home)return`<p class="sub" style="margin-top:8px">${S.partner&&S.partner.live?'Vous partagez le loyer à deux.':S.coloc?'En colocation : votre part du loyer est de '+money(rent*.5+S.rentAdj)+'.':'Loyer de '+money(rent+S.rentAdj)+' par mois.'}${S.dep?' Garantie de loyer bloquée : '+money(S.dep)+', rendue à votre départ.':''}</p><div class="ctl l"><button class="b" data-act="home" data-id="back" ${a>=28?'disabled':''}>Retourner chez vos parents</button></div>`;
+ return`<p class="sub" style="margin-top:8px">Chez vos parents : pas de loyer, seulement une pension de 20 % de votre revenu dès que vous gagnez votre vie. C'est la période où l'on épargne le plus vite. Possible jusqu'à 28 ans.</p>
+ <p class="sub"><b>Appartement seul</b> · loyer ${money(rent)}. La gérance exige un revenu brut d'au moins 3 fois le loyer, soit ${money(3*rent)} (le vôtre : ${money(g)}), et un registre des poursuites vierge. Il faut ${money(3*rent+2500)} : trois mois de garantie de loyer, plus les meubles.</p>
+ <p class="sub"><b>Colocation</b> · votre part ${money(rent*.5)}. Revenu brut exigé : ${money(1.5*rent)}. Il faut ${money(1.5*rent+800)} pour la garantie et l'installation.</p>
+ <div class="ctl l"><button class="b go" data-act="home" data-id="solo" ${a>=18?'':'disabled'}>Prendre un appartement</button><button class="b" data-act="home" data-id="coloc" ${a>=18?'':'disabled'}>Entrer en colocation</button></div>`}
 const FIELDS=[
  {id:'log',n:'Logistique',base:5200,app:1,afp:1,t:['Auxiliaire logistique','Logisticien AFP','Logisticien CFC','Chef d\'équipe logistique','Responsable d\'entrepôt','Responsable supply chain','Directeur logistique'],e:['Planzer','Galliker','La Poste','Migros','Coop','CFF Cargo','Digitec Galaxus','DHL','Kühne+Nagel']},
  {id:'com',n:'Commerce et administration',base:5000,app:1,afp:1,hes:'Haute école de gestion (HEG)',t:['Aide de bureau','Assistant de bureau AFP','Employé de commerce CFC','Spécialiste administratif','Économiste d\'entreprise','Chef de service','Directeur administratif'],e:['État de Vaud','Ville de Lausanne','BCV','UBS','Vaudoise Assurances','La Mobilière','Swisscom','Nestlé','CFF']},
@@ -518,15 +548,15 @@ const tcost=x=>S.chom>0&&(x.id==='de'||x.id==='en')?0:x.c;
 function orp(log){if(S.contrib>=12&&S.lastSal>0){S.chomBase=S.lastSal;S.chom=chomDur();S.chomW=S.quit?2:0;S.contrib=0;S.quit=0;log('Inscription à l\'ORP : '+S.chom+' mois d\'indemnités à '+Math.round(chomRate()*100)+' % de votre dernier salaire.'+(S.chomW?' Deux mois de suspension pour départ volontaire.':''),'ORP, office régional de placement','Confirmation d\'inscription');return true}
  log('Vous n\'avez pas cotisé 12 mois dans les 2 dernières années : pas de droit au chômage.','ORP, office régional de placement','Votre demande d\'indemnités');return false}
 const langs=()=>(S.dip.de?1:0)+(S.dip.en?1:0);
-const salary=(f,lvl,ef)=>Math.round(by(FIELDS,f).base*LM[lvl]*C().sal/5900*ef*S.raise*(1+Math.min(.2,.01*S.xp/12))*(1+.03*langs())*(f==='droit'&&lvl>=5&&S.dip.av?1.25:1)/50)*50;
+const salary=(f,lvl,ef)=>Math.round(by(FIELDS,f).base*LM[lvl]*(age()<18?.6:age()<20&&lvl<2?.85:1)*C().sal/5900*ef*S.raise*(1+Math.min(.2,.01*S.xp/12))*(1+.03*langs())*(f==='droit'&&lvl>=5&&S.dip.av?1.25:1)/50)*50;
 const jobTitle=j=>T(j.f==='droit'&&j.lvl===5&&S.dip.av?'Avocat':by(FIELDS,j.f).t[j.lvl]);
 function genOffers(){const q=FIELDS.map(f=>[f,qlvl(f.id)]),mx=Math.max(...q.map(x=>x[1])),main=q.filter(x=>x[1]===mx&&(mx>0||x[0].app)).map(x=>x[0]),apps=FIELDS.filter(f=>f.app),o=[];
- for(let i=0;i<6;i++){const f=i<3?rnd(main):rnd(apps),lo=f.t.findIndex(x=>x);const l=clamp(i<3?mx+rnd([-1,0,0,1]):rnd([0,0,1,2]),lo,6);o.push({f:f.id,lvl:l,emp:rnd(f.e),ef:.92+.2*Math.random(),done:0})}
+ for(let i=0;i<6;i++){const f=i<3?rnd(main):rnd(apps),lo=f.t.findIndex(x=>x);const l=clamp(i<3?mx+rnd([-1,0,0,1]):rnd([0,0,1,2]),lo,6);o.push({f:f.id,lvl:l,emp:rnd(f.e),ef:.92+.2*Math.random(),done:0,rx:rnd(l<=1?[0,0,0,12]:l<=3?[0,0,12,24,36]:[0,0,24,48])})}
  S.offers=o;S.apN=0}
-function chance(o){const q=qlvl(o.f);if(q<o.lvl)return 0;if((o.f==='banq'||o.f==='pol')&&(S.pours>0||S.record))return 0;
+function chance(o){const q=qlvl(o.f),d=S.dip;if(q<o.lvl||xpEq()<(o.rx||0))return 0;if((o.f==='banq'||o.f==='pol')&&(S.pours>0||S.record))return 0;
  const pb=!S.ch&&S.permit==='B',net=Math.min(.15,.05*S.net.filter(x=>x.k==='pro'&&x.f===o.f).length),mob=S.trans==='none'?-.05:hasCar()?.03:0,m=(S.pours>0?.9:1)*(S.record?.85:1);
- if(o.lvl===0)return clamp(((pb?.65:.75)+net+mob)*m,.05,.95);
- return clamp((.35+.15*(q-o.lvl)+.05*langs()+(S.dip.permis?.04:0)+Math.min(.15,S.xp/12*.02)+net+mob)*(o.lvl>=6?.2:o.lvl===5?.5:1)*(pb?.85:1)*m,.02,.92)}
+ if(o.lvl===0)return clamp(((pb?.38:.45)+Math.min(.25,S.xp/12*.05)+(d.cfc||d.afp||d.matu?.1:0)+net+mob)*m*(age()<18?.4:1),.03,.95);
+ return clamp((.35+.15*(q-o.lvl)+.05*langs()+(d.permis?.04:0)+Math.min(.15,S.xp/12*.02)+net+mob)*(o.lvl>=6?.2:o.lvl===5?.5:1)*(pb?.85:1)*m,.02,.92)}
 const stWage=st=>st.afo?3500:st.k==='pol'?4500:st.k==='loco'?4200:st.k==='cfc'?[750,950,1250][st.y-1]:st.k==='afp'?[650,850][st.y-1]:st.k==='av'?3500:0;
 const stTui=st=>['ba','ma','med'].includes(st.k)?120:st.k==='hes'?(st.f==='gastro'?1500:150):st.k==='hep'?100:0;
 const stP=st=>{const last=st.y===st.n;return st.k==='cfc'?(last?.93:.98):st.k==='afp'?(last?.95:.98):st.k==='gym'?.9:st.k==='med'?(st.y===1?.5:.82):st.k==='ba'?.82:st.k==='av'?(last?.65:.99):st.k==='hep'?.92:st.k==='pol'||st.k==='loco'?.9:.88};
@@ -546,7 +576,7 @@ function graduate(st,log){const d=S.dip,k=st.k;
  S.study=null;log('Diplôme obtenu : '+nm+'. '+(k==='gym'?'L\'université vous est ouverte.':k==='matupro'?'Les hautes écoles spécialisées vous sont ouvertes.':'De nouvelles offres d\'emploi vous attendent.'),'Secrétariat de votre école','Votre diplôme');
  if(['cfc','afp','av','pol','loco'].includes(k)&&(k==='pol'||k==='loco'||Math.random()<.7)){const lvl=k==='cfc'?2:k==='afp'?1:k==='av'?5:3,f=k==='av'?'droit':st.f;S.job={f,lvl,emp:st.emp,sal:salary(f,lvl,1),since:S.m};log(st.emp+' vous garde après votre formation : vous êtes engagé'+ee()+' comme '+jobTitle(S.job)+'.','Ressources humaines, '+st.emp,'Votre engagement')}
  genOffers()}
-function studyTick(log){const st=S.study;if(!st||--st.left>0)return;const sd=S.side?by(SIDE,S.side):null,p=stP(st)-(sd?sd.ch:0)-(S.train?.03:0)+(S.joy-50)/500+(st.bon||0);st.bon=0;
+function studyTick(log){const st=S.study;if(!st||--st.left>0)return;const sd=S.side?by(SIDE,S.side):null,p=stP(st)-(sd?sd.ch:0)-(S.train?.03:0)+(S.joy-50)/500+(st.bon||0)-.03*nHus()-(S.black?.1:0);st.bon=0;
  if(Math.random()<p){st.y++;st.fails=0;if(st.y>st.n)graduate(st,log);else{st.left=12;log('Examens réussis : vous passez en '+st.y+'e année.','Secrétariat de votre école','Résultats d\'examens')}}
  else{st.fails++;if(['ba','ma','med'].includes(st.k)&&st.fails>=2){S.ban[st.f]=1;S.study=null;log('Deuxième échec aux examens : échec définitif dans cette filière. Il faut choisir une autre voie.','Secrétariat de votre école','Résultats d\'examens')}else{st.left=12;log('Examens ratés : vous refaites l\'année.','Secrétariat de votre école','Résultats d\'examens')}}}
 function trainTick(log){const t=S.train;if(!t||--t.left>0)return;const x=by(TRAIN,t.id),d=S.dip;S.train=null;
@@ -638,7 +668,7 @@ const TUT=[
  {tab:'immo',h:'L\'immobilier',p:'La banque prête 80 % du prix. Vous apportez 20 %, plus 4 % de frais. Elle vérifie aussi que vos revenus supportent les charges, et refuse sinon. Le loyer encaissé paie l\'hypothèque et l\'entretien, le reste est pour vous. Plus tard, vous pourrez acheter un terrain et y construire.'},
  {tab:'biz',h:'Les entreprises',p:'Choisissez un domaine et payez le capital de départ. La première année est souvent déficitaire : gardez de la trésorerie. Engagez seulement quand la demande du marché dépasse votre effectif. Les apprentis CFC et AFP coûtent peu et rejoignent l\'équipe une fois diplômés. Une machine par employé augmente la production.'},
  {tab:'banque',h:'Banque et prévoyance',p:'Choisissez votre banque : frais, intérêts, courtage et taux hypothécaire changent de l\'une à l\'autre. Un versement dans le pilier 3a réduit vos impôts, mais l\'argent reste bloqué jusqu\'à 65 ans. Le crédit privé coûte cher : gardez-le pour les urgences. Le bouton CHF / EUR en haut convertit tous les montants.'},
- {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. Des situations surgissent au fil des mois : chaque choix a des conséquences sur votre argent, votre réputation, votre couple ou votre casier. L\'onglet Vie privée réunit bien-être, famille, mobilité, dettes et réseau. La bourse, l\'immobilier et les entreprises s\'ouvrent à vos 18 ans. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Votre partie s\'enregistre toute seule. Vous retrouvez ce tutoriel, le lexique et les sauvegardes dans le dernier onglet.'}];
+ {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. Des situations surgissent au fil des mois : chaque choix a des conséquences sur votre argent, votre réputation, votre couple ou votre casier. L\'onglet Vie privée réunit bien-être, famille, mobilité, dettes et réseau. Rester chez vos parents permet d\'épargner. Un appartement exige un revenu de trois fois le loyer et une garantie. La bourse, l\'immobilier et les entreprises s\'ouvrent à vos 18 ans. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Votre partie s\'enregistre toute seule. Vous retrouvez ce tutoriel, le lexique et les sauvegardes dans le dernier onglet.'}];
 const invested=()=>secVal('s')+secVal('c')+propGross()+cosVal()>0;
 const MIS=[
  {t:'Jouer votre premier mois',w:'Appuyez sur « Mois suivant » pour faire avancer le temps.',tab:'apercu',ok:()=>S.m>=1},
@@ -692,7 +722,7 @@ const $=id=>document.getElementById(id);
 const z=()=>{let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*Math.random())};
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const by=(arr,id)=>arr.find(x=>x.id===id);
-function fresh(){const s={v:4,m:0,canton:null,cash:500,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,job:null,study:null,side:null,train:null,dip:{},ban:{},offers:[],apN:0,xp:0,contrib:0,chomW:0,lastSal:0,quit:0,home:true,sit:null,seen:{},pro:50,joy:60,net:[],partner:null,crush:null,kids:[],alim:false,trans:'tp',car:null,noDrive:0,ot:0,lastRaise:-99,pours:0,owe:0,jail:0,record:false,bills:[],subs:[],fr:300,rc:false,rentAdj:0,mat:0,sick:0,tripM:-99,club1:false,benev:false,sex:null,name:'',mail:{addr:'',list:[],n:0},pend:[],itv:null,mview:null,itvWon:0,nat:null,ch:true,born:true,permit:null,natu:null,aidLast:-1,mil:{st:'none',left:0,kind:null,crN:0,taxN:0},indep:false,chomBase:0,assist:0,uni:null,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[500],bm:500,bmH:[500],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
+function fresh(){const s={v:4,m:0,canton:null,cash:500,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,job:null,study:null,side:null,train:null,dip:{},ban:{},offers:[],apN:0,xp:0,contrib:0,chomW:0,lastSal:0,quit:0,home:true,coloc:false,dep:0,hus:{},black:null,bet:0,betTot:0,sit:null,seen:{},pro:50,joy:60,net:[],partner:null,crush:null,kids:[],alim:false,trans:'tp',car:null,noDrive:0,ot:0,lastRaise:-99,pours:0,owe:0,jail:0,record:false,bills:[],subs:[],fr:300,rc:false,rentAdj:0,mat:0,sick:0,tripM:-99,club1:false,benev:false,sex:null,name:'',mail:{addr:'',list:[],n:0},pend:[],itv:null,mview:null,itvWon:0,nat:null,ch:true,born:true,permit:null,natu:null,aidLast:-1,mil:{st:'none',left:0,kind:null,crN:0,taxN:0},indep:false,chomBase:0,assist:0,uni:null,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[500],bm:500,bmH:[500],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
  A.forEach(a=>{s.px[a.id]=a.p;s.hist[a.id]=[a.p];s.hold[a.id]=0;s.cost[a.id]=0});
  P.forEach(p=>{s.pv[p.id]=p.v;s.props[p.id]={n:0,mort:0}});
  LAND.forEach(l=>s.land[l.id]={own:false,v:l.v,proj:null,done:false});
@@ -723,7 +753,7 @@ const cosVal=()=>S.cos.reduce((t,co)=>t+coVal(co),0);
 const cosAvg=()=>S.cos.reduce((t,co)=>t+Math.max(0,co.avg),0);
 const caYear=()=>S.cos.reduce((t,co)=>t+co.caAvg*12,0);
 const clubVal=()=>CLUBS.reduce((t,c)=>t+S.club[c.id]*S.clubV[c.id],0);
-const nw=()=>S.cash+secVal('s')+secVal('c')+propGross()-propMort()+landVal()+cosVal()+clubVal()-S.loan;
+const nw=()=>(S.dep||0)+S.cash+secVal('s')+secVal('c')+propGross()-propMort()+landVal()+cosVal()+clubVal()-S.loan;
 const rank=v=>v<1e4?'Débutant':v<1e5?'Épargnant':v<1e6?'Investisseur':v<1e7?'Millionnaire':v<1e8?'Magnat':'Légende de la place financière';
 const cal=()=>(S.m+7)%12;
 const dateLbl=m=>MOIS[(m+7)%12]+' '+(2027+Math.floor((m+7)/12));
@@ -751,7 +781,7 @@ function chart(){const h=S.nw,g=S.bmH;if(h.length<2)return'<p class="muted">La c
  <text x="10" y="14">${money(hi)}</text><text x="10" y="155">${money(lo)}</text></svg></div>
  <div class="legend"><span><i class="dot" style="background:var(--accent)"></i>Vous <span class="num">${money(h[h.length-1])}</span></span><span><i class="dot" style="background:var(--stock)"></i>Épargnant ETF <span class="num">${money(S.bm)}</span></span></div>`}
 function cantCards(act){return`<div class="cant">${CANT.map(c=>`<button data-act="${act}" data-id="${c.id}" aria-current="${S.canton===c.id}"><span class="who">${shield(c)}<span><b>${c.n}</b><br><span class="muted">${c.city}</span></span></span>
- <span>Salaire brut <span class="num">${money(c.sal)}</span> × 13</span><span>Loyer <span class="num">${money(c.rent)}</span></span><span>Prime maladie <span class="num">${money(c.lam)}</span></span><span>Impôt sur le revenu env. <span class="num">${p1(c.tax)}</span></span></button>`).join('')}</div>`}
+ <span>Salaire brut <span class="num">${money(c.sal)}</span> × 13</span><span>Loyer <span class="num">${money(c.rent)}</span></span><span>Prime maladie <span class="num">${money(c.lam)}</span></span><span>Impôt sur le revenu env. <span class="num">${p1(c.tax)}</span></span><span>Coût de la vie <span class="num">${Math.round(c.col*100)}</span> (Berne = 100)</span></button>`).join('')}</div>`}
 function vPick(){if(!S.sex)return`<h2>Qui êtes-vous ?</h2><p class="lead">Vous commencez à 16 ans, à la fin de l'école obligatoire. Formation, premier emploi, carrière, puis investissements et entreprises : votre parcours se joue mois après mois jusqu'à la retraite.</p><input class="txt" id="pname" maxlength="20" value="${esc(S.name||'')}" placeholder="Votre prénom (facultatif)" aria-label="Votre prénom"><div class="ctl l" style="margin-top:12px"><button class="b go" data-act="sex" data-id="m">Je suis un garçon</button><button class="b go" data-act="sex" data-id="f">Je suis une fille</button></div><p class="sub" style="margin-top:10px">Ce choix accorde les noms de métiers. Les garçons font aussi l'école de recrues à 19 ans.</p>`;
  if(!S.nat)return`<h2>D'où venez-vous ?</h2><p class="lead">Votre nationalité et votre lieu de naissance fixent votre statut en Suisse : nationalité suisse, permis C si vous êtes né${ee()} ici de parents étrangers, permis B si vous êtes arrivé${ee()} récemment. Chaque statut a ses avantages et ses contraintes, comme dans la réalité.</p>
  <label class="sub" for="pnat">Votre nationalité</label><select class="txt" id="pnat">${['Suisse'].concat(NATS).map(n=>`<option>${n}</option>`).join('')}</select>
@@ -759,7 +789,7 @@ function vPick(){if(!S.sex)return`<h2>Qui êtes-vous ?</h2><p class="lead">Vous 
  <div class="ctl l" style="margin-top:8px"><button class="b" data-act="back" data-id="sex">‹ Retour : prénom et genre</button></div>
  <ul class="log" style="margin-top:14px"><li><b>Suisse</b><span>Droit de vote, séjour garanti, achat immobilier libre. Pour les hommes : obligation de servir, ou taxe d'exemption.</span></li><li><b>Permis C</b><span>Mêmes impôts et mêmes droits économiques qu'un Suisse, pas de service militaire. Pas de droit de vote fédéral. Naturalisation possible.</span></li><li><b>Permis B</b><span>Pas de service militaire, mais impôt à la source, embauche un peu plus difficile et, hors UE et AELE, achat de biens de rendement interdit. Le permis C arrive après 5 ou 10 ans.</span></li></ul>`;
  return`<h2>Où grandissez-vous ?</h2><p class="lead">Vous vivez chez vos parents. Le canton fixe les salaires, les loyers, les primes d'assurance maladie et les impôts que vous connaîtrez plus tard. Si vous étudiez dans un autre canton, il faudra y louer une chambre. Les chiffres ci-dessous sont ceux d'un adulte.</p><div class="ctl l" style="margin-bottom:10px"><button class="b" data-act="back" data-id="nat">‹ Retour : nationalité</button></div>${cantCards('pick')}`}
-function repTable(r){const rows=[[r.lblSal,r.sal],['Petit job',r.side],['Soutien de vos parents',r.par],[r.lblAid||'Aide sociale',r.aid],['Cotisations AVS, AI, APG, AC',-r.soc],['Cotisation LPP (2e pilier)',-r.lpp],[r.lblTax||'Impôts sur le revenu',-r.tax],['Taxe d\'exemption de l\'obligation de servir',-(r.mil||0)],[r.lblRent||'Loyer',-r.rent0],['Prime d\'assurance maladie',-r.lam],['Dépenses courantes',-r.vie],['Taxes d\'études',-r.tui],['Transports',-(r.trans||0)],['Abonnements et mensualités',-(r.subs||0)],['Enfants : votre part des frais',-(r.kidc||0)],['Allocations familiales',r.alloc||0],['Saisie de salaire',-(r.seize||0)],['Dividendes',r.div],['Immobilier, net d\'hypothèque et d\'entretien',r.rent],['Bénéfice des entreprises',r.biz],['Clubs de football',r.club],['Chantiers : dépassement de budget',r.build],['Intérêts du compte',r.sav],['Frais bancaires',-r.bfee],['Intérêts de crédit',-r.int],['Redevance Serafe',-r.ser],['Impôt sur la fortune',-r.wtax],['Imprévu',r.life]];
+function repTable(r){const rows=[[r.lblSal,r.sal],['Petit job',r.side],['Soutien de vos parents',r.par],[r.lblAid||'Aide sociale',r.aid],['Cotisations AVS, AI, APG, AC',-r.soc],['Cotisation LPP (2e pilier)',-r.lpp],[r.lblTax||'Impôts sur le revenu',-r.tax],['Taxe d\'exemption de l\'obligation de servir',-(r.mil||0)],[r.lblRent||'Loyer',-r.rent0],['Prime d\'assurance maladie',-r.lam],['Dépenses courantes',-r.vie],['Taxes d\'études',-r.tui],['Travail non déclaré',r.black||0],['Petits business',r.hus||0],['Paris sportifs',r.bet||0],['Électricité et taxe déchets',-(r.fact||0)],['Transports',-(r.trans||0)],['Abonnements et mensualités',-(r.subs||0)],['Enfants : votre part des frais',-(r.kidc||0)],['Allocations familiales',r.alloc||0],['Saisie de salaire',-(r.seize||0)],['Dividendes',r.div],['Immobilier, net d\'hypothèque et d\'entretien',r.rent],['Bénéfice des entreprises',r.biz],['Clubs de football',r.club],['Chantiers : dépassement de budget',r.build],['Intérêts du compte',r.sav],['Frais bancaires',-r.bfee],['Intérêts de crédit',-r.int],['Redevance Serafe',-r.ser],['Impôt sur la fortune',-r.wtax],['Imprévu',r.life]];
  return`<table>${rows.filter((x,i)=>i===0||Math.abs(x[1]||0)>.5).map(x=>`<tr><td>${x[0]}</td><td class="num ${cls(x[1])}">${money(x[1])}</td></tr>`).join('')}<tr class="tot"><td>Résultat du mois</td><td class="num ${cls(r.tot)}">${money(r.tot)}</td></tr></table>`}
 function vApercu(){const parts=[['Liquidités','--cash',Math.max(0,S.cash)],['Bourse','--stock',secVal('s')],['Crypto','--crypto',secVal('c')],['Immobilier et terrains','--immo',Math.max(0,propGross()-propMort()+landVal())],['Entreprises','--biz',cosVal()],['Clubs','--club',clubVal()]];
  const tot=parts.reduce((t,p)=>t+p[2],0)||1,f=S.final;
@@ -775,12 +805,12 @@ function vApercu(){const parts=[['Liquidités','--cash',Math.max(0,S.cash)],['Bo
  <section class="panel" style="margin-top:12px"><h3>Journal</h3><ul class="log">${S.log.slice(0,14).map(l=>`<li><span>${l.d}</span>${l.t}</li>`).join('')||'<li class="muted">Les événements du marché et de votre vie apparaîtront ici.</li>'}</ul></section>`}
 function vVie(){const c=C(),a=age(),st=S.study,j=S.job,d=S.dip,sd=S.side?by(SIDE,S.side):null,fulltime=!!st;
  const statut=S.ret?'Retraité'+ee():st?stName(st):j?jobTitle(j)+' chez '+j.emp:S.indep?'Chef'+(S.sex==='f'?'fe':'')+' d\'entreprise':S.chom>0?'Au chômage, encore '+S.chom+' mois d\'indemnités':'Sans emploi';
- const log=away()?'Chambre d\'étudiant près de l\'université':S.home?'Chez vos parents':'Votre propre logement';
+ const log=away()?'Chambre d\'étudiant près de l\'université':S.home?'Chez vos parents':S.partner&&S.partner.live?'Logement à deux':S.coloc?'Colocation':'Votre appartement';
  let h=`<h2>Parcours</h2><div class="grid2"><section class="panel"><h3>Votre situation</h3><table>
  <tr><td>Statut</td><td>${statut}</td></tr><tr><td>Revenu brut mensuel</td><td class="num">${money(gross()+(sd&&!j?sd.w:0))}</td></tr>
  <tr><td>Expérience professionnelle</td><td class="num">${(S.xp/12).toFixed(1).replace('.',',')} ans</td></tr>
  <tr class="tot"><td>Logement</td><td>${log}</td></tr></table>
- ${away()||S.ret?'':`<div class="ctl l" style="margin-top:10px"><button class="b" data-act="home" ${S.home?(a<18?'disabled':''):(a>=28?'disabled':'')}>${S.home?'Prendre votre propre logement':'Retourner chez vos parents'}</button></div><p class="sub">${S.home?'Chez vos parents, vous ne payez pas de loyer, seulement une pension de 20 % de votre revenu dès que vous gagnez votre vie. Possible jusqu\'à 28 ans.':'Loyer '+money(c.rent*S.infl)+' par mois dans votre canton.'}</p>`}</section>
+ ${away()||S.ret?'':homeBox()}</section>
  <section class="panel"><h3>Vos diplômes</h3>${dipList().length?`<ul class="log">${dipList().map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Aucun diplôme pour l\'instant. Vous sortez de l\'école obligatoire.</p>'}</section></div>`;
  {const m=S.mil,src=srcTax(),yr=resYears();
  const adv=S.ch?'droit de vote et d\'éligibilité, séjour garanti à vie, aucun permis à renouveler, achat immobilier libre.':S.permit==='C'?'pas de service militaire ni de taxe, mêmes impôts qu\'un Suisse, achat immobilier libre, naturalisation possible.':'pas de service militaire ni de taxe d\'exemption.';
@@ -807,14 +837,21 @@ function vVie(){const c=C(),a=age(),st=S.study,j=S.job,d=S.dip,sd=S.side?by(SIDE
  <div class="ctl l"><button class="b" data-act="drop">${armed==='drop'?'Confirmer : tout arrêter':'Interrompre la formation'}</button></div></div>`;
  if(!j&&!S.ret)h+=`<h2>Petits jobs</h2><p class="lead">Un petit job rapporte de l'argent à côté de vos études, mais il réduit vos chances aux examens.</p><div class="list">${SIDE.map(x=>`<div class="row" style="--c:var(--accent)"><div class="who">${ico('cart','--accent')}<div><b>${T(x.n)}</b><span class="sub">Dès ${x.min} ans · examens −${Math.round(x.ch*100)} points</span></div></div><div class="px"><span class="num">${money(x.w)}</span><span class="sub">par mois</span></div>
  <div class="ctl">${S.side===x.id?`<span class="up">Votre job</span><button class="b" data-act="side" data-id="none">Arrêter</button>`:`<button class="b go" data-act="side" data-id="${x.id}" ${a>=x.min?'':'disabled'}>Prendre ce job</button>`}</div></div>`).join('')}</div>`;
+ if(!j&&!S.ret)h+=`<h2>Travail non déclaré</h2><p class="lead">Payé de la main à la main : pas d'impôt ni de cotisation, mais aucune protection. Pas d'assurance accidents, pas de droit au chômage, pas d'AVS ni de 2e pilier, et une amende en cas de contrôle. Ces mois ne comptent pas comme expérience.</p><div class="list">${BLACK.map(x=>`<div class="row" style="--c:var(--down)"><div class="who">${ico('user','--down')}<div><b>${x.n}</b><span class="sub">Dès 16 ans · risque de contrôle chaque mois</span></div></div><div class="px"><span class="num">${money(x.w)}</span><span class="sub">par mois, en liquide</span></div>
+ <div class="ctl">${S.black===x.id?`<span class="up">En cours</span><button class="b" data-act="black" data-id="none">Arrêter</button>`:`<button class="b" data-act="black" data-id="${x.id}">Accepter</button>`}</div></div>`).join('')}</div>`;
+ if(!S.ret)h+=`<h2>Petits business</h2><p class="lead">Deux activités au plus, à côté de vos études ou de votre emploi. Elles demandent une mise de départ, fatiguent un peu et pèsent sur vos examens. Les gains sont déclarés et imposés.</p><div class="list">${HUS.map(x=>{const hh=S.hus[x.id];return`<div class="row" style="--c:var(--biz)"><div class="who">${ico('cart','--biz')}<div><b>${x.n}</b><span class="sub">${x.d}${hh&&x.id==='contenu'?' Abonnés : '+Math.round(hh.fol||50).toLocaleString('fr-CH')+'.':''}</span></div></div>
+ <div class="px"><span class="num ${hh&&hh.last<0?'down':''}">${hh?money(hh.last||0):money(x.c)}</span><span class="sub">${hh?'le mois dernier · actif depuis '+hh.m+' mois':'mise de départ · dès '+x.min+' ans'}</span></div>
+ <div class="ctl">${hh?`<button class="b" data-act="hus" data-id="${x.id}">Arrêter</button>`:`<button class="b go" data-act="hus" data-id="${x.id}" ${a>=x.min&&nHus()<2?'':'disabled'}>Lancer</button>`}</div></div>`}).join('')}
+ <div class="row" style="--c:var(--down)"><div class="who">${ico('calc','--down')}<div><b>Paris sportifs</b><span class="sub">Dès 18 ans. Ce n'est pas un business : sur la durée, le joueur perd environ 8 % de ses mises. Bilan depuis le début : <span class="${cls(S.betTot)} num">${money(S.betTot)}</span></span></div></div><div class="px"><span class="num">${money(S.bet)}</span><span class="sub">misés par mois</span></div>
+ <div class="ctl">${[0,50,200,500].map(v=>`<button class="b${S.bet===v?' go':''}" data-act="bet" data-id="${v}" ${a>=18||!v?'':'disabled'}>${v?money(v):'Arrêter'}</button>`).join('')}</div></div></div>`;
  if(!S.ret){h+=`<h2>Emploi</h2>`;
   if(j)h+=`<div class="panel"><div class="who">${ico('user','--accent')}<div><b>${jobTitle(j)}</b><span class="sub">${j.emp} · ${by(FIELDS,j.f).n} · depuis ${dateLbl(j.since)}</span></div></div><table style="margin-top:8px"><tr class="tot"><td>Salaire brut, 13 fois par an</td><td class="num">${money(j.sal)}</td></tr></table>
   <p class="sub" style="margin:8px 0 4px">Heures supplémentaires : payées en plus, bonnes pour votre réputation, mauvaises pour votre bien-être.</p><div class="ctl l">${['Aucune','Quelques-unes · +6 %','Beaucoup · +12 %'].map((l,i)=>`<button class="b${S.ot===i?' go':''}" data-act="ot" data-id="${i}">${l}</button>`).join('')}</div>
   <div class="ctl l" style="margin-top:8px"><button class="b" data-act="raise">Demander une augmentation</button><button class="b" data-act="quit">${armed==='quit'?'Confirmer la démission':'Démissionner'}</button>${S.cos.length?`<button class="b" data-act="indep">Quitter pour diriger vos entreprises</button>`:''}</div></div>`;
   if(!j&&!st)h+=chomPanel();
-  h+=`<p class="lead" style="margin-top:10px">${fulltime?'Vous suivez une formation à plein temps. Pour accepter un emploi, il faut la terminer ou l\'interrompre.':'Les offres changent chaque mois. Vous pouvez postuler '+maxAp()+' fois par mois : '+S.apN+' sur '+maxAp()+' utilisées. Les RH répondent par e-mail le mois suivant : accusé de réception, puis entretien ou refus. Vos chances dépendent de vos diplômes, de votre expérience, de vos langues et du permis.'}</p>
-  <div class="list">${S.offers.map((o,i)=>{const F=by(FIELDS,o.f),p=chance(o);return`<div class="row" style="--c:var(--accent)"><div class="who">${ico('bank','--accent')}<div><b>${jobTitle(o)}</b><span class="sub">${o.emp} · ${F.n}</span></div></div>
-  <div class="px"><span class="num">${money(salary(o.f,o.lvl,o.ef))}</span><span class="sub">brut × 13 · ${p?'chances '+Math.round(p*100)+' %':'qualification insuffisante'}</span></div>
+  h+=`<p class="lead" style="margin-top:10px">${fulltime?'Vous suivez une formation à plein temps. Pour accepter un emploi, il faut la terminer ou l\'interrompre.':'Les offres changent chaque mois. Vous pouvez postuler '+maxAp()+' fois par mois : '+S.apN+' sur '+maxAp()+' utilisées. Les RH répondent par e-mail le mois suivant : accusé de réception, puis entretien ou refus. Sans diplôme, vous êtes moins payé et souvent écarté. Avant 18 ans, peu d\'employeurs engagent à plein temps, et pour un salaire réduit. Vos chances dépendent de vos diplômes, de votre expérience, de vos langues, du permis et de votre réseau.'}</p>
+  <div class="list">${S.offers.map((o,i)=>{const F=by(FIELDS,o.f),p=chance(o);return`<div class="row" style="--c:var(--accent)"><div class="who">${ico('bank','--accent')}<div><b>${jobTitle(o)}</b><span class="sub">${o.emp} · ${F.n}${o.rx?' · '+o.rx/12+' an'+(o.rx>12?'s':'')+' d\'expérience exigé'+(o.rx>12?'s':''):''}</span></div></div>
+  <div class="px"><span class="num">${money(salary(o.f,o.lvl,o.ef))}</span><span class="sub">brut × 13 · ${p?'chances '+Math.round(p*100)+' %':whyNot(o)}</span></div>
   <div class="ctl">${o.done?`<span class="muted">Candidature envoyée</span>`:`<button class="b go" data-act="apply" data-id="${i}" ${p&&!fulltime&&S.apN<maxAp()?'':'disabled'}>Postuler</button>`}</div></div>`}).join('')}</div>`}
  if(!S.ret&&!st){const rows=[];const row=(t,s,btn)=>rows.push(`<div class="row" style="--c:var(--accent)"><div class="who" style="grid-column:1/3">${ico('user','--accent')}<div><b>${t}</b><span class="sub">${s}</span></div></div><div class="ctl">${btn}</div></div>`);
   const bt=(id,l)=>`<button class="b go" data-act="study" data-id="${id}">${l}</button>`;
@@ -926,9 +963,10 @@ function coach(d){const t=[],fx=fixed(),st=secVal('s'),cr=secVal('c'),fin=st+cr+
  if(st>10000&&top[1]/st>.35)t.push(top[0]+' pèse '+Math.round(top[1]/st*100)+' % de votre portefeuille d\'actions. Une seule mauvaise nouvelle suffit : diversifiez ou passez par l\'ETF.');
  if(S.loan>0)t.push('Crédit privé de '+money(S.loan)+' à '+p1(B().loan)+'. Le rembourser rapporte plus sûrement que n\'importe quel placement.');
  S.cos.filter(co=>co.age>6&&co.avg<0).forEach(co=>t.push(esc(co.n)+' perd environ '+money(-co.avg)+' par mois. Réduisez l\'effectif, équipez l\'équipe ou vendez.'));
+ if(S.betTot<-1000)t.push('Paris sportifs : '+money(-S.betTot)+' perdus depuis le début. Les cotes sont calculées pour que le bookmaker gagne sur la durée.');
  if(t.length===1)t.push('Rien à signaler sur votre gestion cette année.');S.coach={d,tips:t.slice(0,6)}}
 function next(){if(S.over||S.sit)return null;S.m++;const mo=cal(),d=dateLbl(S.m),sh={s:0,c:0,p:0,b:1,r:0,fx:0},c=C(),a=age(),log=(t,from,sub)=>{S.log.unshift({d,t});if(from)mail(from,sub,hello()+t)};
- const r={sal:0,side:0,par:0,aid:0,soc:0,lpp:0,tax:0,div:0,rent:0,biz:0,club:0,build:0,int:0,ser:0,wtax:0,life:0,bfee:0,sav:0,tui:0,rent0:0,lam:0,vie:0,trans:0,subs:0,kidc:0,alloc:0,seize:0};
+ const r={sal:0,side:0,par:0,aid:0,soc:0,lpp:0,tax:0,div:0,rent:0,biz:0,club:0,build:0,int:0,ser:0,wtax:0,life:0,bfee:0,sav:0,tui:0,rent0:0,lam:0,vie:0,black:0,hus:0,bet:0,fact:0,trans:0,subs:0,kidc:0,alloc:0,seize:0};
  if(Math.random()<.3){const e=rnd(EV);e.f(sh);if(a>=18)log(e.t)}
  if(Math.random()<.1){const e=rnd(LIFE),emp=!!S.job&&!S.ret;if(e.job){if(emp&&S.xp>12){const em=S.job.emp;S.lastSal=S.job.sal;S.quit=0;S.job=null;log(e.t+' Votre contrat prend fin.','Ressources humaines, '+em,'Fin des rapports de travail');orp(log)}}else if(a>=18&&(!e.emp||emp)&&(!e.car||S.dip.permis)){r.life=e.c;log(e.t+' '+money(e.c))}}
  if(mo===0){S.lam*=1.025;S.infl*=1.01;S.p3last=S.p3y;S.p3y=0;if(!S.home&&a>=18)r.ser=335;if(!S.ret){S.raise*=1.012;if(S.job)S.job.sal*=1.012}if(a>=18)log('Nouvelle année : les primes maladie augmentent de 2,5 %.'+(r.ser?' Facture Serafe de CHF 335.':''),'Votre caisse maladie','Votre nouvelle prime')}
@@ -964,9 +1002,9 @@ function next(){if(S.over||S.sit)return null;S.m++;const mo=cal(),d=dateLbl(S.m)
  if(S.job&&a>=25&&S.job.sal*13>22680){r.lpp=r.sal*.05;S.lpp+=r.lpp*2}
  S.lpp*=1+.0125/12;S.p3*=1.003;
  if(S.home&&a>=28&&!S.ret){S.home=false;log('À 28 ans, vous quittez le domicile de vos parents.')}
- if(away()){r.rent0=850*S.infl;r.vie=950*S.infl;r.lblRent='Chambre d\'étudiant';if(a<25)r.par=1400}
- else if(S.home){r.vie=(a<18?350:900)*S.infl;r.rent0=inc>2500?Math.max(500,.2*inc):0;r.lblRent='Pension versée à vos parents';if((st||a<18)&&a<25&&inc<700)r.par=r.vie}
- else{r.rent0=c.rent*S.infl;r.vie=VIE*S.infl+.15*Math.max(0,inc-6000*S.infl);r.lblRent='Loyer'}
+ if(away()){r.rent0=850*S.infl;r.vie=950*c.col*S.infl;r.lblRent='Chambre d\'étudiant';if(a<25)r.par=1400}
+ else if(S.home){r.vie=(a<18?350:900)*c.col*S.infl;r.rent0=inc>2500?Math.max(500,.2*inc):0;r.lblRent='Pension versée à vos parents';if((st||a<18)&&a<25&&inc<700)r.par=r.vie}
+ else{r.rent0=c.rent*S.infl*(S.coloc?.5:1);r.vie=VIE*c.col*S.infl*(S.coloc?.92:1)+.15*Math.max(0,inc-6000*S.infl);r.lblRent=S.coloc?'Loyer en colocation':'Loyer'}
  if(S.partner&&S.partner.live&&!away()){r.rent0*=.55;r.vie*=.9}
  if(!S.home&&!away())r.rent0=Math.max(0,r.rent0+S.rentAdj);
  r.lam=a<18?0:c.lam*S.lam*(a<26?.75:1)*(S.fr===2500?.78:1);if(st)r.tui=stTui(st);
@@ -983,24 +1021,31 @@ function next(){if(S.over||S.sit)return null;S.m++;const mo=cal(),d=dateLbl(S.m)
   tb.forEach(([k],i)=>{const perf=1-i/(tb.length-1),q=S.club[k.id];if(q){const res=S.clubV[k.id]*(-.08+.2*perf)*q;r.club+=res;log('Fin de saison : '+k.n+' termine '+(i+1)+(i?'e':'er')+'. Votre part du résultat : '+money(res)+'.')}
    S.clubV[k.id]*=1+(perf-.5)*.25;S.clubS[k.id]=clamp(.92*S.clubS[k.id]+.08*.55,.2,1)})}
  if(a>=18)r.bfee=B().fee;r.sav=Math.max(0,Math.min(S.cash,250000))*(B().sav+(a<25?.01:0))/12;
+ if(S.black&&!S.job&&!S.ret&&!jl&&!serv){r.black=by(BLACK,S.black).w;
+  if(R(.04)){S.black=null;bill('Amende pour travail au noir',1500,1);if(S.chom>0)S.chomW+=2;log('Contrôle de l\'inspection du travail : amende de '+money(1500)+(S.chom>0?' et suspension de vos indemnités de chômage':'')+'. Votre employeur au noir ne vous rappelle plus.','Inspection du travail','Travail non déclaré')}
+  else if(R(.015)){S.cash-=3000;log('Accident sur votre travail au noir. Sans contrat, pas d\'assurance accidents : '+money(3000)+' de frais à votre charge.')}}else if(S.job||S.ret)S.black=null;
+ Object.keys(S.hus).forEach(id=>{const h=S.hus[id];h.last=husInc(id,h);r.hus+=h.last});if(a>=18)r.soc+=.1*Math.max(0,r.hus);
+ if(S.bet>0&&a>=18){const x=Math.random();r.bet=x<.01?6*S.bet:x<.45?.92*S.bet:-S.bet;S.betTot+=r.bet}
+ if(!S.home&&!away()&&a>=18){const payB=(t,amt,from)=>{if(S.cash>=amt)r.fact+=amt;else{bill(t,Math.round(amt));log('Facture en attente, faute de liquidités : « '+t+' », '+money(amt)+'. Réglez-la dans l\'onglet Vie privée avant la poursuite.',from,'Rappel de facture')}};
+  if(mo===2)payB('Taxe communale sur les déchets',95*S.infl,'Votre commune');if(mo%3===1)payB('Facture d\'électricité',170*S.infl*(S.coloc||(S.partner&&S.partner.live)?.5:1),'Votre fournisseur d\'électricité')}
  r.trans=S.trans==='tp'?(a<25?55:78):S.trans==='ag'?(a<25?245:340):S.trans==='car'&&S.car?430*S.infl+(S.car.lease>0?450:0):0;
  if(S.car){S.car.v*=.985;if(S.car.lease>0&&!--S.car.lease){S.car=null;S.trans='tp';log('Fin du leasing : vous rendez la voiture et reprenez un abonnement.')}}if(S.noDrive>0)S.noDrive--;
  S.subs=S.subs.filter(b=>{r.subs+=b.amt;return b.left<0||--b.left>0});
  S.kids.forEach(b=>{const k=(S.m-b)/12;if(k<20){if(S.partner){r.kidc+=.5*(k<12?900:1100)*S.infl;r.alloc+=.5*(k<16?300:400)}else if(k<18)r.kidc+=900*S.infl}});
  if(S.owe>0){r.seize=clamp(inc-r.soc-r.lpp-r.rent0-r.lam-1200*S.infl,0,S.owe);S.owe-=r.seize;if(S.owe<=0){S.owe=0;log('Vos dettes en poursuite sont entièrement réglées. L\'inscription reste visible cinq ans.','Office des poursuites','Solde de votre dossier')}}else if(S.pours>0)S.pours--;
- const base=inc-r.soc-r.lpp,src=srcTax();let tx=base+r.div+r.sav+Math.max(0,r.rent)+Math.max(0,r.biz);if(!src){const u=Math.min(S.ded,tx);tx-=u;S.ded-=u}r.tax=tx*taxRate(tx)*(src?1.08:1);r.lblTax=src?'Impôt à la source':'Impôts sur le revenu';r.tax*=1-.06*Math.min(3,kidsU());
+ const base=inc-r.soc-r.lpp,src=srcTax();let tx=base+Math.max(0,r.hus)+r.div+r.sav+Math.max(0,r.rent)+Math.max(0,r.biz);if(!src){const u=Math.min(S.ded,tx);tx-=u;S.ded-=u}r.tax=tx*taxRate(tx)*(src?1.08:1);r.lblTax=src?'Impôt à la source':'Impôts sur le revenu';r.tax*=1-.06*Math.min(3,kidsU());
  r.mil=0;if(mo===4&&['pc','inapt','tax'].includes(ml.st)&&a>=19){r.mil=Math.max(400,.03*Math.max(0,base)*12)*(ml.st==='pc'?.8:1);ml.taxN++;log('Taxe d\'exemption de l\'obligation de servir : '+money(r.mil)+'.','Administration cantonale des impôts','Taxe d\'exemption de l\'obligation de servir');if(ml.taxN>=11||a>=37){ml.st='done';log('Vous ne devez plus la taxe d\'exemption.')}}
  r.int=S.loan*B().loan/12+(S.cash<0?-S.cash*.01:0);
  if(dec)r.wtax=Math.max(0,nw()-100000)*c.w;
- const flow=inc+r.par+r.aid-r.soc-r.lpp-r.rent0-r.lam-r.vie-r.tui-r.ser-r.mil-r.trans-r.subs-r.kidc+r.alloc-r.seize+r.life;
- r.tot=flow-r.tax+r.div+r.rent+r.biz+r.club+r.build-r.int-r.wtax+r.sav-r.bfee;
+ const flow=inc+r.par+r.aid-r.soc-r.lpp-r.rent0-r.lam-r.vie-r.tui-r.ser-r.mil-r.trans-r.subs-r.kidc+r.alloc-r.seize+r.black+r.hus-r.fact+r.life;
+ r.tot=flow-r.tax+r.div+r.rent+r.biz+r.club+r.build-r.int-r.wtax+r.sav-r.bfee+r.bet;
  if(st&&a<30&&S.cash+r.tot<0){const x=-(S.cash+r.tot);r.par+=x;r.tot+=x}
  if(a>=18&&!st&&!S.ret&&S.cash+r.tot<0&&nw()+r.tot<1000&&!S.cos.length&&S.loan<=0&&propGross()===0&&landVal()===0){r.aid=-(S.cash+r.tot);r.tot+=r.aid;S.aidLast=S.m;r.lblAid=S.kids.length&&S.job?'PC Familles':'Aide sociale';if(!(S.aidM>S.m-12)){S.aidM=S.m;log('Sans revenu suffisant ni fortune, vous touchez l\'aide sociale. Elle couvre le minimum : cherchez un emploi ou une formation.','Centre social régional','Décision d\'aide')}}
  S.cash+=r.tot;S.rep=r;
  S.bm=S.bm*(a>=18&&S.bm>0?S.px.SMI/etf0+A[0].dv/12:1)+flow-base*taxRate(base);
  if((r.aid||(st&&a<30))&&S.bm<0)S.bm=0;if(dec)S.bm-=Math.max(0,S.bm-100000)*c.w;
  if(S.m===588){const pl=S.lpp*.93,pay=pl+S.p3*.93;S.cash+=pay;S.bm+=pl;S.lpp=S.p3=0;S.ret=true;S.chom=0;S.job=null;S.study=null;S.train=null;S.side=null;log('65 ans : retraite. Votre LPP et votre 3a sont versés, soit '+money(pay)+' après impôt. Vous touchez désormais la rente AVS.','Caisse de compensation AVS','Votre rente de vieillesse')}
- Jj((55-S.joy)*.03-1.2*S.ot+(S.partner?.5:0)+(kidsU()?.3:0)+(S.club1?.5:0)-(S.cash<0?2:0)-(S.pours>0?1:0)-(S.chom>0||(!S.job&&!st&&!S.ret&&a>=18)?1.2:0)-(S.trans==='none'?.3:0));
+ Jj((55-S.joy)*.03-1.2*S.ot+(S.partner?.5:0)+(kidsU()?.3:0)+(S.club1?.5:0)-(S.cash<0?2:0)-(S.pours>0?1:0)-(S.chom>0||(!S.job&&!st&&!S.ret&&a>=18)?1.2:0)-(S.trans==='none'?.3:0)-.4*nHus());
  if(S.job&&S.ot)Pp(.3*S.ot);
  S.bills=S.bills.filter(b=>{if(--b.left>0)return true;const x=Math.round(b.amt*1.25+70);
   if(b.pen&&S.cash<x&&nw()<x){S.jail=1;S.record=true;log('Amende impayée : « '+b.t+' ». Faute de paiement, elle est convertie en peine privative de liberté de substitution. Vous passez un mois en prison.','Ministère public','Conversion de votre amende')}
@@ -1057,7 +1102,16 @@ function act(a,id){
    toast(S.over?'Partie terminée.':S.sit?'Une situation demande votre décision.':S.cash<0?'Compte à découvert : vendez un actif ou empruntez.':(a==='year'?'Résultat sur 12 mois : ':'Résultat du mois : ')+money(t)+'.',S.over||S.cash<0);if(S.sit)try{window.scrollTo(0,0)}catch(e){}}}
  else if(a==='move'){if(id===S.canton)toast('Vous y habitez déjà.',1);else if(pay(4000,'déménager')){S.canton=id;toast('Vous déménagez à '+C().city+'.')}}
  else if(a==='side'){if(id==='none'){S.side=null;toast('Vous arrêtez votre petit job.')}else{const x=by(SIDE,id);if(x&&age()>=x.min&&!S.job&&!S.ret){S.side=id;toast('Nouveau petit job : '+T(x.n)+', '+money(x.w)+' par mois.')}}}
- else if(a==='home'){if(S.home){if(S.pours>0)toast('Les gérances exigent un extrait du registre des poursuites vierge : impossible de signer un bail pour l\'instant.',1);else if(age()>=18){S.home=false;toast('Vous emménagez dans votre propre logement.')}}else if(age()<28){S.home=true;toast('Vous retournez vivre chez vos parents.')}}
+ else if(a==='home'){const rent=C().rent*S.infl,g=gross();
+  if(id==='back'){if(!S.home&&age()<28){S.cash+=S.dep;S.dep=0;S.home=true;S.coloc=false;if(S.partner)S.partner.live=false;toast('Vous retournez vivre chez vos parents. Votre garantie de loyer vous est rendue.')}}
+  else if(S.home&&age()>=18){const k=id==='coloc'?.5:1,need=3*k*rent,cost=3*k*rent+(id==='coloc'?800:2500);
+   if(S.pours>0)toast('Les gérances exigent un extrait du registre des poursuites vierge : impossible de signer un bail pour l\'instant.',1);
+   else if(g<need)toast('Dossier refusé : la gérance exige un revenu brut de '+money(need)+' par mois. Le vôtre est de '+money(g)+'.',1);
+   else if(pay(cost,'la garantie de loyer et l\'installation')){S.dep=3*k*rent;S.home=false;S.coloc=id==='coloc';toast(id==='coloc'?'Vous emménagez en colocation.':'Vous emménagez dans votre appartement. Loyer, électricité, taxe déchets et redevance sont désormais pour vous.')}}}
+ else if(a==='black'){if(id==='none'){S.black=null;toast('Vous arrêtez le travail non déclaré.')}else if(by(BLACK,id)&&!S.job&&!S.ret){S.black=id;toast('Vous acceptez. Aucun contrat, aucune protection : vous êtes prévenu'+ee()+'.')}}
+ else if(a==='hus'){const x=by(HUS,id);if(!x)return false;if(S.hus[id]){delete S.hus[id];if(id==='scoot')S.cash+=1200;toast('Activité arrêtée.'+(id==='scoot'?' Scooter revendu '+money(1200)+'.':''))}
+  else if(age()>=x.min&&nHus()<2&&!S.ret&&pay(x.c,'la mise de départ')){S.hus[id]={m:0,last:0,fol:50};toast('Lancé : '+x.n+'. Premiers résultats le mois prochain.')}}
+ else if(a==='bet'){const v=+id||0;if(v===0||age()>=18){S.bet=[0,50,200,500].includes(v)?v:0;toast(S.bet?'Vous misez '+money(S.bet)+' par mois.':'Vous arrêtez les paris.')}}
  else if(a==='study'){const[k,f,u,x]=id.split(':');if(!S.study&&!S.ret){startStudy(k,f,u,x==='afo'&&S.chom>0&&age()>=30);toast('Inscription confirmée : '+stName(S.study)+'.')}}
  else if(a==='drop'){if(armed==='drop'){S.study=null;armed=false;toast('Formation interrompue.')}else armed='drop'}
  else if(a==='quit'){if(armed==='quit'){S.lastSal=S.job?S.job.sal:0;S.quit=1;S.job=null;armed=false;toast('Vous avez démissionné. Vous pouvez vous inscrire au chômage, avec deux mois de suspension.')}else armed='quit'}
