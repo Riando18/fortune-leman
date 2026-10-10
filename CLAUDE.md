@@ -56,3 +56,10 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Sons : `beep()` (WebAudio, sans fichier), préférence `fortune-leman-snd` hors état, réglage dans `vAide()`.
 - Sur téléphone (700 px et moins), l'en-tête tient sur une ligne : la devise se règle dans Réglages, le bouton de l'en-tête n'affiche que la roue.
 - Test de toutes les situations : forcer `S.sit` pour chaque entrée de `SITS` dans un état riche (emploi, couple, enfant, entreprise, bien, titres) et exécuter chaque choix.
+
+## Ce qui donne envie de continuer
+- Rêve de vie : `DREAMS` (chacun avec `p()` de 0 à 1), choisi dans `vDream()` tant que `S.dream` est vide (aussi pour les anciennes sauvegardes), accompli dans `S.dreamDone`. Milieu de départ `BGS` dans `S.bg` (modeste, moyen, aisé), choisi avant le 3e mois, avec un coefficient sur le score.
+- `vCap()` en tête de l'accueil : barre du rêve et « prochaine étape » calculée par `nextStep()`. Y ajouter un cas quand une nouvelle mécanique mérite d'être mise en avant.
+- Moments : `mom(émoji, titre, texte)` remplit `S.mom`, affiché par `vMom()`. Un moment bloque « Mois suivant » jusqu'à « Continuer ». `track()` en crée pour les grandes étapes, et `recap()` fait le point à 18 ans puis tous les 5 ans (comparaison avec `medNw()`, médiane inventée).
+- Histoires à suites : drapeaux dans `S.fl`. Chaînes actuelles : prêt à un ami (`pret_ami`, `pret_suite`, `ami_retour`, `ami_refus`), collègue rival (`rival1`, `rival2`), faveur du chef (`faveur`, `faveur2`), jeune entreprise (`startup`, `startup2`), Madame Rochat (`voisine1`, `voisine2`). Une suite vérifie son délai avec le mois stocké dans `S.fl`.
+- Dans un test Node, vider `S.mom` avec `act('momok')` et choisir un rêve avant d'enchaîner les mois.
