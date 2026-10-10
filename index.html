@@ -320,7 +320,7 @@ const LIFE=[
  {t:'Franchise et quote-part après une visite médicale.',c:-900},
  {t:'Prime exceptionnelle de votre employeur.',c:2500,emp:1},
  {t:'Restructuration : vous perdez votre emploi. Chômage à 70 % pendant 4 mois.',c:0,job:1}];
-const TABS=[['apercu','Aperçu','--accent'],['vie','Parcours','--accent'],['s','Bourse','--stock'],['c','Crypto','--crypto'],['immo','Immobilier','--immo'],['biz','Entreprises','--biz'],['club','Participations','--club'],['banque','Banque','--cash'],['aide','Aide','--accent']];
+const TABS=[['apercu','Aperçu','--accent'],['vie','Parcours','--accent'],['s','Bourse','--stock'],['c','Crypto','--crypto'],['immo','Immobilier','--immo'],['biz','Entreprises','--biz'],['club','Participations','--club'],['banque','Banque','--cash'],['aide','Sauvegardes et aide','--accent']];
 const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const VIE=1500,CAP3A=7258,AVS=2520,KEY='fortune-leman-4';
 const BANKS=[
@@ -361,7 +361,7 @@ const TUT=[
  {tab:'immo',h:'L\'immobilier',p:'La banque prête 80 % du prix. Vous apportez 20 %, plus 4 % de frais. Elle vérifie aussi que vos revenus supportent les charges, et refuse sinon. Le loyer encaissé paie l\'hypothèque et l\'entretien, le reste est pour vous. Plus tard, vous pourrez acheter un terrain et y construire.'},
  {tab:'biz',h:'Les entreprises',p:'Choisissez un domaine et payez le capital de départ. La première année est souvent déficitaire : gardez de la trésorerie. Engagez seulement quand la demande du marché dépasse votre effectif. Les apprentis CFC et AFP coûtent peu et rejoignent l\'équipe une fois diplômés. Une machine par employé augmente la production.'},
  {tab:'banque',h:'Banque et prévoyance',p:'Choisissez votre banque : frais, intérêts, courtage et taux hypothécaire changent de l\'une à l\'autre. Un versement dans le pilier 3a réduit vos impôts, mais l\'argent reste bloqué jusqu\'à 65 ans. Le crédit privé coûte cher : gardez-le pour les urgences. Le bouton CHF / EUR en haut convertit tous les montants.'},
- {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. La bourse, l\'immobilier et les entreprises s\'ouvrent à vos 18 ans. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Vous retrouvez ce tutoriel et le lexique dans l\'onglet Aide.'}];
+ {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. La bourse, l\'immobilier et les entreprises s\'ouvrent à vos 18 ans. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Votre partie s\'enregistre toute seule. Vous retrouvez ce tutoriel, le lexique et les sauvegardes dans le dernier onglet.'}];
 const invested=()=>secVal('s')+secVal('c')+propGross()+cosVal()>0;
 const MIS=[
  {t:'Jouer votre premier mois',w:'Appuyez sur « Mois suivant » pour faire avancer le temps.',tab:'apercu',ok:()=>S.m>=1},
@@ -445,7 +445,12 @@ const fixed=()=>S.rep?S.rep.rent0+S.rep.lam+S.rep.vie+S.rep.tui:500;
 const taxRate=tx=>{const an=tx*12;return Math.min(.4,C().tax*(an<=15000?0:an<=80000?(an-15000)/65000:Math.min(2.6,1+(an-80000)/170000*.88)))};
 const clubOpen=()=>nw()>=1e6||caYear()>=1e6;
 function toast(t,bad){$('toast').textContent=t;$('toast').className=bad?'down':''}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let saveOk=true;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));saveOk=true}catch(e){saveOk=false}}
+const slot=n=>{try{return JSON.parse(localStorage.getItem('fortune-leman-slot-'+n))}catch(e){return null}};
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+const dec=t=>JSON.parse(decodeURIComponent(escape(atob(String(t).replace(/\s+/g,'')))));
+const valid=o=>o&&o.v===4&&o.px&&o.hold&&Array.isArray(o.cos)&&A.every(a=>o.px[a.id]>0);
 function spark(h){h=h.slice(-24);if(h.length<2)return'';const lo=Math.min(...h),hi=Math.max(...h),r=hi-lo||1;
  const pts=h.map((v,i)=>(i/(h.length-1)*70).toFixed(1)+','+(20-(v-lo)/r*18).toFixed(1)).join(' ');
  return`<svg width="72" height="22" viewBox="0 0 72 22" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="var(--${h[h.length-1]>=h[0]?'up':'down'})" stroke-width="1.5"/></svg>`}
@@ -576,6 +581,13 @@ function checkMis(){MIS.forEach((m,i)=>{if(!S.mis[i]&&m.ok()){S.mis[i]=1;S.log.u
 function vMis(){const todo=MIS.map((m,i)=>[m,i]).filter(x=>!S.mis[x[1]]),done=MIS.length-todo.length;
  return`<section class="panel" style="margin-top:12px"><h3>Missions · ${done} sur ${MIS.length}</h3>${todo.length?`<ul class="log mis">${todo.slice(0,3).map(([m])=>`<li><div><b>${m.t}</b><span>${m.w}</span></div><button class="b" data-act="tab" data-id="${m.tab}">Y aller</button></li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Toutes les missions sont accomplies.</p>'}</section>`}
 function vAide(){return`<h2>Aide</h2><div class="panel"><h3>Comment se joue un tour</h3><p style="margin:0 0 10px;max-width:65ch">Vous prenez vos décisions dans les onglets, puis vous appuyez sur « Mois suivant ». Le jeu verse votre salaire, prélève vos charges et vos impôts, fait bouger les marchés et calcule le résultat de vos entreprises. La partie se termine par un bilan à 65 ans, mais vous pouvez continuer ensuite.</p><button class="b go" data-act="help">Revoir le tutoriel</button></div>
+ <div class="panel" style="margin-top:12px"><h3>Sauvegardes</h3><p style="margin:0 0 6px;max-width:65ch">${saveOk?'Votre partie est enregistrée automatiquement sur cet appareil après chaque action. Vous pouvez quitter le jeu et revenir : elle reprend où vous l\'avez laissée.':'<span class="down">Ce navigateur bloque l\'enregistrement, par exemple en navigation privée. Votre partie sera perdue à la fermeture : utilisez le code de sauvegarde ci-dessous.</span>'}</p>
+ <p class="sub">Safari et l'icône de l'écran d'accueil gardent des parties séparées. Ouvrez toujours le jeu par le même chemin.</p>
+ <table>${[1,2,3].map(n=>{const x=slot(n);return`<tr><td>Emplacement ${n}<span class="sub">${x?esc(x.label):'Vide'}</span></td><td><button class="b go" data-act="slotsave" data-id="${n}">Enregistrer</button> <button class="b" data-act="slotload" data-id="${n}" ${x?'':'disabled'}>${armed==='slotload'+n?'Confirmer':'Charger'}</button></td></tr>`}).join('')}</table>
+ <p class="sub">Charger un emplacement remplace la partie en cours.</p>
+ <h3 style="margin-top:14px">Code de sauvegarde</h3><p class="sub" style="margin-bottom:8px">Pour changer de téléphone ou garder une copie hors du jeu : copiez le code, collez-le dans Notes, puis recollez-le ici plus tard.</p>
+ <textarea class="txt" id="code" rows="3" style="max-width:100%;font-family:var(--mono);font-size:12px" placeholder="Collez ici un code de sauvegarde" aria-label="Code de sauvegarde"></textarea>
+ <div class="ctl l" style="margin-top:8px"><button class="b go" data-act="codecopy">Copier le code de ma partie</button><button class="b" data-act="coderest">Restaurer ce code</button></div></div>
  <div class="panel" style="margin-top:12px"><h3>Lexique</h3><dl class="lex">${LEX.map(l=>`<dt>${l[0]}</dt><dd>${l[1]}</dd>`).join('')}</dl></div>`}
 function render(){const v=nw(),on=!!S.canton;$('nw').textContent=money(v);
  $('meta').innerHTML=on?`<span>${S.name?esc(S.name)+' · ':''}${dateLbl(S.m)} · ${age()} ans · ${C().n}</span><span>Liquidités <b class="num ${S.cash<0?'down':''}">${money(S.cash)}</b></span><span>Rang <b>${rank(v)}</b></span><span class="num">1 € = CHF ${S.fx.toFixed(3)}</span>`:'<span>Choisissez votre canton pour commencer.</span>';
@@ -664,6 +676,10 @@ function next(){if(S.over)return;S.m++;const mo=cal(),d=dateLbl(S.m),sh={s:0,c:0
 function act(a,id){
  if(a==='tab'){S.tab=id;toast('')}
  else if(a==='cur'){S.cur=id}
+ else if(a==='slotsave'){try{localStorage.setItem('fortune-leman-slot-'+id,JSON.stringify({label:(S.name?S.name+' · ':'')+age()+' ans · '+C().n+' · '+money(nw())+' · '+dateLbl(S.m),state:S}));toast('Partie enregistrée dans l\'emplacement '+id+'.')}catch(e){toast('Enregistrement impossible sur ce navigateur.',1)}}
+ else if(a==='slotload'){const x=slot(id);if(!x||!valid(x.state))toast('Cet emplacement est vide ou illisible.',1);else if(armed==='slotload'+id){S=Object.assign(fresh(),x.state);S.tab='apercu';armed=false;toast('Partie chargée : '+x.label+'.')}else armed='slotload'+id}
+ else if(a==='codecopy'){const t=enc(S),el=$('code');if(el){el.value=t;if(el.select)el.select()}const ok=()=>toast('Code copié. Collez-le dans Notes pour le garder.');try{navigator.clipboard.writeText(t).then(ok,()=>toast('Le code est affiché dans la case : copiez-le à la main.'))}catch(e){toast('Le code est affiché dans la case : copiez-le à la main.')}return false}
+ else if(a==='coderest'){let o=null;try{o=dec(($('code')||{}).value||'')}catch(e){}if(!valid(o)){toast('Code illisible. Collez le code complet, sans rien ajouter.',1);return false}S=Object.assign(fresh(),o);S.tab='apercu';toast('Partie restaurée à partir du code.')}
  else if(a==='help'){if(S.canton){S.tut=0;S.tab=TUT[0].tab}}
  else if(a==='tnext'){S.tut++;if(S.tut>=TUT.length)S.tut=-1;else S.tab=TUT[S.tut].tab}
  else if(a==='tskip'){S.tut=-1}
@@ -718,9 +734,9 @@ function act(a,id){
  else if(a==='borrow'||a==='repay'){let x=qty('loan')*(S.cur==='EUR'?S.fx:1);if(!x)toast('Entrez un montant valable.',1);
   else if(a==='borrow'){x=Math.min(x,loanCap());if(x<1)toast('Capacité d\'emprunt épuisée.',1);else{S.loan+=x;S.cash+=x;toast('Emprunté : '+money(x)+'.')}}
   else{x=Math.min(x,S.loan,Math.max(0,S.cash));if(x<1)toast('Rien à rembourser avec vos liquidités actuelles.',1);else{S.loan-=x;S.cash-=x;toast('Remboursé : '+money(x)+'.')}}}}
-document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const k=el.dataset.act;if(armed&&armed!==(k==='new'?true:k))armed=false;if(act(el.dataset.act,el.dataset.id)!==false)render()});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const k=el.dataset.act,i=el.dataset.id||'';if(armed&&!(armed===true&&k==='new')&&armed!==k&&armed!==k+i)armed=false;if(act(el.dataset.act,el.dataset.id)!==false)render()});
 function start(d){let s=d&&d.S;if(!s){try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}}
- const f=fresh();S=s&&s.v===4&&s.px&&A.every(a=>s.px[a.id]>0)&&Array.isArray(s.cos)?Object.assign(f,s):f;render()}
+ const f=fresh(),ok=valid(s);S=ok?Object.assign(f,s):f;render();if(ok&&S.canton)toast('Partie reprise : '+(S.name?S.name+', ':'')+age()+' ans, '+dateLbl(S.m)+'.');try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
 window.claude?.hot?.snapshot?.(()=>({S}));
 window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
 </script>
