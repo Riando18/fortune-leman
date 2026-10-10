@@ -89,6 +89,7 @@ select.txt{font-size:16px;height:44px}
 .ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .who{display:flex;gap:10px;align-items:center}.who>div,.who>span:last-child{min-width:0}
 .logo{width:46px;height:46px;flex:none;margin-top:2px}
+.gd summary{display:flex;justify-content:space-between;gap:10px;cursor:pointer;list-style:none}.gd summary span{white-space:nowrap}.gd summary::-webkit-details-marker{display:none}.gd summary b::before{content:'+ ';color:var(--accent)}.gd[open] summary b::before{content:'− '}.gd ul{margin:10px 0 6px;padding:0;list-style:none;font-size:14px}.gd p{margin:6px 0;max-width:65ch;font-size:14px}
 .tut{border:2px solid var(--accent);border-radius:10px;padding:14px;background:var(--surface);margin-bottom:12px}
 .mis li{display:flex;gap:10px;align-items:center;justify-content:space-between}
 .help{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;font:600 13px var(--body);padding:7px 14px;cursor:pointer}
@@ -258,6 +259,10 @@ const FIELDS=[
  {id:'sante',n:'Santé',base:4900,app:1,afp:1,hes:'HES en soins infirmiers',t:['Auxiliaire de santé','Aide en soins et accompagnement AFP','Assistant en soins et santé communautaire CFC','Assistant en soins spécialisé','Infirmier diplômé HES','Infirmier chef','Directeur des soins'],e:['CHUV','HUG','Inselspital','Hirslanden','HFR Fribourg','Réseau hospitalier neuchâtelois','Hôpital du Valais','USZ']},
  {id:'soc',n:'Social et éducation',base:4800,app:1,afp:1,hes:'HES en travail social',t:['Auxiliaire de vie','Aide en soins et accompagnement AFP','Assistant socio-éducatif CFC','Assistant socio-éducatif spécialisé','Éducateur social HES','Responsable d\'équipe éducative','Directeur d\'institution'],e:['Fondation de Vernand','Pro Infirmis','Caritas','Pro Senectute','Ville de Lausanne','Fondation Eben-Hézer','Croix-Rouge suisse']},
  {id:'auto',n:'Automobile et transports',base:5000,app:1,afp:1,t:['Laveur de voitures','Assistant en maintenance d\'automobiles AFP','Mécatronicien d\'automobiles CFC','Diagnosticien d\'automobiles','Chef d\'atelier','Responsable après-vente','Directeur de garage'],e:['AMAG','Emil Frey','TCS','CarPostal','Transports publics lausannois','TPG']},
+ {id:'banq',n:'Banque et assurance',base:5600,app:1,afp:0,t:['Aide au guichet','Assistant bancaire','Employé de banque CFC','Conseiller clientèle','Conseiller en patrimoine','Responsable d\'agence','Directeur régional'],e:['UBS','BCV','Raiffeisen','PostFinance','Banque Migros','Zurich Assurances','AXA','Helvetia','La Mobilière','Swiss Life']},
+ {id:'hor',n:'Horlogerie',base:5300,app:1,afp:1,t:['Ouvrier en horlogerie','Opérateur en horlogerie AFP','Horloger CFC','Horloger rhabilleur','Technicien en microtechnique','Responsable d\'atelier horloger','Directeur de manufacture'],e:['Rolex','Patek Philippe','Audemars Piguet','Jaeger-LeCoultre','Swatch Group','Breitling','TAG Heuer','Vacheron Constantin']},
+ {id:'coif',n:'Coiffure',base:4100,app:1,afp:1,t:['Aide en salon','Coiffeur AFP','Coiffeur CFC','Coiffeur spécialisé','Gérant de salon','Formateur en coiffure','Directeur de chaîne de salons'],e:['Gidor Coiffure','Salon indépendant à Lausanne','Salon indépendant à Genève','Salon indépendant à Berne','Salon indépendant à Fribourg']},
+ {id:'agri',n:'Agriculture et viticulture',base:4300,app:1,afp:1,t:['Ouvrier agricole','Agropraticien AFP','Agriculteur CFC','Chef de cultures','Agrotechnicien','Chef d\'exploitation','Directeur de domaine'],e:['fenaco','Domaine viticole en Lavaux','Exploitation familiale','Agroscope','Provins','Schenk']},
  {id:'droit',n:'Droit',base:4600,uni:['unil','unige','unifr','unine','unibe','uzh','unibas'],t:[,,,,'Assistant juridique','Juriste','Avocat associé'],e:['Lenz & Staehelin','Schellenberg Wittmer','Kellerhals Carrard','État de Vaud','Tribunal cantonal','La Mobilière','UBS']},
  {id:'med',n:'Médecine',base:4800,uni:['unil','unige','unibe','uzh','unibas'],t:[,,,,,'Médecin assistant','Médecin spécialiste FMH'],e:['CHUV','HUG','Inselspital','USZ','Hirslanden','Hôpital du Valais']},
  {id:'eco',n:'Économie (HEC)',base:4700,uni:['unil','unige','unifr','unine','unibe','uzh','unibas','usi'],t:[,,,,'Analyste','Analyste financier','Directeur financier'],e:['UBS','BCV','Pictet','Lombard Odier','Nestlé','PwC','KPMG','Deloitte','Banque nationale suisse']},
@@ -266,7 +271,10 @@ const FIELDS=[
  {id:'lettres',n:'Lettres et sciences humaines',base:4000,uni:['unil','unige','unifr','unine','unibe','uzh','unibas'],t:[,,,,'Chargé de communication','Journaliste','Rédacteur en chef'],e:['RTS','Tamedia','Ringier','État de Vaud','Ville de Genève','Payot']},
  {id:'pharma',n:'Pharmacie',base:4700,uni:['unige','unibas','ethz','unibe'],t:[,,,,'Préparateur en pharmacie','Pharmacien','Pharmacien responsable'],e:['Amavita','Sun Store','Benu','Roche','Novartis','Galenica']},
  {id:'archi',n:'Architecture',base:4500,uni:['epfl','ethz','usi'],t:[,,,,'Architecte junior','Architecte','Architecte associé'],e:['Herzog & de Meuron','Richter Dahl Rocha','Implenia','Losinger Marazzi','État de Vaud']},
- {id:'ens',n:'Enseignement',base:4100,t:[,,,,,'Enseignant','Directeur d\'établissement scolaire'],e:['État de Vaud','État de Genève','État de Fribourg','État de Neuchâtel','Canton de Berne']}];
+ {id:'ens',n:'Enseignement',base:4100,t:[,,,,,'Enseignant','Directeur d\'établissement scolaire'],e:['État de Vaud','État de Genève','État de Fribourg','État de Neuchâtel','Canton de Berne']},
+ {id:'pol',n:'Police',base:5600,t:[,,,'Policier','Sergent','Inspecteur principal','Commissaire'],e:['Police cantonale vaudoise','Police municipale de Lausanne','Police cantonale genevoise','Police cantonale fribourgeoise','Police cantonale bernoise','Police neuchâteloise','Police cantonale valaisanne']},
+ {id:'rail',n:'Transports ferroviaires',base:5500,t:[,,,'Conducteur de locomotive','Chef circulation des trains','Responsable d\'exploitation','Directeur d\'exploitation']
+,e:['CFF','BLS','MOB','TPF','Chemins de fer du Jura','RhB']}];
 const UNIS=[{id:'unil',n:'Université de Lausanne',s:'UNIL',c:'VD'},{id:'epfl',n:'EPFL',s:'EPFL',c:'VD'},{id:'unige',n:'Université de Genève',s:'UNIGE',c:'GE'},{id:'unifr',n:'Université de Fribourg',s:'UNIFR',c:'FR'},{id:'unine',n:'Université de Neuchâtel',s:'UNINE',c:'NE'},{id:'unibe',n:'Université de Berne',s:'UniBE',c:'BE'},{id:'uzh',n:'Université de Zurich',s:'UZH',c:'ZH'},{id:'ethz',n:'EPF de Zurich',s:'ETHZ',c:'ZH'},{id:'unibas',n:'Université de Bâle',s:'UniBas',c:'BS'},{id:'usi',n:'Université de la Suisse italienne',s:'USI',c:'TI'}];
 const SIDE=[{id:'baby',n:'Baby-sitting',w:300,ch:.02,min:16},{id:'rep',n:'Répétiteur',w:450,ch:.03,min:16},{id:'caisse',n:'Caissier le samedi',w:650,ch:.04,min:16},{id:'livr',n:'Livreur à vélo',w:900,ch:.07,min:18},{id:'serv',n:'Serveur le soir',w:1200,ch:.1,min:18},{id:'nuit',n:'Auxiliaire logistique de nuit',w:1500,ch:.14,min:18}];
 const TRAIN=[
@@ -276,16 +284,24 @@ const TRAIN=[
  {id:'brevet',n:'Brevet fédéral',c:12000,mo:18,sub:1,d:'Exige un CFC et 2 ans d\'expérience. Ouvre les postes de chef d\'équipe et de spécialiste. La Confédération rembourse la moitié à la réussite.',ok:()=>!!S.dip.cfc&&!S.dip.brevet&&S.xp>=24},
  {id:'es',n:'Diplôme ES',c:21000,mo:36,d:'Exige un CFC. Ouvre les postes de cadre dans votre branche.',ok:()=>!!S.dip.cfc&&!S.dip.es&&!S.dip.hes},
  {id:'df',n:'Diplôme fédéral (maîtrise)',c:16000,mo:18,sub:1,d:'Exige le brevet fédéral et 4 ans d\'expérience. Avec 8 ans d\'expérience, il ouvre les postes de responsable. La Confédération rembourse la moitié à la réussite.',ok:()=>!!S.dip.brevet&&!S.dip.df&&S.xp>=48},
+ {id:'art32',n:'CFC par l\'article 32 (candidat libre)',c:4000,mo:12,d:'Exige 5 ans d\'expérience et un emploi dans une branche où vous n\'avez pas de CFC. Cours du soir, puis l\'examen final, sans refaire d\'apprentissage.',ok:()=>S.xp>=60&&!!S.job&&!!by(FIELDS,S.job.f).app&&S.dip.cfc!==S.job.f&&S.dip.cfc0!==S.job.f},
  {id:'mba',n:'Executive MBA',c:65000,mo:24,d:'Exige un diplôme supérieur et 6 ans d\'expérience. Ouvre les postes de direction.',ok:()=>!S.dip.mba&&S.xp>=72&&FIELDS.some(f=>qlvl(f.id)>=4)}];
-const FEMW={chef:'cheffe','sous-chef':'sous-cheffe',ingénieur:'ingénieure',serveur:'serveuse',vendeur:'vendeuse',coiffeur:'coiffeuse',livreur:'livreuse',laveur:'laveuse',maçon:'maçonne',apprenti:'apprentie',assistant:'assistante',qualifié:'qualifiée',spécialisé:'spécialisée',diplômé:'diplômée',associé:'associée',social:'sociale',financier:'financière',régional:'régionale',administratif:'administrative'};
+const FEMW={chef:'cheffe','sous-chef':'sous-cheffe',ingénieur:'ingénieure',serveur:'serveuse',vendeur:'vendeuse',coiffeur:'coiffeuse',livreur:'livreuse',laveur:'laveuse',maçon:'maçonne',horloger:'horlogère',sergent:'sergente',principal:'principale',apprenti:'apprentie',assistant:'assistante',qualifié:'qualifiée',spécialisé:'spécialisée',diplômé:'diplômée',associé:'associée',social:'sociale',financier:'financière',régional:'régionale',administratif:'administrative'};
 function femW(w,first){const l=w.toLowerCase();let o=FEMW[l];if(!o&&first)o=l.endsWith('teur')?l.slice(0,-4)+'trice':l.endsWith('ien')?l+'ne':l.endsWith('ier')?l.slice(0,-2)+'ère':l.endsWith('é')?l+'e':l.endsWith('ant')?l+'e':l==='avocat'?'avocate':null;
  if(!o)return w;return w[0]!==l[0]?o[0].toUpperCase()+o.slice(1):o}
 const T=t=>S.sex==='f'?t.split(' ').map((w,i)=>femW(w,i===0)).join(' '):t;
 const ee=()=>S.sex==='f'?'e':'';
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
-function qlvl(f){const d=S.dip,F=by(FIELDS,f);if(f==='med')return d.med?(d.fmh?6:5):0;if(f==='ens')return d.hep?5:0;
- let l=0;if(d.afp===f)l=1;if(d.cfc===f)l=2;if(d.cfc===f&&d.brevet===f)l=3;if(d.es===f||d.hes===f||d.ba===f)l=4;if((l>=2&&d.df===f&&S.xp>=96)||d.ma===f||(l>=4&&d.mba))l=5;if(l>=5&&S.xp>=180)l=6;
+function qlvl(f){const d=S.dip,F=by(FIELDS,f),x=S.xp;if(f==='med')return d.med?(d.fmh?6:5):0;if(f==='ens')return d.hep?5:0;
+ if(f==='pol'||f==='rail')return d[f==='pol'?'pol':'loco']?3+(x>=96?1:0)+(x>=168?1:0)+(x>=240?1:0):0;
+ const c=d.cfc===f||d.cfc0===f;let l=0;if(d.afp===f)l=1;if(c)l=2;if(c&&d.brevet===f)l=3;if(d.es===f||d.hes===f||d.ba===f)l=4;if((l>=2&&d.df===f&&x>=96)||d.ma===f||(l>=4&&d.mba))l=5;if(l>=5&&x>=180)l=6;
  if(!l&&F.app&&(d.cfc||d.afp||d.ba||d.hes))l=1;return l}
+const chomRate=()=>S.chomBase<3797?.8:.7;
+const chomDur=()=>{const a=age();return a<25?9:a>=55?24:S.contrib>=18?18:12};
+const maxAp=()=>S.chom>0?5:3;
+const tcost=x=>S.chom>0&&(x.id==='de'||x.id==='en')?0:x.c;
+function orp(log){if(S.contrib>=12&&S.lastSal>0){S.chomBase=S.lastSal;S.chom=chomDur();S.chomW=S.quit?2:0;S.contrib=0;S.quit=0;log('Inscription à l\'ORP : '+S.chom+' mois d\'indemnités à '+Math.round(chomRate()*100)+' % de votre dernier salaire.'+(S.chomW?' Deux mois de suspension pour départ volontaire.':''));return true}
+ log('Vous n\'avez pas cotisé 12 mois dans les 2 dernières années : pas de droit au chômage.');return false}
 const langs=()=>(S.dip.de?1:0)+(S.dip.en?1:0);
 const salary=(f,lvl,ef)=>Math.round(by(FIELDS,f).base*LM[lvl]*C().sal/5900*ef*S.raise*(1+Math.min(.2,.01*S.xp/12))*(1+.03*langs())*(f==='droit'&&lvl>=5&&S.dip.av?1.25:1)/50)*50;
 const jobTitle=j=>T(j.f==='droit'&&j.lvl===5&&S.dip.av?'Avocat':by(FIELDS,j.f).t[j.lvl]);
@@ -293,30 +309,56 @@ function genOffers(){const q=FIELDS.map(f=>[f,qlvl(f.id)]),mx=Math.max(...q.map(
  for(let i=0;i<6;i++){const f=i<3?rnd(main):rnd(apps),lo=f.t.findIndex(x=>x);const l=clamp(i<3?mx+rnd([-1,0,0,1]):rnd([0,0,1,2]),lo,6);o.push({f:f.id,lvl:l,emp:rnd(f.e),ef:.92+.2*Math.random(),done:0})}
  S.offers=o;S.apN=0}
 function chance(o){const q=qlvl(o.f);if(q<o.lvl)return 0;if(o.lvl===0)return !S.ch&&S.permit==='B'?.65:.75;return Math.min(.92,.35+.15*(q-o.lvl)+.05*langs()+(S.dip.permis?.04:0)+Math.min(.15,S.xp/12*.02))*(o.lvl>=6?.2:o.lvl===5?.5:1)*(!S.ch&&S.permit==='B'?.85:1)}
-const stWage=st=>st.k==='cfc'?[750,950,1250][st.y-1]:st.k==='afp'?[650,850][st.y-1]:st.k==='av'?3500:0;
+const stWage=st=>st.afo?3500:st.k==='pol'?4500:st.k==='loco'?4200:st.k==='cfc'?[750,950,1250][st.y-1]:st.k==='afp'?[650,850][st.y-1]:st.k==='av'?3500:0;
 const stTui=st=>['ba','ma','med'].includes(st.k)?120:st.k==='hes'?(st.f==='gastro'?1500:150):st.k==='hep'?100:0;
-const stP=st=>{const last=st.y===st.n;return st.k==='cfc'?(last?.93:.98):st.k==='afp'?(last?.95:.98):st.k==='gym'?.9:st.k==='med'?(st.y===1?.5:.82):st.k==='ba'?.82:st.k==='av'?(last?.65:.99):st.k==='hep'?.92:.88};
+const stP=st=>{const last=st.y===st.n;return st.k==='cfc'?(last?.93:.98):st.k==='afp'?(last?.95:.98):st.k==='gym'?.9:st.k==='med'?(st.y===1?.5:.82):st.k==='ba'?.82:st.k==='av'?(last?.65:.99):st.k==='hep'?.92:st.k==='pol'||st.k==='loco'?.9:.88};
 function stName(st){const F=st.f&&by(FIELDS,st.f),U=st.uni&&by(UNIS,st.uni);
- return st.k==='cfc'?'Apprentissage · '+T(F.t[2])+' chez '+st.emp:st.k==='afp'?'Apprentissage · '+T(F.t[1])+' chez '+st.emp:st.k==='gym'?'Gymnase':st.k==='matupro'?'Maturité professionnelle':st.k==='ba'?'Bachelor · '+F.n+' · '+U.n:st.k==='ma'?'Master · '+F.n+' · '+U.n:st.k==='med'?'Médecine · '+U.n:st.k==='hes'?F.hes:st.k==='av'?'Stage d\'avocat chez '+st.emp:'Haute école pédagogique (HEP)'}
-function startStudy(k,f,u){const n={cfc:3,afp:2,gym:3,matupro:1,ba:3,ma:2,med:6,hes:3,av:2,hep:2}[k];
- S.study={k,f:f||null,uni:u||null,emp:k==='cfc'||k==='afp'?rnd(by(FIELDS,f).e):k==='av'?rnd(by(FIELDS,'droit').e.slice(0,3)):null,y:k==='cfc'&&(S.dip.afp===f||S.dip.matu)?2:1,n,left:12,fails:0};
+ return st.k==='cfc'?'Apprentissage · '+T(F.t[2])+' chez '+st.emp:st.k==='afp'?'Apprentissage · '+T(F.t[1])+' chez '+st.emp:st.k==='gym'?'Gymnase':st.k==='matupro'?'Maturité professionnelle':st.k==='ba'?'Bachelor · '+F.n+' · '+U.n:st.k==='ma'?'Master · '+F.n+' · '+U.n:st.k==='med'?'Médecine · '+U.n:st.k==='hes'?F.hes:st.k==='av'?'Stage d\'avocat chez '+st.emp:st.k==='pol'?'École de police · '+st.emp:st.k==='loco'?'Formation de '+T('Conducteur de locomotive').toLowerCase()+' · '+st.emp:'Haute école pédagogique (HEP)'}
+function startStudy(k,f,u,afo){const n={cfc:3,afp:2,gym:3,matupro:1,ba:3,ma:2,med:6,hes:3,av:2,hep:2,pol:1,loco:1}[k],d=S.dip;
+ S.study={k,f:f||null,uni:u||null,afo:!!afo,emp:['cfc','afp','pol','loco'].includes(k)?rnd(by(FIELDS,f).e):k==='av'?rnd(by(FIELDS,'droit').e.slice(0,3)):null,y:k==='cfc'&&(d.afp===f||d.matu||d.cfc)?2:1,n,left:12,fails:0};
  if(u)S.uni=u;S.job=null;S.chom=0;S.indep=false}
 function dipList(){const d=S.dip,n=f=>by(FIELDS,f).n,o=[];
- if(d.afp)o.push('AFP ('+n(d.afp)+')');if(d.cfc)o.push('CFC ('+n(d.cfc)+')');if(d.matu)o.push(d.matu==='gym'?'Maturité gymnasiale':'Maturité professionnelle');
+ if(d.afp)o.push('AFP ('+n(d.afp)+')');if(d.cfc0)o.push('CFC ('+n(d.cfc0)+')');if(d.cfc)o.push('CFC ('+n(d.cfc)+')');if(d.matu)o.push(d.matu==='gym'?'Maturité gymnasiale':'Maturité professionnelle');
  if(d.brevet)o.push('Brevet fédéral');if(d.es)o.push('Diplôme ES');if(d.df)o.push('Diplôme fédéral');if(d.hes)o.push(by(FIELDS,d.hes).hes);
  if(d.med)o.push('Diplôme fédéral de médecin');else{if(d.ba)o.push('Bachelor ('+n(d.ba)+')');if(d.ma)o.push('Master ('+n(d.ma)+')')}
- if(d.fmh)o.push('Titre FMH');if(d.av)o.push('Brevet d\'avocat');if(d.hep)o.push('Diplôme HEP');if(d.mba)o.push('Executive MBA');if(d.de)o.push('Allemand B2');if(d.en)o.push('Anglais B2');if(d.permis)o.push('Permis de conduire');return o}
+ if(d.fmh)o.push('Titre FMH');if(d.av)o.push('Brevet d\'avocat');if(d.hep)o.push('Diplôme HEP');if(d.pol)o.push('Brevet fédéral de policier');if(d.loco)o.push('Permis de conducteur de locomotive');if(d.mba)o.push('Executive MBA');if(d.de)o.push('Allemand B2');if(d.en)o.push('Anglais B2');if(d.permis)o.push('Permis de conduire');return o}
 function graduate(st,log){const d=S.dip,k=st.k;
- if(k==='afp')d.afp=st.f;else if(k==='cfc')d.cfc=st.f;else if(k==='gym')d.matu='gym';else if(k==='matupro')d.matu=d.matu||'pro';else if(k==='ba')d.ba=st.f;else if(k==='ma')d.ma=st.f;else if(k==='med'){d.med=1;d.ba=d.ma='med'}else if(k==='hes')d.hes=st.f;else if(k==='av')d.av=1;else d.hep=1;
- S.study=null;log('Diplôme obtenu : '+dipList().slice(-1)[0]+'. '+(k==='gym'?'L\'université vous est ouverte.':k==='matupro'?'Les hautes écoles spécialisées vous sont ouvertes.':'De nouvelles offres d\'emploi vous attendent.'));
- if((k==='cfc'||k==='afp'||k==='av')&&Math.random()<.7){const lvl=k==='cfc'?2:k==='afp'?1:5,f=k==='av'?'droit':st.f;S.job={f,lvl,emp:st.emp,sal:salary(f,lvl,1),since:S.m};log(st.emp+' vous garde après votre formation : vous êtes engagé'+ee()+' comme '+jobTitle(S.job)+'.')}
+ if(k==='afp')d.afp=st.f;else if(k==='cfc'){if(d.cfc&&d.cfc!==st.f)d.cfc0=d.cfc;d.cfc=st.f}else if(k==='gym')d.matu='gym';else if(k==='matupro')d.matu=d.matu||'pro';else if(k==='ba')d.ba=st.f;else if(k==='ma')d.ma=st.f;else if(k==='med'){d.med=1;d.ba=d.ma='med'}else if(k==='hes')d.hes=st.f;else if(k==='av')d.av=1;else if(k==='pol')d.pol=1;else if(k==='loco')d.loco=1;else d.hep=1;
+ const nm={afp:'AFP',cfc:'CFC',gym:'maturité gymnasiale',matupro:'maturité professionnelle',ba:'bachelor',ma:'master',med:'diplôme fédéral de médecin',hes:'bachelor HES',av:'brevet d\'avocat',hep:'diplôme HEP',pol:'brevet fédéral de policier',loco:'permis de conducteur de locomotive'}[k];
+ S.study=null;log('Diplôme obtenu : '+nm+'. '+(k==='gym'?'L\'université vous est ouverte.':k==='matupro'?'Les hautes écoles spécialisées vous sont ouvertes.':'De nouvelles offres d\'emploi vous attendent.'));
+ if(['cfc','afp','av','pol','loco'].includes(k)&&(k==='pol'||k==='loco'||Math.random()<.7)){const lvl=k==='cfc'?2:k==='afp'?1:k==='av'?5:3,f=k==='av'?'droit':st.f;S.job={f,lvl,emp:st.emp,sal:salary(f,lvl,1),since:S.m};log(st.emp+' vous garde après votre formation : vous êtes engagé'+ee()+' comme '+jobTitle(S.job)+'.')}
  genOffers()}
 function studyTick(log){const st=S.study;if(!st||--st.left>0)return;const sd=S.side?by(SIDE,S.side):null,p=stP(st)-(sd?sd.ch:0)-(S.train?.03:0);
  if(Math.random()<p){st.y++;st.fails=0;if(st.y>st.n)graduate(st,log);else{st.left=12;log('Examens réussis : vous passez en '+st.y+'e année.')}}
  else{st.fails++;if(['ba','ma','med'].includes(st.k)&&st.fails>=2){S.ban[st.f]=1;S.study=null;log('Deuxième échec aux examens : échec définitif dans cette filière. Il faut choisir une autre voie.')}else{st.left=12;log('Examens ratés : vous refaites l\'année.')}}}
-function trainTick(log){const t=S.train;if(!t||--t.left>0)return;const x=by(TRAIN,t.id),d=S.dip;
- if(t.id==='brevet'||t.id==='es'||t.id==='df')d[t.id]=d.cfc;else d[t.id]=1;S.train=null;
+function trainTick(log){const t=S.train;if(!t||--t.left>0)return;const x=by(TRAIN,t.id),d=S.dip;S.train=null;
+ if(t.id==='art32'){if(t.f&&Math.random()<.8){if(d.cfc&&d.cfc!==t.f)d.cfc0=d.cfc;d.cfc=t.f;log('Examen réussi : vous obtenez le CFC par l\'article 32, sans avoir refait d\'apprentissage.')}else log('Examen du CFC raté. Vous pouvez vous réinscrire.');genOffers();return}
+ if(t.id==='brevet'||t.id==='es'||t.id==='df')d[t.id]=d.cfc;else d[t.id]=1;
  if(x.sub){S.cash+=x.c/2;S.bm+=x.c/2}log('Formation terminée : '+x.n+'.'+(x.sub?' La Confédération vous rembourse '+money(x.c/2)+'.':''));genOffers()}
+function chomPanel(){const a=age();if(S.chom>0){const rt=chomRate();return`<div class="panel"><h3>Chômage · inscrit${ee()} à l'ORP</h3><table><tr><td>Indemnité, ${Math.round(rt*100)} % du dernier salaire</td><td class="num">${money(rt*S.chomBase)}</td></tr><tr><td>Mois d'indemnités restants</td><td class="num">${S.chom}</td></tr>${S.chomW>0?`<tr><td>Suspension pour départ volontaire</td><td class="num">${S.chomW} mois</td></tr>`:''}<tr class="tot"><td>Postulations ce mois</td><td class="num">${S.apN} sur 2 exigées</td></tr></table>
+ <p class="sub">L'ORP exige des recherches d'emploi : avec moins de 2 postulations dans le mois, l'indemnité est réduite d'un quart. Pendant le chômage, vous pouvez postuler 5 fois par mois et les cours de langue sont payés par l'ORP${a>=30?'. Dès 30 ans, vous pouvez aussi vous reconvertir par un apprentissage avec une allocation de formation de '+money(3500)+' par mois':''}.</p></div>`}
+ return`<div class="panel"><h3>Chômage</h3><p style="margin:0 0 8px;max-width:65ch">L'assurance-chômage verse 70 % du dernier salaire, ou 80 % s'il était inférieur à ${money(3797)}. Il faut avoir cotisé 12 mois dans les 2 dernières années : vous en avez ${S.contrib}. Après une démission, les deux premiers mois ne sont pas indemnisés.</p><button class="b go" data-act="orp" ${S.contrib>=12&&S.lastSal>0?'':'disabled'}>S'inscrire au chômage</button></div>`}
+function vGuide(){const d=S.dip,a=age(),fx=d.cfc||(S.job&&by(FIELDS,S.job.f).app?S.job.f:'log'),sl=l=>money(salary(fx,l,1)),sf=(f,l)=>money(salary(f,l,1));
+ const G=[
+ ['AFP, attestation fédérale',!!d.afp,[['Avoir terminé l\'école obligatoire',true]],'2 ans d\'apprentissage payé de '+money(650)+' à '+money(850)+' par mois. Aucun frais.','Les postes d\'assistant, env. '+sl(1)+'. Permet ensuite de faire le CFC en 2 ans au lieu de 3.'],
+ ['CFC, certificat fédéral de capacité',!!d.cfc,[['Avoir terminé l\'école obligatoire',true],['Avoir 50 ans au plus pour commencer un apprentissage',a<=50]],'3 ans d\'apprentissage payé, 2 ans avec une AFP, une maturité ou un premier CFC. Examen final réussi 9 fois sur 10.','Les postes qualifiés de la branche, env. '+sl(2)+'. Votre entreprise formatrice vous garde 7 fois sur 10. Ouvre le brevet fédéral, le diplôme ES et la maturité professionnelle.'],
+ ['CFC par l\'article 32, en candidat libre',false,[['5 ans d\'expérience professionnelle',S.xp>=60],['Un emploi actuel dans une branche où vous n\'avez pas de CFC',by(TRAIN,'art32').ok()||false]],'12 mois de cours du soir à côté du travail, '+money(4000)+'. Examen réussi 8 fois sur 10.','Le même CFC que par l\'apprentissage, sans quitter votre emploi ni perdre votre salaire.'],
+ ['Maturité professionnelle',d.matu==='pro',[['Un CFC',!!d.cfc]],'1 an à plein temps, sans salaire.','L\'entrée dans les hautes écoles spécialisées (HES).'],
+ ['Maturité gymnasiale',d.matu==='gym',[['Entrer au gymnase à 19 ans au plus',a<=19],['Ne pas avoir déjà un CFC',!d.cfc]],'3 ans de gymnase, sans salaire. Réussite annuelle 9 fois sur 10.','L\'université et les EPF : droit, médecine, économie, ingénierie, psychologie, lettres, pharmacie, architecture.'],
+ ['Brevet fédéral',!!d.brevet,[['Un CFC',!!d.cfc],['2 ans d\'expérience',S.xp>=24]],'18 mois à côté du travail, '+money(12000)+', dont la moitié remboursée par la Confédération.','Les postes de chef d\'équipe et de spécialiste, env. '+sl(3)+'. Ouvre le diplôme fédéral.'],
+ ['Diplôme ES, école supérieure',!!d.es,[['Un CFC',!!d.cfc]],'3 ans à côté du travail, '+money(21000)+'.','Les postes de cadre, env. '+sl(4)+'. Avec un MBA, les postes de responsable.'],
+ ['Diplôme fédéral, maîtrise',!!d.df,[['Le brevet fédéral',!!d.brevet],['4 ans d\'expérience',S.xp>=48]],'18 mois à côté du travail, '+money(16000)+', dont la moitié remboursée.','Avec 8 ans d\'expérience, les postes de responsable, env. '+sl(5)+'. Avec 15 ans, la direction, env. '+sl(6)+'.'],
+ ['Bachelor HES',!!d.hes,[['Une maturité professionnelle ou gymnasiale',!!d.matu],['Avec une maturité professionnelle : le CFC de la même branche',d.matu==='gym'||FIELDS.some(f=>f.hes&&d.cfc===f.id)]],'3 ans à plein temps, '+money(150)+' par mois. L\'EHL coûte '+money(1500)+' par mois.','Les postes de cadre : ingénieur, infirmier, éducateur social, économiste d\'entreprise. Env. '+sf('sante',4)+' dans la santé, '+sf('inf',4)+' en informatique.'],
+ ['Bachelor universitaire',!!d.ba,[['La maturité gymnasiale',d.matu==='gym']],'3 ans à plein temps, '+money(120)+' par mois. Deux échecs de suite ferment la filière.','Les premiers postes universitaires, env. '+sf('eco',4)+' en économie. Ouvre le master et la HEP.'],
+ ['Master',!!d.ma,[['Un bachelor universitaire',!!d.ba]],'2 ans à plein temps.','Juriste, psychologue, pharmacien, architecte, analyste financier : env. '+sf('droit',5)+' en droit, '+sf('eco',5)+' en économie. Après 15 ans d\'expérience, la direction.'],
+ ['Médecine et titre FMH',!!d.fmh,[['La maturité gymnasiale',d.matu==='gym']],'6 ans d\'études, dont une première année réussie une fois sur deux. Puis 5 ans comme médecin assistant.','Médecin assistant, env. '+sf('med',5)+', puis médecin spécialiste FMH, env. '+sf('med',6)+'.'],
+ ['Brevet d\'avocat',!!d.av,[['Un master en droit',d.ma==='droit']],'2 ans de stage payé '+money(3500)+', puis un examen réussi 2 fois sur 3.','Le titre d\'avocat et 25 % de salaire en plus qu\'un juriste. L\'étude vous garde souvent.'],
+ ['Diplôme HEP, enseignement',!!d.hep,[['Un bachelor universitaire, hors médecine',!!d.ba&&!d.med]],'2 ans à plein temps, '+money(100)+' par mois.','Le métier d\'enseignant dans un canton, env. '+sf('ens',5)+'. Plus tard, la direction d\'un établissement.'],
+ ['École de police',!!d.pol,[['20 ans révolus',a>=20],['Un CFC ou une maturité',!!(d.cfc||d.matu)],['Le permis de conduire',!!d.permis],['La nationalité suisse ou le permis C',S.ch||S.permit==='C']],'1 an d\'école payé '+money(4500)+' par mois.','Un poste de policier garanti, env. '+sf('pol',3)+'. Les grades montent avec l\'ancienneté : sergent après 8 ans, inspecteur principal après 14 ans.'],
+ ['Conducteur de locomotive',!!d.loco,[['18 ans révolus',a>=18],['Un CFC ou une maturité',!!(d.cfc||d.matu)]],'1 an de formation payée '+money(4200)+' par une compagnie ferroviaire.','Un poste garanti, env. '+sf('rail',3)+'. Promotions à l\'ancienneté.'],
+ ['Executive MBA',!!d.mba,[['Un diplôme supérieur : ES, HES ou bachelor',FIELDS.some(f=>qlvl(f.id)>=4)],['6 ans d\'expérience',S.xp>=72]],'2 ans à côté du travail, '+money(65000)+'.','Les postes de responsable sans attendre, puis la direction après 15 ans d\'expérience.'],
+ ['Langues et permis de conduire',!!(d.de&&d.en&&d.permis),[['Permis de conduire : 18 ans révolus',a>=18]],'Allemand '+money(4200)+', anglais '+money(3800)+', permis '+money(3500)+'. Les cours de langue sont gratuits pendant le chômage.','Chaque langue : 3 % de salaire en plus à l\'embauche et de meilleures chances. Le permis augmente aussi vos chances, et il est exigé pour la police.']];
+ return`<h2>Guide des diplômes</h2><p class="lead">Touchez un diplôme pour voir les conditions d'inscription, la durée, le coût et ce qu'il débloque. Les salaires sont calculés pour votre canton et, quand c'est une formation de branche, pour ${by(FIELDS,fx).n.toLowerCase()}.</p><div class="list">${G.map(g=>{const ok=g[2].every(c=>c[1]);return`<details class="panel gd"><summary><b>${g[0]}</b><span class="${g[1]?'up':ok?'':'muted'}">${g[1]?'Obtenu':ok?'Accessible':'Pas encore'}</span></summary>${g[1]?'':`<ul>${g[2].map(c=>`<li class="${c[1]?'up':'down'}">${c[1]?'✓':'✗'} ${c[0]}</li>`).join('')}</ul>`}<p><b>Durée et coût.</b> ${g[3]}</p><p><b>Ce que ça débloque.</b> ${g[4]}</p></details>`}).join('')}</div>`}
 const away=()=>!!(S.study&&S.study.uni&&by(UNIS,S.study.uni).c!==S.canton);
 const EV=[
  {t:'Krach boursier : le SMI décroche.',f:s=>s.s=-.12},
@@ -336,7 +378,7 @@ const LIFE=[
  {t:'Décompte de chauffage : supplément de charges.',c:-600},
  {t:'Franchise et quote-part après une visite médicale.',c:-900},
  {t:'Prime exceptionnelle de votre employeur.',c:2500,emp:1},
- {t:'Restructuration : vous perdez votre emploi. Chômage à 70 % pendant 4 mois.',c:0,job:1}];
+ {t:'Restructuration : vous êtes licencié.',c:0,job:1}];
 const TABS=[['apercu','Aperçu','--accent'],['vie','Parcours','--accent'],['s','Bourse','--stock'],['c','Crypto','--crypto'],['immo','Immobilier','--immo'],['biz','Entreprises','--biz'],['club','Participations','--club'],['banque','Banque','--cash'],['aide','Sauvegardes et aide','--accent']];
 const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const VIE=1500,CAP3A=7258,AVS=2520,KEY='fortune-leman-4';
@@ -416,13 +458,16 @@ const LEX=[
  ['Chiffre d\'affaires','Tout ce que l\'entreprise encaisse en vendant. Ce n\'est pas ce qu\'elle gagne.'],
  ['Bénéfice','Ce qui reste du chiffre d\'affaires une fois payés les salaires, le loyer, les matières et les frais.'],
  ['Raison individuelle, Sàrl, SA','Les trois formes d\'entreprise les plus courantes. En raison individuelle, vous répondez des dettes sur vos biens personnels. La Sàrl demande CHF 20’000 de capital, la SA CHF 100’000.'],
+ ['ORP et chômage','L\'office régional de placement suit les chômeurs. L\'assurance verse 70 ou 80 % du dernier salaire pendant une durée limitée, à condition de chercher activement un emploi.'],
+ ['Article 32','Voie qui permet à un adulte ayant 5 ans d\'expérience de passer l\'examen du CFC sans refaire d\'apprentissage.'],
+ ['Allocation de formation','Aide de l\'assurance-chômage qui complète le salaire d\'apprenti d\'un adulte de 30 ans ou plus, pour qu\'il puisse obtenir un diplôme.'],
  ['BNS','Banque nationale suisse. Son taux directeur influence les taux hypothécaires et l\'épargne.']];
 let S,armed=false;
 const $=id=>document.getElementById(id);
 const z=()=>{let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*Math.random())};
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const by=(arr,id)=>arr.find(x=>x.id===id);
-function fresh(){const s={v:4,m:0,canton:null,cash:500,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,job:null,study:null,side:null,train:null,dip:{},ban:{},offers:[],apN:0,xp:0,home:true,sex:null,name:'',nat:null,ch:true,born:true,permit:null,natu:null,aidLast:-1,mil:{st:'none',left:0,kind:null,crN:0,taxN:0},indep:false,chomBase:0,assist:0,uni:null,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[500],bm:500,bmH:[500],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
+function fresh(){const s={v:4,m:0,canton:null,cash:500,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,job:null,study:null,side:null,train:null,dip:{},ban:{},offers:[],apN:0,xp:0,contrib:0,chomW:0,lastSal:0,quit:0,home:true,sex:null,name:'',nat:null,ch:true,born:true,permit:null,natu:null,aidLast:-1,mil:{st:'none',left:0,kind:null,crN:0,taxN:0},indep:false,chomBase:0,assist:0,uni:null,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[500],bm:500,bmH:[500],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
  A.forEach(a=>{s.px[a.id]=a.p;s.hist[a.id]=[a.p];s.hold[a.id]=0;s.cost[a.id]=0});
  P.forEach(p=>{s.pv[p.id]=p.v;s.props[p.id]={n:0,mort:0}});
  LAND.forEach(l=>s.land[l.id]={own:false,v:l.v,proj:null,done:false});
@@ -539,10 +584,11 @@ function vVie(){const c=C(),a=age(),st=S.study,j=S.job,d=S.dip,sd=S.side?by(SIDE
  if(!S.ret){h+=`<h2>Emploi</h2>`;
   if(j)h+=`<div class="panel"><div class="who">${ico('user','--accent')}<div><b>${jobTitle(j)}</b><span class="sub">${j.emp} · ${by(FIELDS,j.f).n} · depuis ${dateLbl(j.since)}</span></div></div><table style="margin-top:8px"><tr class="tot"><td>Salaire brut, 13 fois par an</td><td class="num">${money(j.sal)}</td></tr></table>
   <div class="ctl l" style="margin-top:8px"><button class="b" data-act="quit">${armed==='quit'?'Confirmer la démission':'Démissionner'}</button>${S.cos.length?`<button class="b" data-act="indep">Quitter pour diriger vos entreprises</button>`:''}</div></div>`;
-  h+=`<p class="lead" style="margin-top:10px">${fulltime?'Vous suivez une formation à plein temps. Pour accepter un emploi, il faut la terminer ou l\'interrompre.':'Les offres changent chaque mois. Vous pouvez postuler trois fois par mois : '+S.apN+' sur 3 utilisées. Vos chances dépendent de vos diplômes, de votre expérience, de vos langues et du permis.'}</p>
+  if(!j&&!st)h+=chomPanel();
+  h+=`<p class="lead" style="margin-top:10px">${fulltime?'Vous suivez une formation à plein temps. Pour accepter un emploi, il faut la terminer ou l\'interrompre.':'Les offres changent chaque mois. Vous pouvez postuler '+maxAp()+' fois par mois : '+S.apN+' sur '+maxAp()+' utilisées. Vos chances dépendent de vos diplômes, de votre expérience, de vos langues et du permis.'}</p>
   <div class="list">${S.offers.map((o,i)=>{const F=by(FIELDS,o.f),p=chance(o);return`<div class="row" style="--c:var(--accent)"><div class="who">${ico('bank','--accent')}<div><b>${jobTitle(o)}</b><span class="sub">${o.emp} · ${F.n}</span></div></div>
   <div class="px"><span class="num">${money(salary(o.f,o.lvl,o.ef))}</span><span class="sub">brut × 13 · ${p?'chances '+Math.round(p*100)+' %':'qualification insuffisante'}</span></div>
-  <div class="ctl">${o.done?`<span class="${o.done===2?'up':'muted'}">${o.done===2?'Engagé'+ee():'Refusé'+ee()}</span>`:`<button class="b go" data-act="apply" data-id="${i}" ${p&&!fulltime&&S.apN<3?'':'disabled'}>Postuler</button>`}</div></div>`}).join('')}</div>`}
+  <div class="ctl">${o.done?`<span class="${o.done===2?'up':'muted'}">${o.done===2?'Engagé'+ee():'Refusé'+ee()}</span>`:`<button class="b go" data-act="apply" data-id="${i}" ${p&&!fulltime&&S.apN<maxAp()?'':'disabled'}>Postuler</button>`}</div></div>`}).join('')}</div>`}
  if(!S.ret&&!st){const rows=[];const row=(t,s,btn)=>rows.push(`<div class="row" style="--c:var(--accent)"><div class="who" style="grid-column:1/3">${ico('user','--accent')}<div><b>${t}</b><span class="sub">${s}</span></div></div><div class="ctl">${btn}</div></div>`);
   const bt=(id,l)=>`<button class="b go" data-act="study" data-id="${id}">${l}</button>`;
   if(!d.matu&&!d.cfc&&a<=19)row('Gymnase','3 ans, pas de salaire. La maturité gymnasiale ouvre l\'université et les EPF.',bt('gym','Entrer au gymnase'));
@@ -552,12 +598,14 @@ function vVie(){const c=C(),a=age(),st=S.study,j=S.job,d=S.dip,sd=S.side?by(SIDE
   if(d.ma==='droit'&&!d.av)row('Stage d\'avocat','2 ans payés '+money(3500)+', puis l\'examen du brevet, réputé difficile. Un avocat gagne 25 % de plus qu\'un juriste.',bt('av','Commencer le stage'));
   if(d.ba&&!d.med&&!d.hep)row('Haute école pédagogique (HEP)','2 ans après un bachelor. Ouvre le métier d\'enseignant.',bt('hep','S\'inscrire'));
   if(d.matu&&!d.hes)FIELDS.filter(f=>f.hes&&(d.cfc===f.id||d.matu==='gym')).forEach(f=>row(f.hes,'Bachelor HES de 3 ans.'+(f.id==='gastro'?' Taxes d\'études élevées : '+money(1500)+' par mois.':'')+' Salaire de départ : env. '+money(salary(f.id,4,1))+'.',bt('hes:'+f.id,'S\'inscrire')));
-  if(a<=30&&!d.cfc)FIELDS.filter(f=>f.app).forEach(f=>row('Apprentissage · '+f.n,(d.afp===f.id||d.matu?'CFC en 2 ans grâce à votre diplôme. ':'CFC en 3 ans, AFP en 2 ans. ')+'Salaire d\'apprenti de '+money(750)+' à '+money(1250)+'. Avec le CFC : env. '+money(salary(f.id,2,1))+'.',bt('cfc:'+f.id,'CFC')+(f.afp&&!d.afp?`<button class="b" data-act="study" data-id="afp:${f.id}">AFP</button>`:'')));
-  if(rows.length)h+=`<h2>Formations à plein temps</h2><p class="lead">Commencer une formation à plein temps met fin à votre emploi actuel.</p><div class="list">${rows.join('')}</div>`}
+  if(!d.pol)row('École de police','1 an, payé '+money(4500)+' par mois. Exige 20 ans, un CFC ou une maturité, le permis de conduire, et la nationalité suisse ou le permis C. Salaire ensuite : env. '+money(salary('pol',3,1))+'.',`<button class="b go" data-act="study" data-id="pol:pol" ${a>=20&&(d.cfc||d.matu)&&d.permis&&(S.ch||S.permit==='C')?'':'disabled'}>S'inscrire</button>`);
+  if(!d.loco)row(T('Conducteur de locomotive'),'Formation d\'un an payée '+money(4200)+' par mois par une compagnie ferroviaire. Exige 18 ans et un CFC ou une maturité. Salaire ensuite : env. '+money(salary('rail',3,1))+'.',`<button class="b go" data-act="study" data-id="loco:rail" ${a>=18&&(d.cfc||d.matu)?'':'disabled'}>S'inscrire</button>`);
+  if(a<=50)FIELDS.filter(f=>f.app&&d.cfc!==f.id&&d.cfc0!==f.id).forEach(f=>row('Apprentissage · '+f.n,(d.cfc?'Reconversion : un deuxième CFC en 2 ans. ':d.afp===f.id||d.matu?'CFC en 2 ans grâce à votre diplôme. ':'CFC en 3 ans, AFP en 2 ans. ')+'Salaire d\'apprenti de '+money(750)+' à '+money(1250)+'. Avec le CFC : env. '+money(salary(f.id,2,1))+'.',bt('cfc:'+f.id,'CFC')+(f.afp&&!d.afp&&!d.cfc?`<button class="b" data-act="study" data-id="afp:${f.id}">AFP</button>`:'')+(S.chom>0&&a>=30?`<button class="b" data-act="study" data-id="cfc:${f.id}::afo">Avec allocation de formation</button>`:'')));
+  if(rows.length)h+=`<h2>Formations à plein temps</h2><p class="lead">Commencer une formation à plein temps met fin à votre emploi actuel. Changer de métier reste possible à tout âge : deuxième CFC en 2 ans, article 32, ou allocation de formation pendant le chômage.</p><div class="list">${rows.join('')}</div>`}
  if(!S.ret){h+=`<h2>Formations en cours d'emploi</h2><p class="lead">Une formation à la fois, à côté de votre travail ou de vos études. Elle se paie en une fois à l'inscription.</p>`;
   if(S.train){const x=by(TRAIN,S.train.id);h+=`<div class="panel"><b>${x.n}</b><span class="sub">En cours · encore ${S.train.left} mois</span></div>`}
-  else h+=`<div class="list">${TRAIN.filter(x=>!d[x.id]).map(x=>`<div class="row" style="--c:var(--accent)"><div class="who">${ico('calc','--accent')}<div><b>${x.n}</b><span class="sub">${x.d}</span></div></div><div class="px"><span class="num">${money(x.c)}</span><span class="sub">${x.mo} mois</span></div><div class="ctl"><button class="b go" data-act="train" data-id="${x.id}" ${x.ok()?'':'disabled'}>S'inscrire</button></div></div>`).join('')}</div>`}
- return h+`<h2>Déménager</h2><p class="lead">Changer de canton coûte ${money(4000)} et modifie salaires, loyers, primes et impôts.</p>${cantCards('move')}`}
+  else h+=`<div class="list">${TRAIN.filter(x=>!d[x.id]).map(x=>`<div class="row" style="--c:var(--accent)"><div class="who">${ico('calc','--accent')}<div><b>${x.n}</b><span class="sub">${x.d}</span></div></div><div class="px"><span class="num">${money(tcost(x))}</span><span class="sub">${x.mo} mois${tcost(x)<x.c?' · payé par l\'ORP':''}</span></div><div class="ctl"><button class="b go" data-act="train" data-id="${x.id}" ${x.ok()?'':'disabled'}>S'inscrire</button></div></div>`).join('')}</div>`}
+ return h+vGuide()+`<h2>Déménager</h2><p class="lead">Changer de canton coûte ${money(4000)} et modifie salaires, loyers, primes et impôts.</p>${cantCards('move')}`}
 function vMarket(k){const c=k==='s'?'--stock':'--crypto';
  return`<h2>${k==='s'?'Bourse suisse':'Crypto'}</h2><p class="lead">${k==='s'?'Les dividendes sont imposés comme un revenu. Les plus-values privées ne sont pas imposées, comme en Suisse. Frais de courtage : '+p1(fee())+'.':'Très volatil : un jeton peut perdre la moitié de sa valeur en quelques mois. Fractions autorisées. Frais : '+p1(fee())+'.'}</p>
  <div class="list">${A.filter(a=>a.k===k).map(a=>{const h=S.hist[a.id],p=S.px[a.id],ch=h.length>1?p/h[h.length-2]-1:0,q=S.hold[a.id],v=q*p;
@@ -655,7 +703,7 @@ function coach(d){const t=[],fx=fixed(),st=secVal('s'),cr=secVal('c'),fin=st+cr+
 function next(){if(S.over)return;S.m++;const mo=cal(),d=dateLbl(S.m),sh={s:0,c:0,p:0,b:1,r:0,fx:0},c=C(),a=age(),log=t=>S.log.unshift({d,t});
  const r={sal:0,side:0,par:0,aid:0,soc:0,lpp:0,tax:0,div:0,rent:0,biz:0,club:0,build:0,int:0,ser:0,wtax:0,life:0,bfee:0,sav:0,tui:0,rent0:0,lam:0,vie:0};
  if(Math.random()<.3){const e=rnd(EV);e.f(sh);if(a>=18)log(e.t)}
- if(Math.random()<.1){const e=rnd(LIFE),emp=!!S.job&&!S.ret;if(e.job){if(emp&&S.xp>12){S.chomBase=S.job.sal;S.chom=12;S.job=null;log(e.t)}}else if(a>=18&&(!e.emp||emp)&&(!e.car||S.dip.permis)){r.life=e.c;log(e.t+' '+money(e.c))}}
+ if(Math.random()<.1){const e=rnd(LIFE),emp=!!S.job&&!S.ret;if(e.job){if(emp&&S.xp>12){S.lastSal=S.job.sal;S.quit=0;S.job=null;log(e.t);orp(log)}}else if(a>=18&&(!e.emp||emp)&&(!e.car||S.dip.permis)){r.life=e.c;log(e.t+' '+money(e.c))}}
  if(mo===0){S.lam*=1.025;S.infl*=1.01;S.p3last=S.p3y;S.p3y=0;if(!S.home&&a>=18)r.ser=335;if(!S.ret){S.raise*=1.012;if(S.job)S.job.sal*=1.012}if(a>=18)log('Nouvelle année : les primes maladie augmentent de 2,5 %.'+(r.ser?' Facture Serafe de CHF 335.':''))}
  S.fx=clamp(S.fx*Math.exp(.01*z())+sh.fx,.8,1.15);S.rate=clamp(S.rate+sh.r,.8,4.5);
  const mk={s:.03*z()+sh.s,c:.07*z()+sh.c},etf0=S.px.SMI;
@@ -671,9 +719,11 @@ function next(){if(S.over)return;S.m++;const mo=cal(),d=dateLbl(S.m),sh={s:0,c:0
  if(!S.ret){if(!serv)studyTick(log);trainTick(log)}
  const dec=mo===11,st=S.study;let w=0,lbl='Aucun salaire',paid=false;
  if(S.ret){w=AVS;lbl='Rente AVS'}
- else if(S.job){w=S.job.sal;lbl='Salaire brut';paid=true;S.xp++;if(S.job.f==='med'&&S.dip.med&&!S.dip.fmh&&++S.assist>=60){S.dip.fmh=1;log('Après cinq ans comme médecin assistant'+ee()+', vous obtenez le titre de spécialiste FMH.')}}
- else if(st&&stWage(st)){w=stWage(st);lbl=st.k==='av'?'Salaire de stagiaire':'Salaire d\'apprenti'+ee();paid=true}
- else if(S.chom>0){w=.7*S.chomBase;lbl='Indemnité de chômage';if(!--S.chom)log('Vos indemnités de chômage sont épuisées.')}
+ else if(S.job){w=S.job.sal;lbl='Salaire brut';paid=true;S.xp++;S.contrib=Math.min(24,S.contrib+1);if(S.job.f==='med'&&S.dip.med&&!S.dip.fmh&&++S.assist>=60){S.dip.fmh=1;log('Après cinq ans comme médecin assistant'+ee()+', vous obtenez le titre de spécialiste FMH.')}}
+ else if(st&&stWage(st)){w=stWage(st);lbl=st.afo?'Salaire et allocation de formation':st.k==='av'||st.k==='pol'||st.k==='loco'?'Salaire de formation':'Salaire d\'apprenti'+ee();paid=!st.afo;S.contrib=Math.min(24,S.contrib+1)}
+ else if(S.chom>0){if(S.chomW>0){S.chomW--;lbl='Chômage : mois de suspension'}else{w=chomRate()*S.chomBase;lbl='Indemnité de chômage';if(S.apN<2){w*=.75;log('Recherches d\'emploi insuffisantes ce mois : l\'ORP réduit votre indemnité d\'un quart.')}}
+  if(!--S.chom)log('Vos indemnités de chômage sont épuisées. Il reste l\'aide sociale si vous n\'avez plus rien.')}
+ else if(S.contrib>0&&S.m%2===0)S.contrib--;
  if(dec&&paid){w*=2;lbl+=' et 13e salaire'}
  if(serv){w=Math.max(2070,.8*w);lbl='Allocation perte de gain ('+MILN[ml.kind].toLowerCase()+')';
   if(--ml.left<=0){if(ml.kind==='er'){ml.st='cr';ml.crN=6;log('École de recrues terminée. Il vous reste 6 cours de répétition, un par an.')}else{ml.st='done';log(MILN[ml.kind]+' terminé : vos obligations sont accomplies.')}}}
@@ -744,13 +794,14 @@ function act(a,id){
  else if(a==='move'){if(id===S.canton)toast('Vous y habitez déjà.',1);else if(pay(4000,'déménager')){S.canton=id;toast('Vous déménagez à '+C().city+'.')}}
  else if(a==='side'){if(id==='none'){S.side=null;toast('Vous arrêtez votre petit job.')}else{const x=by(SIDE,id);if(x&&age()>=x.min&&!S.job&&!S.ret){S.side=id;toast('Nouveau petit job : '+T(x.n)+', '+money(x.w)+' par mois.')}}}
  else if(a==='home'){if(S.home){if(age()>=18){S.home=false;toast('Vous emménagez dans votre propre logement.')}}else if(age()<28){S.home=true;toast('Vous retournez vivre chez vos parents.')}}
- else if(a==='study'){const[k,f,u]=id.split(':');if(!S.study&&!S.ret){startStudy(k,f,u);toast('Inscription confirmée : '+stName(S.study)+'.')}}
+ else if(a==='study'){const[k,f,u,x]=id.split(':');if(!S.study&&!S.ret){startStudy(k,f,u,x==='afo'&&S.chom>0&&age()>=30);toast('Inscription confirmée : '+stName(S.study)+'.')}}
  else if(a==='drop'){if(armed==='drop'){S.study=null;armed=false;toast('Formation interrompue.')}else armed='drop'}
- else if(a==='quit'){if(armed==='quit'){S.job=null;armed=false;toast('Vous avez démissionné.')}else armed='quit'}
+ else if(a==='quit'){if(armed==='quit'){S.lastSal=S.job?S.job.sal:0;S.quit=1;S.job=null;armed=false;toast('Vous avez démissionné. Vous pouvez vous inscrire au chômage, avec deux mois de suspension.')}else armed='quit'}
  else if(a==='apply'){const o=S.offers[+id],p=o?chance(o):0;if(!o||o.done||!p||S.study||S.ret)return false;
-  if(S.apN>=3)toast('Trois postulations par mois au maximum.',1);
+  if(S.apN>=maxAp())toast(maxAp()+' postulations par mois au maximum.',1);
   else{S.apN++;if(Math.random()<p){S.job={f:o.f,lvl:o.lvl,emp:o.emp,sal:salary(o.f,o.lvl,o.ef),since:S.m};o.done=2;S.chom=0;S.indep=false;S.side=null;toast('Engagé'+ee()+' comme '+jobTitle(o)+' chez '+o.emp+'. Salaire brut : '+money(S.job.sal)+'.')}else{o.done=1;toast('Candidature refusée chez '+o.emp+'. Tentez une autre offre.',1)}}}
- else if(a==='train'){const x=by(TRAIN,id);if(S.train)toast('Terminez d\'abord votre formation en cours.',1);else if(x&&x.ok()&&!S.dip[id]&&pay(x.c,'cette formation')){S.bm-=x.c;S.train={id,left:x.mo};toast('Inscription confirmée : '+x.n+', '+x.mo+' mois.')}}
+ else if(a==='train'){const x=by(TRAIN,id);if(S.train)toast('Terminez d\'abord votre formation en cours.',1);else if(x&&x.ok()&&!S.dip[id]&&pay(tcost(x),'cette formation')){S.bm-=tcost(x);S.train={id,left:x.mo,f:S.job?S.job.f:null};toast('Inscription confirmée : '+x.n+', '+x.mo+' mois.')}}
+ else if(a==='orp'){if(!S.job&&!S.study&&!(S.chom>0)&&!S.ret){const m=[];if(orp(t=>m.push(t)))S.log.unshift({d:dateLbl(S.m),t:m[0]});toast(m[0],!S.chom)}}
  else if(a==='indep'){if(S.cos.length){S.job=null;S.indep=true;toast('Vous quittez votre emploi et dirigez vos entreprises à plein temps.')}}
  else if(['buy','max','pbuy','lbuy','build','cocreate','borrow','clbuy','p3'].includes(a)&&age()<18){toast('Il faut avoir 18 ans pour cela. D\'ici là, votre argent reste sur votre compte d\'épargne.',1)}
  else if(a==='buy')buy(by(A,id),qty(id));
