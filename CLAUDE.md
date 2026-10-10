@@ -78,3 +78,10 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Transports : `trList()` donne les offres selon le canton (`REG` : communauté tarifaire, exploitants, prix), l'âge (tarif jeune avant 25 ans) et l'inflation. `S.trans` vaut none, parc, tp, tp1, ag, ag1 ou car ; `S.half` est le demi-tarif. `trCost()`, `trMob()` (chances d'embauche) et `trJoy()` (bien-être) en découlent.
 - Subside à l'assurance maladie `r.sub` : 40 % de la prime sous CHF 38'000 de revenu annuel et CHF 50'000 de fortune.
 - Situations : `votation`, `impots_decl`, `caisse_maladie`, `frontiere`.
+
+## Apprentissages, AFP et vie des femmes
+- `FIELDS` : `afp:1` seulement quand l'attestation existe dans la branche (pas d'AFP en informatique, électricité, banque, esthétique, assistance en pharmacie, cabinet médical). `cy` donne la durée du CFC quand elle est de 4 ans. Vérifier sur orientation.ch avant d'ajouter une branche.
+- Entreprises : `AP[secteur]` donne les métiers d'apprentis `[CFC, AFP ou null]`, ou `null` si la branche ne forme pas d'apprentis (sécurité privée). `apOf()` sert l'écran et l'action d'engagement ; l'apprenti garde son métier dans `n`.
+- Grossesse : la situation `enfant` lance `S.preg` (9 mois), la naissance a lieu dans `next()`. Mère avec emploi : `S.mat` (congé de maternité, 80 %). Père avec emploi : `S.pat` (deux semaines). `fire()` ne licencie pas pendant la grossesse ni le congé.
+- Situations réservées au personnage féminin : `preg_annonce`, `regles`, `entretien_enfant`, `salaire_egal`, `remarques`, `reseau_f`. `charge` vaut pour tous les parents en couple.
+- `T()` accorde les titres au féminin : tester chaque nouveau titre avec `S.sex='f'`.
