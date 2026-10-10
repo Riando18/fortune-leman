@@ -43,3 +43,11 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Menu de démarrage : `menu` (variable hors état, vraie à chaque lancement) affiche `vMenu()` avec Continuer, Charger un emplacement et Nouvelle partie. Dans un test Node, mettre `menu=false` après le chargement du script.
 - Onglet Guide (`vGuideTab()`) : `LEARN` explique chaque écran, `SOL` donne un plan par objectif, chaque étape pouvant porter un test d'état qui coche l'étape. Ajouter une entrée `SOL` quand une nouvelle mécanique peut bloquer un joueur. Le lexique `LEX` s'y affiche aussi.
 - Sauvegarde : `autoSave` (préférence `fortune-leman-auto`, hors état). En mode manuel, seul `save(true)` écrit.
+
+## Navigation, bilan et succès
+- Barre du bas `#nav` : cinq groupes dans `NAV` (Accueil, Parcours, Argent, Vie, Plus). Les onglets du haut sont les sous-pages du groupe courant (`grp()`), `S.gt` retient la dernière page de chaque groupe.
+- Parcours est découpé en sous-pages `VSUB` (`S.vsub` : sit, emploi, form, rev, guide). `vVie()` construit toutes les sections puis n'affiche que la sous-page choisie.
+- `track()` tourne à la fin de `next()` : il compare l'état à `S.sf` et écrit les étapes de vie dans `S.story` avec `story()`, met à jour `S.topLvl` et `S.topT`, puis appelle `checkAch()`. Une ancienne sauvegarde sans `S.sf` est initialisée sans rien écrire.
+- `score()` note la vie sur 1000 (fortune 400, carrière 200, vie privée 250, réputation 150). `vBilan()` (onglet « Ma vie ») l'affiche avec l'histoire, ouvert d'office à 65 ans. `shareTxt()` est le texte partagé.
+- Succès : tableau `ACH`, obtenus dans la partie dans `S.ach`, conservés entre les parties dans `localStorage` sous `fortune-leman-ach`.
+- 70 situations dans `SITS`. Une situation peut rester ouverte pendant que le joueur agit ailleurs : chaque choix doit revérifier l'état (exemple : ne jamais faire tomber `co.emp` à 0).
