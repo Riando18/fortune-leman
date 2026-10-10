@@ -85,3 +85,10 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Grossesse : la situation `enfant` lance `S.preg` (9 mois), la naissance a lieu dans `next()`. Mère avec emploi : `S.mat` (congé de maternité, 80 %). Père avec emploi : `S.pat` (deux semaines). `fire()` ne licencie pas pendant la grossesse ni le congé.
 - Situations réservées au personnage féminin : `preg_annonce`, `regles`, `entretien_enfant`, `salaire_egal`, `remarques`, `reseau_f`. `charge` vaut pour tous les parents en couple.
 - `T()` accorde les titres au féminin : tester chaque nouveau titre avec `S.sex='f'`.
+
+## Âge de départ, anniversaire et cadeaux
+- Le joueur choisit son âge de départ (16 à 50 ans, `S.age0`) et sa date de naissance (`S.bd` : jour et mois). Dès 18 ans, une étape de plus demande son parcours (`PROFS`, stocké dans `S.prof`). `applyStart()`, appelé au choix du canton, en déduit diplômes, expérience, emploi, économies, logement, 2e pilier et obligations militaires.
+- Le temps reste compté depuis 16 ans : un départ à l'âge A pose `S.m = S.m0 = (A − 16) × 12`. Le calendrier commence toujours en août 2027 : `dateLbl()` et `yrNow()` retranchent `S.m0`. Ne jamais calculer une année ou un âge à partir de `S.m` à la main : utiliser `age()`, `ageAt(mois)`, `dateLbl()`, `yrNow()`.
+- L'âge change le mois de naissance (`bk()` : décalage par rapport à août). `track()` fête l'anniversaire ce mois-là et y déclenche `recap()`. La retraite reste à `S.m === 588`.
+- Cadeaux : `vGifts()` dans Vie privée, action `gift`, dernier cadeau par destinataire dans `S.gifts`. Situation `noel` en novembre et décembre.
+- Impôts : aucun avant 18 ans ni sur un salaire d'apprenti (CFC ou AFP sans allocation de formation), tant que le revenu imposable annuel reste sous CHF 30'000.
