@@ -92,3 +92,11 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - L'âge change le mois de naissance (`bk()` : décalage par rapport à août). `track()` fête l'anniversaire ce mois-là et y déclenche `recap()`. La retraite reste à `S.m === 588`.
 - Cadeaux : `vGifts()` dans Vie privée, action `gift`, dernier cadeau par destinataire dans `S.gifts`. Situation `noel` en novembre et décembre.
 - Impôts : aucun avant 18 ans ni sur un salaire d'apprenti (CFC ou AFP sans allocation de formation), tant que le revenu imposable annuel reste sous CHF 30'000.
+
+## Départ guidé, emploi temporaire, loisirs et comptes
+- Guide de départ : `GD` (étapes avec `tab`, `sel` sélecteur de l'élément à toucher, `ok()`), étape courante `S.gd` (−1 : terminé). `gdTick()` tourne au début de `render()`, avance les étapes et change d'onglet ; `render()` pose la classe `gd-hi` (cadre et doigt) sur l'élément visé. Il remplace l'ancien tutoriel `TUT` pour les nouvelles parties.
+- Compte en banque : `S.acct` est faux au début d'une nouvelle partie. Sans compte, pas de postulation, de mission, de stage ni d'apprentissage. L'action `bank` l'ouvre. Dans un test Node, appeler `act('bank','bc')` après `act('pick', …)`.
+- Autres comptes dès 18 ans (`vAccts()`) : épargne `S.sv` (comptée dans `nw()`, retraits limités à CHF 20'000 par mois) et compte commercial `S.bizAcct`, exigé par `cocreate`.
+- Emploi : 10 offres par mois, chacune avec un site d'origine `src`. `vTemp()` propose des missions temporaires (`S.job.tmp` mois restants) et des stages (`S.job.stage`, bonus dans `S.stg[domaine]`). La fin de mission est traitée dans `next()`.
+- Onglet Vie, « Loisirs et achats » (`vLoisirs()`) : abonnements `ABO` (formules `[nom, prix, prix étudiant]`, choisis dans `S.abo`, coût ajouté à `r.subs`), sorties `OUT` (compteur du mois dans `S.out`), achats `GOODS` (`S.own`). Situations de boîte de nuit `mad_*` après une soirée (`S.clubM`).
+- Prix relevés en octobre 2026 : Netflix, Disney+, Spotify, Apple Music et Deezer viennent de comparateurs suisses ; Prime Video, blue Sport, DAZN et NonStop Gym sont des estimations (`est:1`).
