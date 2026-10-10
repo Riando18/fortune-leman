@@ -121,3 +121,11 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Agence (`k:'agent'`, spécialités `AGS` : football, hockey, basketball, mannequins) : licence `S.aglic` pour le sport (examen réussi une fois sur deux), talents dans `cl` (paliers `AGT`), prospection payante, commissions mensuelles, transferts, départs. Revenus faibles les premières années, par construction.
 - Promotion : réseaux `NETS`, efficacité par activité dans `NETB`, campagnes de trois mois dans `S.ind.pr`.
 - Réglages : le prénom se modifie (`rename`). Il n'existe ni compte, ni mot de passe.
+
+## Messagerie enrichie, santé, logement et arnaques
+- Chaque e-mail porte un jour et une heure (`d`, `h`, affichés par `mailWhen()`). Bouton enveloppe `#mbtn` dans l'en-tête, avec un point rouge quand il reste des messages non lus. Courriers ajoutés : factures réglées, dernier rappel avant poursuite, avis de prélèvement trimestriel de la banque, confirmations de commande (Galaxus, Apple Store, Digitec, mobilier), suivi AliExpress (`S.ali`, `aliTick()`).
+- Santé `S.hp` (0 à 100, `hpTick()`) : baisse avec plus de quatre fast-foods ou deux soirées en boîte dans le mois, les heures supplémentaires, un bébé, un moral bas ; remonte avec le fitness, un sport ou le panier de la ferme. Sous 35, la situation `medecin` peut être forcée. La prime de base ne dépend pas de la santé : le coût passe par la franchise et la quote-part.
+- Mobilier : `S.furn` (−1 vide, puis `FURN`), remis à −1 par `track()` quand le joueur quitte ses parents. Habiter un bien que l'on possède : `S.liveOwn` (plus de loyer, charges de CHF 380, et le loyer de ce bien n'est plus encaissé).
+- Biens loués sur Airbnb : `bnb:1` dans `P`, rendement multiplié chaque mois par `bnbK()` (saison et hasard). `start()` complète `S.px`, `S.hold`, `S.pv` et `S.props` pour les titres et les biens ajoutés après une sauvegarde.
+- Titres liés à l'intelligence artificielle : `AIQ`, `NVDA`, `MSFT`. Branche `dess` (dessinateur en architecture, CFC en 4 ans, sans AFP). Secteur `par` (parfumerie).
+- Situations : `video_soiree`, `arnaque_sms`, `faux_bail`, `combine` (escroquer : amende, casier, prison en cas de récidive), `medecin`.
