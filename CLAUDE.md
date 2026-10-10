@@ -65,3 +65,10 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Dans un test Node, vider `S.mom` avec `act('momok')` et choisir un rêve avant d'enchaîner les mois.
 - Train de vie `S.life` (0 sobre, 1 normal, 2 confortable, tableau `LIFES`) : coefficient sur les dépenses courantes et effet mensuel sur le bien-être, réglé dans Vie privée. L'aide sociale coûte du bien-être et de la réputation chaque mois.
 - 91 situations, dont celles des propriétaires (`taux_hypo`, `energie`, `promoteur`), des patrons (`gros_contrat`, `guerre_prix`, `cyber`) et des actionnaires de clubs (`club_crise`, `club_vedette`). `amort(x)` rembourse les hypothèques.
+
+## Sport
+- Sous-page Parcours, Sport (`vSport()`). Sports dans `SPORTS` (`p` : revenu mensuel semi-pro, pro, élite ; `full` : le contrat pro exige de quitter emploi et études ; `cb` : sport de combat ; `team` : ligue de `CLUBS`). Carrière dans `S.sp` (`lvl` 0 à 3, `sk` niveau sportif sur 100, `tal` talent caché, `inj` mois de blessure, `all` tout miser), ancienne carrière dans `S.spPast`.
+- `spTick()` tourne dans `next()` avant le calcul du revenu : progression (plafond `spCeil()`, facteur d'âge `spAgeF()`), déclin dès 31 ans, blessures, revenu `r.sport` (imposé comme un salaire). Paliers `TH`. `spFull()` dit si le joueur vit du sport à plein temps (pas compté comme sans emploi).
+- Les situations `sp_up`, `sp_blessure` et `sp_fin` ne sont jamais tirées au sort : `force(id, données)` les déclenche. Les autres situations de sport passent par `pickSit()`.
+- Mesure d'octobre 2026 sur 150 carrières menées jusqu'au bout : 28 % atteignent le niveau pro, 3 % l'élite. C'est volontairement bien plus généreux que la réalité, et le jeu le dit.
+- Clubs : champ `l` (foot par défaut, hockey, basket), classement de fin de saison par ligue, couleurs des nouveaux clubs dans `CC2`. `start()` complète `S.club`, `S.clubV` et `S.clubS` pour les anciennes sauvegardes.
