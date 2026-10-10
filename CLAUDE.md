@@ -28,3 +28,4 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Formations à plein temps dans `S.study` (apprentissage CFC ou AFP, gymnase, maturité pro, université, HES, stage d'avocat, HEP), diplômes dans `S.dip`, emploi dans `S.job`, offres du mois dans `S.offers`.
 - `qlvl(domaine)` donne le niveau de qualification de 0 à 6, `T()` accorde les noms de métiers au féminin.
 - Avant 18 ans, pas d'investissement. Les parents et l'aide sociale empêchent la faillite quand le joueur n'a ni dette ni actif.
+- Statut : `S.nat` (pays), `S.ch` (nationalité suisse), `S.permit` (B ou C), `S.natu` (naturalisation en cours), `S.mil` (obligation de servir). Règles reprises du droit suisse : impôt à la source pour le permis B seulement, taxe d'exemption de 3 % (CHF 400 au minimum, 11 ans au plus, jusqu'à 37 ans), Lex Koller pour le permis B hors UE et AELE.
