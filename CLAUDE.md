@@ -39,4 +39,5 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Revenus annexes : travail non déclaré `S.black` (`BLACK`, risque de contrôle mensuel, pas de cotisation ni d'expérience), petits business `S.hus` (`HUS`, revenu par `husInc()`, deux au plus), paris `S.bet` (espérance négative, bilan dans `S.betTot`).
 - Logement : quitter ses parents exige un revenu brut de 3 fois le loyer (1,5 fois en colocation, `S.coloc`) et une garantie de loyer (`S.dep`, comptée dans la fortune). Coût de la vie par canton dans `col`.
 - Réglages : onglet `aide` (bouton « Réglages » de l'en-tête), rendu par `vAide()`. Thème dans `localStorage` sous `fortune-leman-theme` (hors de l'état de partie), appliqué par `setTheme()` via l'attribut `data-theme`.
+- Avant le début de la partie (menu ou création du personnage), `body.pre` masque l'en-tête, les onglets et la barre du bas.
 - Menu de démarrage : `menu` (variable hors état, vraie à chaque lancement) affiche `vMenu()` avec Continuer, Charger un emplacement et Nouvelle partie. Dans un test Node, mettre `menu=false` après le chargement du script.
