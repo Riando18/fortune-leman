@@ -67,8 +67,14 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - 91 situations, dont celles des propriétaires (`taux_hypo`, `energie`, `promoteur`), des patrons (`gros_contrat`, `guerre_prix`, `cyber`) et des actionnaires de clubs (`club_crise`, `club_vedette`). `amort(x)` rembourse les hypothèques.
 
 ## Sport
-- Sous-page Parcours, Sport (`vSport()`). Sports dans `SPORTS` (`p` : revenu mensuel semi-pro, pro, élite ; `full` : le contrat pro exige de quitter emploi et études ; `cb` : sport de combat ; `team` : ligue de `CLUBS`). Carrière dans `S.sp` (`lvl` 0 à 3, `sk` niveau sportif sur 100, `tal` talent caché, `inj` mois de blessure, `all` tout miser), ancienne carrière dans `S.spPast`.
-- `spTick()` tourne dans `next()` avant le calcul du revenu : progression (plafond `spCeil()`, facteur d'âge `spAgeF()`), déclin dès 31 ans, blessures, revenu `r.sport` (imposé comme un salaire). Paliers `TH`. `spFull()` dit si le joueur vit du sport à plein temps (pas compté comme sans emploi).
-- Les situations `sp_up`, `sp_blessure` et `sp_fin` ne sont jamais tirées au sort : `force(id, données)` les déclenche. Les autres situations de sport passent par `pickSit()`.
-- Mesure d'octobre 2026 sur 150 carrières menées jusqu'au bout : 28 % atteignent le niveau pro, 3 % l'élite. C'est volontairement bien plus généreux que la réalité, et le jeu le dit.
+- Sous-page Parcours, Sport (`vSport()`). Chaque sport de `SPORTS` a une échelle `L` de ligues réelles : `[nom, niveau sportif minimal, revenu mensuel, catégorie 0 amateur à 3 élite, cachet par victoire]`. `full` : le contrat pro exige de quitter emploi et études ; `cb` : sport de combat ; `team` : ligue de `CLUBS`.
+- Carrière dans `S.sp` : `t` échelon, `lvl` catégorie (tenue à jour par `spSet()`), `sk` niveau sur 100, `tal` talent caché, `inj` mois de blessure, `all` tout miser, `pal` palmarès, `w` et `l` victoires et défaites. `spMig()` convertit une carrière enregistrée avant les échelons. Ancienne carrière dans `S.spPast`.
+- `spTick()` tourne dans `next()` avant le calcul du revenu : progression (plafond `spCeil()`, facteur d'âge `spAgeF()`), déclin dès 31 ans, blessures, revenu `r.sport` imposé comme un salaire, licence de CHF 60 par mois en amateur. `spSeason()` clôt la saison en juin : classement sur 12 (équipes), sur 30 (individuels) ou bilan de combats avec cachets, titres au palmarès, promotion automatique tant que la catégorie ne change pas. Un changement de catégorie passe par la situation `sp_up`.
+- `sp_up`, `sp_blessure` et `sp_fin` ne sont jamais tirées au sort : `force(id, données)` les déclenche. Les autres situations de sport passent par `pickSit()`, dont trois pour les amateurs (`sp_tournoi`, `sp_barrage`, `sp_offre_club`).
+- Mesure d'octobre 2026 sur 150 carrières menées jusqu'au bout : 25 % atteignent une ligue pro, 2 % l'élite. C'est volontairement bien plus généreux que la réalité, et le jeu le dit.
 - Clubs : champ `l` (foot par défaut, hockey, basket), classement de fin de saison par ligue, couleurs des nouveaux clubs dans `CC2`. `start()` complète `S.club`, `S.clubV` et `S.clubS` pour les anciennes sauvegardes.
+
+## Détails suisses
+- Transports : `trList()` donne les offres selon le canton (`REG` : communauté tarifaire, exploitants, prix), l'âge (tarif jeune avant 25 ans) et l'inflation. `S.trans` vaut none, parc, tp, tp1, ag, ag1 ou car ; `S.half` est le demi-tarif. `trCost()`, `trMob()` (chances d'embauche) et `trJoy()` (bien-être) en découlent.
+- Subside à l'assurance maladie `r.sub` : 40 % de la prime sous CHF 38'000 de revenu annuel et CHF 50'000 de fortune.
+- Situations : `votation`, `impots_decl`, `caisse_maladie`, `frontiere`.
