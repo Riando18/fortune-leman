@@ -228,8 +228,79 @@ const CLUBS=[
  {id:'ls',n:'FC Lausanne-Sport',c:'Vaud',v:3.5e7,s:.6},{id:'fcl',n:'FC Lucerne',c:'Lucerne',v:3e7,s:.58},
  {id:'sio',n:'FC Sion',c:'Valais',v:2.8e7,s:.55},{id:'gc',n:'Grasshopper Club Zurich',c:'Zurich',v:2.2e7,s:.45},
  {id:'win',n:'FC Winterthour',c:'Zurich',v:1.2e7,s:.35},{id:'xam',n:'Neuchâtel Xamax',c:'Neuchâtel',v:8e6,s:.3}];
-const FORM=[{n:'Brevet fédéral',c:12000,x:1.04},{n:'Diplôme ES ou Bachelor HES',c:28000,x:1.05},{n:'Executive MBA',c:65000,x:1.06}];
-const JOBS=[{n:'Employé qualifié (CFC)',x:1,car:0,xp:0},{n:'Chef d\'équipe',x:1.22,car:1,xp:36},{n:'Responsable de département',x:1.55,car:2,xp:84},{n:'Directeur',x:2.2,car:3,xp:156}];
+const LM=[.78,.86,1,1.18,1.42,1.75,2.3];
+const FIELDS=[
+ {id:'log',n:'Logistique',base:5200,app:1,afp:1,t:['Auxiliaire logistique','Logisticien AFP','Logisticien CFC','Chef d\'équipe logistique','Responsable d\'entrepôt','Responsable supply chain','Directeur logistique'],e:['Planzer','Galliker','La Poste','Migros','Coop','CFF Cargo','Digitec Galaxus','DHL','Kühne+Nagel']},
+ {id:'com',n:'Commerce et administration',base:5000,app:1,afp:1,hes:'Haute école de gestion (HEG)',t:['Aide de bureau','Assistant de bureau AFP','Employé de commerce CFC','Spécialiste administratif','Économiste d\'entreprise','Chef de service','Directeur administratif'],e:['État de Vaud','Ville de Lausanne','BCV','UBS','Vaudoise Assurances','La Mobilière','Swisscom','Nestlé','CFF']},
+ {id:'vente',n:'Commerce de détail',base:4500,app:1,afp:1,t:['Auxiliaire de vente','Assistant du commerce de détail AFP','Gestionnaire du commerce de détail CFC','Chef de rayon','Gérant de magasin','Responsable régional des ventes','Directeur des ventes'],e:['Migros','Coop','Manor','Denner','Lidl','Aldi','Fust','Interdiscount','Ochsner Sport']},
+ {id:'inf',n:'Informatique',base:5800,app:1,afp:1,hes:'HES en informatique',t:['Auxiliaire au support','Opérateur en informatique AFP','Informaticien CFC','Spécialiste TIC','Ingénieur logiciel','Chef de projet informatique','Directeur informatique'],e:['Swisscom','ELCA','Logitech','Kudelski','CFF','UBS','Digitec Galaxus','Google Zurich','La Poste']},
+ {id:'tech',n:'Mécanique et industrie',base:5500,app:1,afp:1,hes:'HES en ingénierie',t:['Ouvrier d\'usine','Praticien en mécanique AFP','Polymécanicien CFC','Chef d\'atelier','Ingénieur HES','Responsable de production','Directeur technique'],e:['Bobst','ABB','Stadler Rail','Rolex','Swatch Group','Schindler','Bühler','Pilatus']},
+ {id:'bat',n:'Construction',base:5600,app:1,afp:1,hes:'HES en génie civil',t:['Manœuvre','Aide-maçon AFP','Maçon CFC','Chef d\'équipe','Conducteur de travaux','Chef de projet construction','Directeur de travaux'],e:['Implenia','Losinger Marazzi','Marti','Frutiger','Orllati','HRS']},
+ {id:'elec',n:'Électricité',base:5500,app:1,afp:0,t:['Aide-électricien','Électricien auxiliaire','Électricien CFC','Chef de chantier électricité','Chef de projet électricité','Responsable technique','Directeur technique'],e:['Romande Energie','Groupe E','BKW','SIG','Cablex','Alpiq']},
+ {id:'gastro',n:'Hôtellerie et restauration',base:4400,app:1,afp:1,hes:'École hôtelière de Lausanne (EHL)',t:['Aide de cuisine','Employé en cuisine AFP','Cuisinier CFC','Chef de partie','Sous-chef','Chef de cuisine','Directeur d\'hôtel'],e:['Beau-Rivage Palace','Lausanne Palace','SV Group','Eldora','Novae','Kempinski','Mövenpick']},
+ {id:'sante',n:'Santé',base:4900,app:1,afp:1,hes:'HES en soins infirmiers',t:['Auxiliaire de santé','Aide en soins et accompagnement AFP','Assistant en soins et santé communautaire CFC','Assistant en soins spécialisé','Infirmier diplômé HES','Infirmier chef','Directeur des soins'],e:['CHUV','HUG','Inselspital','Hirslanden','HFR Fribourg','Réseau hospitalier neuchâtelois','Hôpital du Valais','USZ']},
+ {id:'soc',n:'Social et éducation',base:4800,app:1,afp:1,hes:'HES en travail social',t:['Auxiliaire de vie','Aide en soins et accompagnement AFP','Assistant socio-éducatif CFC','Assistant socio-éducatif spécialisé','Éducateur social HES','Responsable d\'équipe éducative','Directeur d\'institution'],e:['Fondation de Vernand','Pro Infirmis','Caritas','Pro Senectute','Ville de Lausanne','Fondation Eben-Hézer','Croix-Rouge suisse']},
+ {id:'auto',n:'Automobile et transports',base:5000,app:1,afp:1,t:['Laveur de voitures','Assistant en maintenance d\'automobiles AFP','Mécatronicien d\'automobiles CFC','Diagnosticien d\'automobiles','Chef d\'atelier','Responsable après-vente','Directeur de garage'],e:['AMAG','Emil Frey','TCS','CarPostal','Transports publics lausannois','TPG']},
+ {id:'droit',n:'Droit',base:4600,uni:['unil','unige','unifr','unine','unibe','uzh','unibas'],t:[,,,,'Assistant juridique','Juriste','Avocat associé'],e:['Lenz & Staehelin','Schellenberg Wittmer','Kellerhals Carrard','État de Vaud','Tribunal cantonal','La Mobilière','UBS']},
+ {id:'med',n:'Médecine',base:4800,uni:['unil','unige','unibe','uzh','unibas'],t:[,,,,,'Médecin assistant','Médecin spécialiste FMH'],e:['CHUV','HUG','Inselspital','USZ','Hirslanden','Hôpital du Valais']},
+ {id:'eco',n:'Économie (HEC)',base:4700,uni:['unil','unige','unifr','unine','unibe','uzh','unibas','usi'],t:[,,,,'Analyste','Analyste financier','Directeur financier'],e:['UBS','BCV','Pictet','Lombard Odier','Nestlé','PwC','KPMG','Deloitte','Banque nationale suisse']},
+ {id:'ing',n:'Ingénierie (EPF)',base:5000,uni:['epfl','ethz'],t:[,,,,'Ingénieur','Ingénieur chef de projet','Directeur technique'],e:['ABB','Stadler Rail','Logitech','CERN','CFF','Holcim','Sika','Nestlé']},
+ {id:'psy',n:'Psychologie',base:4500,uni:['unil','unige','unifr','unibe','uzh','unibas'],t:[,,,,'Assistant en psychologie','Psychologue','Responsable de service psychologique'],e:['CHUV','HUG','État de Vaud','Fondation de Nant','Pro Juventute']},
+ {id:'lettres',n:'Lettres et sciences humaines',base:4000,uni:['unil','unige','unifr','unine','unibe','uzh','unibas'],t:[,,,,'Chargé de communication','Journaliste','Rédacteur en chef'],e:['RTS','Tamedia','Ringier','État de Vaud','Ville de Genève','Payot']},
+ {id:'pharma',n:'Pharmacie',base:4700,uni:['unige','unibas','ethz','unibe'],t:[,,,,'Préparateur en pharmacie','Pharmacien','Pharmacien responsable'],e:['Amavita','Sun Store','Benu','Roche','Novartis','Galenica']},
+ {id:'archi',n:'Architecture',base:4500,uni:['epfl','ethz','usi'],t:[,,,,'Architecte junior','Architecte','Architecte associé'],e:['Herzog & de Meuron','Richter Dahl Rocha','Implenia','Losinger Marazzi','État de Vaud']},
+ {id:'ens',n:'Enseignement',base:4100,t:[,,,,,'Enseignant','Directeur d\'établissement scolaire'],e:['État de Vaud','État de Genève','État de Fribourg','État de Neuchâtel','Canton de Berne']}];
+const UNIS=[{id:'unil',n:'Université de Lausanne',s:'UNIL',c:'VD'},{id:'epfl',n:'EPFL',s:'EPFL',c:'VD'},{id:'unige',n:'Université de Genève',s:'UNIGE',c:'GE'},{id:'unifr',n:'Université de Fribourg',s:'UNIFR',c:'FR'},{id:'unine',n:'Université de Neuchâtel',s:'UNINE',c:'NE'},{id:'unibe',n:'Université de Berne',s:'UniBE',c:'BE'},{id:'uzh',n:'Université de Zurich',s:'UZH',c:'ZH'},{id:'ethz',n:'EPF de Zurich',s:'ETHZ',c:'ZH'},{id:'unibas',n:'Université de Bâle',s:'UniBas',c:'BS'},{id:'usi',n:'Université de la Suisse italienne',s:'USI',c:'TI'}];
+const SIDE=[{id:'baby',n:'Baby-sitting',w:300,ch:.02,min:16},{id:'rep',n:'Répétiteur',w:450,ch:.03,min:16},{id:'caisse',n:'Caissier le samedi',w:650,ch:.04,min:16},{id:'livr',n:'Livreur à vélo',w:900,ch:.07,min:18},{id:'serv',n:'Serveur le soir',w:1200,ch:.1,min:18},{id:'nuit',n:'Auxiliaire logistique de nuit',w:1500,ch:.14,min:18}];
+const TRAIN=[
+ {id:'permis',n:'Permis de conduire',c:3500,mo:6,d:'Dès 18 ans. Augmente vos chances à l\'embauche.',ok:()=>age()>=18&&!S.dip.permis},
+ {id:'de',n:'Allemand, niveau B2',c:4200,mo:10,d:'+3 % de salaire à l\'embauche et de meilleures chances.',ok:()=>!S.dip.de},
+ {id:'en',n:'Anglais, niveau B2',c:3800,mo:8,d:'+3 % de salaire à l\'embauche et de meilleures chances.',ok:()=>!S.dip.en},
+ {id:'brevet',n:'Brevet fédéral',c:12000,mo:18,sub:1,d:'Exige un CFC et 2 ans d\'expérience. Ouvre les postes de chef d\'équipe et de spécialiste. La Confédération rembourse la moitié à la réussite.',ok:()=>!!S.dip.cfc&&!S.dip.brevet&&S.xp>=24},
+ {id:'es',n:'Diplôme ES',c:21000,mo:36,d:'Exige un CFC. Ouvre les postes de cadre dans votre branche.',ok:()=>!!S.dip.cfc&&!S.dip.es&&!S.dip.hes},
+ {id:'df',n:'Diplôme fédéral (maîtrise)',c:16000,mo:18,sub:1,d:'Exige le brevet fédéral et 4 ans d\'expérience. Avec 8 ans d\'expérience, il ouvre les postes de responsable. La Confédération rembourse la moitié à la réussite.',ok:()=>!!S.dip.brevet&&!S.dip.df&&S.xp>=48},
+ {id:'mba',n:'Executive MBA',c:65000,mo:24,d:'Exige un diplôme supérieur et 6 ans d\'expérience. Ouvre les postes de direction.',ok:()=>!S.dip.mba&&S.xp>=72&&FIELDS.some(f=>qlvl(f.id)>=4)}];
+const FEMW={chef:'cheffe','sous-chef':'sous-cheffe',ingénieur:'ingénieure',serveur:'serveuse',vendeur:'vendeuse',coiffeur:'coiffeuse',livreur:'livreuse',laveur:'laveuse',maçon:'maçonne',apprenti:'apprentie',assistant:'assistante',qualifié:'qualifiée',spécialisé:'spécialisée',diplômé:'diplômée',associé:'associée',social:'sociale',financier:'financière',régional:'régionale',administratif:'administrative'};
+function femW(w,first){const l=w.toLowerCase();let o=FEMW[l];if(!o&&first)o=l.endsWith('teur')?l.slice(0,-4)+'trice':l.endsWith('ien')?l+'ne':l.endsWith('ier')?l.slice(0,-2)+'ère':l.endsWith('é')?l+'e':l.endsWith('ant')?l+'e':l==='avocat'?'avocate':null;
+ if(!o)return w;return w[0]!==l[0]?o[0].toUpperCase()+o.slice(1):o}
+const T=t=>S.sex==='f'?t.split(' ').map((w,i)=>femW(w,i===0)).join(' '):t;
+const ee=()=>S.sex==='f'?'e':'';
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function qlvl(f){const d=S.dip,F=by(FIELDS,f);if(f==='med')return d.med?(d.fmh?6:5):0;if(f==='ens')return d.hep?5:0;
+ let l=0;if(d.afp===f)l=1;if(d.cfc===f)l=2;if(d.cfc===f&&d.brevet===f)l=3;if(d.es===f||d.hes===f||d.ba===f)l=4;if((l>=2&&d.df===f&&S.xp>=96)||d.ma===f||(l>=4&&d.mba))l=5;if(l>=5&&S.xp>=180)l=6;
+ if(!l&&F.app&&(d.cfc||d.afp||d.ba||d.hes))l=1;return l}
+const langs=()=>(S.dip.de?1:0)+(S.dip.en?1:0);
+const salary=(f,lvl,ef)=>Math.round(by(FIELDS,f).base*LM[lvl]*C().sal/5900*ef*S.raise*(1+Math.min(.2,.01*S.xp/12))*(1+.03*langs())*(f==='droit'&&lvl>=5&&S.dip.av?1.25:1)/50)*50;
+const jobTitle=j=>T(j.f==='droit'&&j.lvl===5&&S.dip.av?'Avocat':by(FIELDS,j.f).t[j.lvl]);
+function genOffers(){const q=FIELDS.map(f=>[f,qlvl(f.id)]),mx=Math.max(...q.map(x=>x[1])),main=q.filter(x=>x[1]===mx&&(mx>0||x[0].app)).map(x=>x[0]),apps=FIELDS.filter(f=>f.app),o=[];
+ for(let i=0;i<6;i++){const f=i<3?rnd(main):rnd(apps),lo=f.t.findIndex(x=>x);const l=clamp(i<3?mx+rnd([-1,0,0,1]):rnd([0,0,1,2]),lo,6);o.push({f:f.id,lvl:l,emp:rnd(f.e),ef:.92+.2*Math.random(),done:0})}
+ S.offers=o;S.apN=0}
+function chance(o){const q=qlvl(o.f);if(q<o.lvl)return 0;if(o.lvl===0)return .75;return Math.min(.92,.35+.15*(q-o.lvl)+.05*langs()+(S.dip.permis?.04:0)+Math.min(.15,S.xp/12*.02))*(o.lvl>=6?.2:o.lvl===5?.5:1)}
+const stWage=st=>st.k==='cfc'?[750,950,1250][st.y-1]:st.k==='afp'?[650,850][st.y-1]:st.k==='av'?3500:0;
+const stTui=st=>['ba','ma','med'].includes(st.k)?120:st.k==='hes'?(st.f==='gastro'?1500:150):st.k==='hep'?100:0;
+const stP=st=>{const last=st.y===st.n;return st.k==='cfc'?(last?.93:.98):st.k==='afp'?(last?.95:.98):st.k==='gym'?.9:st.k==='med'?(st.y===1?.5:.82):st.k==='ba'?.82:st.k==='av'?(last?.65:.99):st.k==='hep'?.92:.88};
+function stName(st){const F=st.f&&by(FIELDS,st.f),U=st.uni&&by(UNIS,st.uni);
+ return st.k==='cfc'?'Apprentissage · '+T(F.t[2])+' chez '+st.emp:st.k==='afp'?'Apprentissage · '+T(F.t[1])+' chez '+st.emp:st.k==='gym'?'Gymnase':st.k==='matupro'?'Maturité professionnelle':st.k==='ba'?'Bachelor · '+F.n+' · '+U.n:st.k==='ma'?'Master · '+F.n+' · '+U.n:st.k==='med'?'Médecine · '+U.n:st.k==='hes'?F.hes:st.k==='av'?'Stage d\'avocat chez '+st.emp:'Haute école pédagogique (HEP)'}
+function startStudy(k,f,u){const n={cfc:3,afp:2,gym:3,matupro:1,ba:3,ma:2,med:6,hes:3,av:2,hep:2}[k];
+ S.study={k,f:f||null,uni:u||null,emp:k==='cfc'||k==='afp'?rnd(by(FIELDS,f).e):k==='av'?rnd(by(FIELDS,'droit').e.slice(0,3)):null,y:k==='cfc'&&(S.dip.afp===f||S.dip.matu)?2:1,n,left:12,fails:0};
+ if(u)S.uni=u;S.job=null;S.chom=0;S.indep=false}
+function dipList(){const d=S.dip,n=f=>by(FIELDS,f).n,o=[];
+ if(d.afp)o.push('AFP ('+n(d.afp)+')');if(d.cfc)o.push('CFC ('+n(d.cfc)+')');if(d.matu)o.push(d.matu==='gym'?'Maturité gymnasiale':'Maturité professionnelle');
+ if(d.brevet)o.push('Brevet fédéral');if(d.es)o.push('Diplôme ES');if(d.df)o.push('Diplôme fédéral');if(d.hes)o.push(by(FIELDS,d.hes).hes);
+ if(d.med)o.push('Diplôme fédéral de médecin');else{if(d.ba)o.push('Bachelor ('+n(d.ba)+')');if(d.ma)o.push('Master ('+n(d.ma)+')')}
+ if(d.fmh)o.push('Titre FMH');if(d.av)o.push('Brevet d\'avocat');if(d.hep)o.push('Diplôme HEP');if(d.mba)o.push('Executive MBA');if(d.de)o.push('Allemand B2');if(d.en)o.push('Anglais B2');if(d.permis)o.push('Permis de conduire');return o}
+function graduate(st,log){const d=S.dip,k=st.k;
+ if(k==='afp')d.afp=st.f;else if(k==='cfc')d.cfc=st.f;else if(k==='gym')d.matu='gym';else if(k==='matupro')d.matu=d.matu||'pro';else if(k==='ba')d.ba=st.f;else if(k==='ma')d.ma=st.f;else if(k==='med'){d.med=1;d.ba=d.ma='med'}else if(k==='hes')d.hes=st.f;else if(k==='av')d.av=1;else d.hep=1;
+ S.study=null;log('Diplôme obtenu : '+dipList().slice(-1)[0]+'. '+(k==='gym'?'L\'université vous est ouverte.':k==='matupro'?'Les hautes écoles spécialisées vous sont ouvertes.':'De nouvelles offres d\'emploi vous attendent.'));
+ if((k==='cfc'||k==='afp'||k==='av')&&Math.random()<.7){const lvl=k==='cfc'?2:k==='afp'?1:5,f=k==='av'?'droit':st.f;S.job={f,lvl,emp:st.emp,sal:salary(f,lvl,1),since:S.m};log(st.emp+' vous garde après votre formation : vous êtes engagé'+ee()+' comme '+jobTitle(S.job)+'.')}
+ genOffers()}
+function studyTick(log){const st=S.study;if(!st||--st.left>0)return;const sd=S.side?by(SIDE,S.side):null,p=stP(st)-(sd?sd.ch:0)-(S.train?.03:0);
+ if(Math.random()<p){st.y++;st.fails=0;if(st.y>st.n)graduate(st,log);else{st.left=12;log('Examens réussis : vous passez en '+st.y+'e année.')}}
+ else{st.fails++;if(['ba','ma','med'].includes(st.k)&&st.fails>=2){S.ban[st.f]=1;S.study=null;log('Deuxième échec aux examens : échec définitif dans cette filière. Il faut choisir une autre voie.')}else{st.left=12;log('Examens ratés : vous refaites l\'année.')}}}
+function trainTick(log){const t=S.train;if(!t||--t.left>0)return;const x=by(TRAIN,t.id),d=S.dip;
+ if(t.id==='brevet'||t.id==='es'||t.id==='df')d[t.id]=d.cfc;else d[t.id]=1;S.train=null;
+ if(x.sub){S.cash+=x.c/2;S.bm+=x.c/2}log('Formation terminée : '+x.n+'.'+(x.sub?' La Confédération vous rembourse '+money(x.c/2)+'.':''));genOffers()}
+const away=()=>!!(S.study&&S.study.uni&&by(UNIS,S.study.uni).c!==S.canton);
 const EV=[
  {t:'Krach boursier : le SMI décroche.',f:s=>s.s=-.12},
  {t:'Rallye boursier : les résultats dépassent les attentes.',f:s=>s.s=.06},
@@ -244,14 +315,14 @@ const EV=[
  {t:'L\'euro reprend des couleurs face au franc.',f:s=>s.fx=.03}];
 const LIFE=[
  {t:'Facture de dentiste, non couverte par la LAMal.',c:-1800},
- {t:'Réparation de la voiture avant l\'expertise.',c:-1400},
+ {t:'Réparation de la voiture avant l\'expertise.',c:-1400,car:1},
  {t:'Décompte de chauffage : supplément de charges.',c:-600},
  {t:'Franchise et quote-part après une visite médicale.',c:-900},
  {t:'Prime exceptionnelle de votre employeur.',c:2500,emp:1},
  {t:'Restructuration : vous perdez votre emploi. Chômage à 70 % pendant 4 mois.',c:0,job:1}];
-const TABS=[['apercu','Aperçu','--accent'],['vie','Vie et emploi','--accent'],['s','Bourse','--stock'],['c','Crypto','--crypto'],['immo','Immobilier','--immo'],['biz','Entreprises','--biz'],['club','Participations','--club'],['banque','Banque','--cash'],['aide','Aide','--accent']];
+const TABS=[['apercu','Aperçu','--accent'],['vie','Parcours','--accent'],['s','Bourse','--stock'],['c','Crypto','--crypto'],['immo','Immobilier','--immo'],['biz','Entreprises','--biz'],['club','Participations','--club'],['banque','Banque','--cash'],['aide','Aide','--accent']];
 const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-const VIE=1500,CAP3A=7258,AVS=2520,KEY='fortune-leman-3';
+const VIE=1500,CAP3A=7258,AVS=2520,KEY='fortune-leman-4';
 const BANKS=[
  {id:'bc',n:'Banque cantonale',fee:5,sav:.008,hyp:-.1,brok:.006,loan:.079},
  {id:'raif',n:'Raiffeisen',fee:5,sav:.007,hyp:-.15,brok:.008,loan:.082},
@@ -283,28 +354,32 @@ const mono=a=>`<span class="ic" style="--k:var(${a.k==='s'?'--stock':'--crypto'}
 const disc=c=>`<span class="ic" style="background:linear-gradient(90deg,${CC[c.id][0]} 50%,${CC[c.id][1]} 50%);border:1px solid var(--line);border-radius:50%"></span>`;
 const shield=c=>`<span class="ic" style="background:linear-gradient(${CF[c.id][0]}deg,${CF[c.id][1]} 50%,${CF[c.id][2]} 50%);border:1px solid var(--line);border-radius:6px 6px 16px 16px;width:30px;height:34px"></span>`;
 const TUT=[
- {tab:'apercu',h:'Bienvenue dans Fortune Léman',p:'Vous avez 25 ans et 40 ans devant vous pour construire votre fortune en Suisse. Le grand chiffre en haut est votre fortune nette : tout ce que vous possédez, moins vos dettes. Chaque tour dure un mois. Prenez vos décisions, puis appuyez sur « Mois suivant » en bas. Le bouton « +1 an » fait défiler douze mois d\'un coup.'},
+ {tab:'apercu',h:'Bienvenue dans Fortune Léman',p:'Vous avez 16 ans et toute une vie devant vous : formation, carrière, puis fortune. Le grand chiffre en haut est votre fortune nette : tout ce que vous possédez, moins vos dettes. Chaque tour dure un mois. Prenez vos décisions, puis appuyez sur « Mois suivant » en bas. Le bouton « +1 an » fait défiler douze mois d\'un coup.'},
  {tab:'apercu',h:'L\'aperçu : votre tableau de bord',p:'Après chaque mois, le budget détaille votre fiche de salaire : cotisations, impôts, loyer, prime maladie, puis ce qu\'il vous reste. La courbe vous compare à l\'épargnant ETF, qui place simplement son surplus chaque mois. Les missions vous donnent la prochaine étape, et le coach commente vos décisions chaque janvier.'},
- {tab:'vie',h:'Vie et emploi',p:'Votre salaire dépend de votre canton et de votre poste. Une formation coûte cher mais ouvre un poste mieux payé. Une fois la formation et l\'expérience réunies, postulez : la réponse est positive environ quatre fois sur dix. Vous pouvez aussi déménager dans un canton où les impôts ou les loyers sont plus bas.'},
+ {tab:'vie',h:'Votre parcours',p:'Tout commence ici. Choisissez un apprentissage ou le gymnase, prenez un petit job à côté, puis postulez aux offres d\'emploi qui changent chaque mois. Plus tard, le brevet fédéral, une haute école ou l\'université ouvrent des postes mieux payés. Les langues et le permis augmentent vos chances.'},
  {tab:'s',h:'La bourse',p:'Entrez une quantité, puis « Acheter ». « Max » calcule ce que vos liquidités permettent. L\'ETF sur le SMI contient les vingt plus grandes sociétés suisses : c\'est le placement le plus diversifié. Les actions versent des dividendes chaque mois. Un cours peut baisser longtemps : n\'investissez pas l\'argent dont vous avez besoin pour vos charges.'},
  {tab:'immo',h:'L\'immobilier',p:'La banque prête 80 % du prix. Vous apportez 20 %, plus 4 % de frais. Elle vérifie aussi que vos revenus supportent les charges, et refuse sinon. Le loyer encaissé paie l\'hypothèque et l\'entretien, le reste est pour vous. Plus tard, vous pourrez acheter un terrain et y construire.'},
  {tab:'biz',h:'Les entreprises',p:'Choisissez un domaine et payez le capital de départ. La première année est souvent déficitaire : gardez de la trésorerie. Engagez seulement quand la demande du marché dépasse votre effectif. Les apprentis CFC et AFP coûtent peu et rejoignent l\'équipe une fois diplômés. Une machine par employé augmente la production.'},
  {tab:'banque',h:'Banque et prévoyance',p:'Choisissez votre banque : frais, intérêts, courtage et taux hypothécaire changent de l\'une à l\'autre. Un versement dans le pilier 3a réduit vos impôts, mais l\'argent reste bloqué jusqu\'à 65 ans. Le crédit privé coûte cher : gardez-le pour les urgences. Le bouton CHF / EUR en haut convertit tous les montants.'},
- {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Vous retrouvez ce tutoriel et le lexique dans l\'onglet Aide.'}];
+ {tab:'apercu',h:'À vous de jouer',p:'Commencez par les missions de l\'aperçu : elles suivent l\'ordre logique, de la réserve de sécurité à la première entreprise. La bourse, l\'immobilier et les entreprises s\'ouvrent à vos 18 ans. Les cryptos sont très risquées, et les clubs de football s\'ouvrent quand vous serez millionnaire. Vous retrouvez ce tutoriel et le lexique dans l\'onglet Aide.'}];
 const invested=()=>secVal('s')+secVal('c')+propGross()+cosVal()>0;
 const MIS=[
- {t:'Jouer votre premier mois',w:'Appuyez sur « Mois suivant » pour toucher votre premier salaire.',tab:'apercu',ok:()=>S.m>=1},
- {t:'Acheter des parts de l\'ETF sur le SMI',w:'Un seul achat, vingt sociétés : le risque est réparti.',tab:'s',ok:()=>S.hold.SMI>0},
+ {t:'Jouer votre premier mois',w:'Appuyez sur « Mois suivant » pour faire avancer le temps.',tab:'apercu',ok:()=>S.m>=1},
+ {t:'Choisir une formation',w:'Apprentissage ou gymnase : en Suisse, les deux voies mènent loin.',tab:'vie',ok:()=>!!S.study||dipList().length>0},
+ {t:'Prendre un petit job',w:'Gagner son propre argent tôt apprend à le gérer.',tab:'vie',ok:()=>!!S.side},
+ {t:'Mettre CHF 1’000 de côté',w:'L\'habitude d\'épargner compte plus que le montant.',tab:'apercu',ok:()=>S.cash>=1000},
+ {t:'Obtenir un premier diplôme',w:'AFP, CFC ou maturité : c\'est votre ticket d\'entrée sur le marché du travail.',tab:'vie',ok:()=>!!(S.dip.afp||S.dip.cfc||S.dip.matu)},
+ {t:'Décrocher un premier emploi',w:'Postulez à plusieurs offres : un refus ne coûte rien.',tab:'vie',ok:()=>!!S.job},
+ {t:'Acheter des parts de l\'ETF sur le SMI',w:'Dès 18 ans. Un seul achat, vingt sociétés : le risque est réparti.',tab:'s',ok:()=>S.hold.SMI>0},
  {t:'Verser dans votre pilier 3a',w:'Chaque franc versé est déduit de votre revenu imposable.',tab:'banque',ok:()=>S.p3>0},
- {t:'Garder trois mois de charges en réserve tout en étant investi',w:'La réserve évite de vendre au pire moment quand un imprévu arrive.',tab:'apercu',ok:()=>S.m>=6&&S.cash>=3*fixed()&&invested()},
- {t:'Obtenir le brevet fédéral',w:'La formation est souvent le placement le plus rentable en début de carrière.',tab:'vie',ok:()=>S.car>=1},
- {t:'Décrocher une promotion',w:'Un meilleur salaire augmente aussi ce que la banque accepte de vous prêter.',tab:'vie',ok:()=>S.job>=1},
+ {t:'Passer le permis de conduire',w:'Un atout demandé dans beaucoup d\'offres d\'emploi.',tab:'vie',ok:()=>!!S.dip.permis},
+ {t:'Apprendre une langue',w:'En Suisse, l\'allemand ou l\'anglais ouvre des postes et augmente le salaire.',tab:'vie',ok:()=>langs()>0},
+ {t:'Obtenir un diplôme supérieur',w:'Brevet, ES, HES ou université : chaque niveau ouvre des postes mieux payés.',tab:'vie',ok:()=>FIELDS.some(f=>qlvl(f.id)>=3)},
+ {t:'Prendre votre propre logement',w:'Vérifiez d\'abord que votre salaire couvre loyer, prime maladie et dépenses.',tab:'vie',ok:()=>!S.home&&S.m>0},
  {t:'Atteindre CHF 100’000 de fortune nette',w:'Le premier palier est le plus long. Ensuite, les rendements travaillent pour vous.',tab:'apercu',ok:()=>nw()>=1e5},
  {t:'Acheter un premier bien immobilier',w:'L\'hypothèque vous fait profiter de la hausse d\'un bien que vous n\'avez payé qu\'en partie.',tab:'immo',ok:()=>S.built.length>0||P.some(p=>S.props[p.id].n>0)},
  {t:'Créer une entreprise',w:'Gardez plusieurs mois de charges de l\'entreprise en trésorerie avant de vous lancer.',tab:'biz',ok:()=>S.cos.length>0},
- {t:'Rendre une entreprise rentable après un an',w:'Une entreprise vaut par son bénéfice régulier, pas par son chiffre d\'affaires.',tab:'biz',ok:()=>S.cos.some(co=>co.age>=12&&co.avg>0)},
  {t:'Former un apprenti jusqu\'au diplôme',w:'Former coûte du temps mais donne des employés qualifiés sans frais de recrutement.',tab:'biz',ok:()=>S.grad>0},
- {t:'Construire sur un terrain',w:'Le promoteur gagne la différence entre le coût de construction et la valeur du bien fini.',tab:'immo',ok:()=>S.built.length>0},
  {t:'Atteindre le million',w:'À ce niveau, les participations dans les clubs s\'ouvrent.',tab:'apercu',ok:()=>nw()>=1e6},
  {t:'Entrer au capital d\'un club de football',w:'Un placement de passion : n\'y mettez que ce que vous pouvez perdre.',tab:'club',ok:()=>CLUBS.some(c=>S.club[c.id]>0)}];
 const LEX=[
@@ -330,7 +405,7 @@ const $=id=>document.getElementById(id);
 const z=()=>{let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*Math.random())};
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const by=(arr,id)=>arr.find(x=>x.id===id);
-function fresh(){const s={v:3,m:0,canton:null,cash:20000,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,car:0,job:0,apCd:0,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[20000],bm:20000,bmH:[20000],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
+function fresh(){const s={v:4,m:0,canton:null,cash:500,fx:.935,rate:1.6,cur:'CHF',tab:'apercu',hold:{},cost:{},px:{},hist:{},pv:{},props:{},land:{},built:[],cos:[],club:{},clubV:{},clubS:{},loan:0,lpp:0,p3:0,p3y:0,p3last:0,ded:0,job:null,study:null,side:null,train:null,dip:{},ban:{},offers:[],apN:0,xp:0,home:true,sex:null,name:'',indep:false,army:0,chomBase:0,assist:0,uni:null,raise:1,lam:1,infl:1,chom:0,ret:false,nw:[500],bm:500,bmH:[500],coach:null,final:null,log:[],rep:null,over:false,won:false,bank:'bc',tut:-1,mis:{},grad:0};
  A.forEach(a=>{s.px[a.id]=a.p;s.hist[a.id]=[a.p];s.hold[a.id]=0;s.cost[a.id]=0});
  P.forEach(p=>{s.pv[p.id]=p.v;s.props[p.id]={n:0,mort:0}});
  LAND.forEach(l=>s.land[l.id]={own:false,v:l.v,proj:null,done:false});
@@ -348,8 +423,7 @@ const B=()=>by(BANKS,S.bank)||BANKS[0];
 const bname=b=>b.id==='bc'?(BCN[S.canton]||b.n)+' (banque cantonale)':b.n;
 const fee=()=>B().brok;
 const mrate=()=>S.rate+B().hyp;
-const carMult=()=>FORM.slice(0,S.car).reduce((t,f)=>t*f.x,1);
-const gross=()=>S.ret?AVS:S.job<0?0:C().sal*JOBS[S.job].x*carMult()*S.raise*(S.chom>0?.7:1);
+const gross=()=>S.ret?AVS:S.job?S.job.sal:S.study?stWage(S.study):0;
 const secVal=k=>A.filter(a=>a.k===k).reduce((t,a)=>t+S.hold[a.id]*S.px[a.id],0);
 const propGross=()=>P.reduce((t,p)=>t+S.props[p.id].n*S.pv[p.id],0)+S.built.reduce((t,b)=>t+b.v,0);
 const propMort=()=>P.reduce((t,p)=>t+S.props[p.id].mort,0)+S.built.reduce((t,b)=>t+b.mort,0);
@@ -363,11 +437,12 @@ const cosAvg=()=>S.cos.reduce((t,co)=>t+Math.max(0,co.avg),0);
 const caYear=()=>S.cos.reduce((t,co)=>t+co.caAvg*12,0);
 const clubVal=()=>CLUBS.reduce((t,c)=>t+S.club[c.id]*S.clubV[c.id],0);
 const nw=()=>S.cash+secVal('s')+secVal('c')+propGross()-propMort()+landVal()+cosVal()+clubVal()-S.loan;
-const rank=v=>v<1e5?'Salarié':v<5e5?'Épargnant':v<1e6?'Investisseur':v<1e7?'Millionnaire':v<1e8?'Magnat':'Légende de la place financière';
-const dateLbl=m=>MOIS[m%12]+' '+(2027+Math.floor(m/12));
-const age=()=>25+Math.floor(S.m/12);
-const fixed=()=>C().rent*S.infl+C().lam*S.lam+VIE*S.infl;
-const taxRate=tx=>Math.min(.4,C().tax*clamp(.68+tx*12/250000,.6,2.6));
+const rank=v=>v<1e4?'Débutant':v<1e5?'Épargnant':v<1e6?'Investisseur':v<1e7?'Millionnaire':v<1e8?'Magnat':'Légende de la place financière';
+const cal=()=>(S.m+7)%12;
+const dateLbl=m=>MOIS[(m+7)%12]+' '+(2027+Math.floor((m+7)/12));
+const age=()=>16+Math.floor(S.m/12);
+const fixed=()=>S.rep?S.rep.rent0+S.rep.lam+S.rep.vie+S.rep.tui:500;
+const taxRate=tx=>{const an=tx*12;return Math.min(.4,C().tax*(an<=15000?0:an<=80000?(an-15000)/65000:Math.min(2.6,1+(an-80000)/170000*.88)))};
 const clubOpen=()=>nw()>=1e6||caYear()>=1e6;
 function toast(t,bad){$('toast').textContent=t;$('toast').className=bad?'down':''}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -385,9 +460,10 @@ function chart(){const h=S.nw,g=S.bmH;if(h.length<2)return'<p class="muted">La c
  <div class="legend"><span><i class="dot" style="background:var(--accent)"></i>Vous <span class="num">${money(h[h.length-1])}</span></span><span><i class="dot" style="background:var(--stock)"></i>Épargnant ETF <span class="num">${money(S.bm)}</span></span></div>`}
 function cantCards(act){return`<div class="cant">${CANT.map(c=>`<button data-act="${act}" data-id="${c.id}" aria-current="${S.canton===c.id}"><span class="who">${shield(c)}<span><b>${c.n}</b><br><span class="muted">${c.city}</span></span></span>
  <span>Salaire brut <span class="num">${money(c.sal)}</span> × 13</span><span>Loyer <span class="num">${money(c.rent)}</span></span><span>Prime maladie <span class="num">${money(c.lam)}</span></span><span>Impôt sur le revenu env. <span class="num">${p1(c.tax)}</span></span></button>`).join('')}</div>`}
-function vPick(){return`<h2>Où vivez-vous ?</h2><p class="lead">Vous avez 25 ans, un CFC, un emploi et CHF 20’000 d'économies. Le canton fixe votre salaire, votre loyer, votre prime d'assurance maladie et vos impôts. Vous pourrez déménager plus tard.</p>${cantCards('pick')}`}
-function repTable(r){const rows=[[r.lblSal,r.sal],['Cotisations AVS, AI, APG, AC',-r.soc],['Cotisation LPP (2e pilier)',-r.lpp],['Impôts sur le revenu',-r.tax],['Loyer',-r.rent0],['Prime d\'assurance maladie',-r.lam],['Dépenses courantes',-r.vie],['Dividendes',r.div],['Immobilier, net d\'hypothèque et d\'entretien',r.rent],['Bénéfice des entreprises',r.biz],['Clubs de football',r.club],['Chantiers : dépassement de budget',r.build],['Intérêts du compte',r.sav||0],['Frais bancaires',-(r.bfee||0)],['Intérêts de crédit',-r.int],['Redevance Serafe',-r.ser],['Impôt sur la fortune',-r.wtax],['Imprévu',r.life]];
- return`<table>${rows.filter((x,i)=>i===0||Math.abs(x[1])>.5).map(x=>`<tr><td>${x[0]}</td><td class="num ${cls(x[1])}">${money(x[1])}</td></tr>`).join('')}<tr class="tot"><td>Résultat du mois</td><td class="num ${cls(r.tot)}">${money(r.tot)}</td></tr></table>`}
+function vPick(){if(!S.sex)return`<h2>Qui êtes-vous ?</h2><p class="lead">Vous commencez à 16 ans, à la fin de l'école obligatoire. Formation, premier emploi, carrière, puis investissements et entreprises : votre parcours se joue mois après mois jusqu'à la retraite.</p><input class="txt" id="pname" maxlength="20" placeholder="Votre prénom (facultatif)" aria-label="Votre prénom"><div class="ctl l" style="margin-top:12px"><button class="b go" data-act="sex" data-id="m">Je suis un garçon</button><button class="b go" data-act="sex" data-id="f">Je suis une fille</button></div><p class="sub" style="margin-top:10px">Ce choix accorde les noms de métiers. Les garçons font aussi l'école de recrues à 19 ans.</p>`;
+ return`<h2>Où grandissez-vous ?</h2><p class="lead">Vous vivez chez vos parents. Le canton fixe les salaires, les loyers, les primes d'assurance maladie et les impôts que vous connaîtrez plus tard. Si vous étudiez dans un autre canton, il faudra y louer une chambre. Les chiffres ci-dessous sont ceux d'un adulte.</p>${cantCards('pick')}`}
+function repTable(r){const rows=[[r.lblSal,r.sal],['Petit job',r.side],['Soutien de vos parents',r.par],['Aide sociale',r.aid],['Cotisations AVS, AI, APG, AC',-r.soc],['Cotisation LPP (2e pilier)',-r.lpp],['Impôts sur le revenu',-r.tax],[r.lblRent||'Loyer',-r.rent0],['Prime d\'assurance maladie',-r.lam],['Dépenses courantes',-r.vie],['Taxes d\'études',-r.tui],['Dividendes',r.div],['Immobilier, net d\'hypothèque et d\'entretien',r.rent],['Bénéfice des entreprises',r.biz],['Clubs de football',r.club],['Chantiers : dépassement de budget',r.build],['Intérêts du compte',r.sav],['Frais bancaires',-r.bfee],['Intérêts de crédit',-r.int],['Redevance Serafe',-r.ser],['Impôt sur la fortune',-r.wtax],['Imprévu',r.life]];
+ return`<table>${rows.filter((x,i)=>i===0||Math.abs(x[1]||0)>.5).map(x=>`<tr><td>${x[0]}</td><td class="num ${cls(x[1])}">${money(x[1])}</td></tr>`).join('')}<tr class="tot"><td>Résultat du mois</td><td class="num ${cls(r.tot)}">${money(r.tot)}</td></tr></table>`}
 function vApercu(){const parts=[['Liquidités','--cash',Math.max(0,S.cash)],['Bourse','--stock',secVal('s')],['Crypto','--crypto',secVal('c')],['Immobilier et terrains','--immo',Math.max(0,propGross()-propMort()+landVal())],['Entreprises','--biz',cosVal()],['Clubs','--club',clubVal()]];
  const tot=parts.reduce((t,p)=>t+p[2],0)||1,f=S.final;
  return`${S.over?`<div class="banner">Faillite personnelle. Vos dettes dépassent vos actifs. <button class="b" data-act="new">Recommencer</button></div>`:''}
@@ -396,19 +472,47 @@ function vApercu(){const parts=[['Liquidités','--cash',Math.max(0,S.cash)],['Bo
  <div class="grid2"><section class="panel"><h3>Fortune nette</h3>${chart()}
  <div class="alloc">${parts.map(p=>`<i style="width:${p[2]/tot*100}%;background:var(${p[1]})"></i>`).join('')}</div>
  <div class="legend">${parts.filter(p=>p[2]>0).map(p=>`<span><i class="dot" style="background:var(${p[1]})"></i>${p[0]} <span class="num">${money(p[2])}</span></span>`).join('')}</div>
- <p class="sub" style="margin:10px 0 0">L'épargnant ETF garde un emploi de base toute sa vie et place chaque mois tout ce qui lui reste dans l'ETF sur le SMI. Prévoyance hors fortune : LPP <span class="num">${money(S.lpp)}</span>, 3a <span class="num">${money(S.p3)}</span>.</p></section>
+ <p class="sub" style="margin:10px 0 0">L'épargnant ETF suit exactement votre parcours et vos salaires, mais place dès 18 ans tout ce qui lui reste dans l'ETF sur le SMI. Prévoyance hors fortune : LPP <span class="num">${money(S.lpp)}</span>, 3a <span class="num">${money(S.p3)}</span>.</p></section>
  <section class="panel"><h3>Budget du dernier mois</h3>${S.rep?repTable(S.rep):`<p class="muted">Investissez vos économies, puis appuyez sur « Mois suivant ». Le détail de votre fiche de salaire et de vos charges s'affichera ici.</p>`}</section></div>
  ${vMis()}<section class="panel" style="margin-top:12px"><h3>Bilan du coach${S.coach?' · '+S.coach.d:''}</h3>${S.coach?`<ul class="log">${S.coach.tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:'<p class="muted">Chaque mois de janvier, le coach passe vos décisions en revue : réserve de sécurité, 3a, concentration, crédit, entreprises en perte.</p>'}</section>
  <section class="panel" style="margin-top:12px"><h3>Journal</h3><ul class="log">${S.log.slice(0,14).map(l=>`<li><span>${l.d}</span>${l.t}</li>`).join('')||'<li class="muted">Les événements du marché et de votre vie apparaîtront ici.</li>'}</ul></section>`}
-function vVie(){const c=C(),g=gross();
- return`<h2>Vie et emploi</h2><p class="lead">Vous vivez à ${c.city}, vous avez ${age()} ans. ${S.ret?'Vous êtes à la retraite et touchez la rente AVS.':S.job<0?'Vous êtes indépendant : pas de salaire, mais votre présence augmente de 15 % le chiffre d\'affaires de vos entreprises.':S.chom?'Vous êtes au chômage encore '+S.chom+' mois.':'Poste actuel : '+JOBS[S.job].n+'. Le 13e salaire tombe en décembre.'}</p>
- <div class="grid2"><section class="panel"><h3>Budget fixe</h3><table><tr><td>${S.ret?'Rente AVS':'Salaire brut mensuel'}</td><td class="num">${money(g)}</td></tr><tr><td>Loyer</td><td class="num">${money(c.rent*S.infl)}</td></tr><tr><td>Prime d'assurance maladie</td><td class="num">${money(c.lam*S.lam)}</td></tr><tr><td>Dépenses courantes</td><td class="num">${money(VIE*S.infl)}</td></tr><tr><td>Impôt sur le revenu, taux de base</td><td class="num">${p1(c.tax)}</td></tr><tr class="tot"><td>Impôt sur la fortune au-delà de CHF 100’000</td><td class="num">${p1(c.w)}</td></tr></table></section>
- <section class="panel"><h3>Formation continue</h3><div class="list">${FORM.map((f,i)=>`<div class="ctl" style="justify-content:space-between"><span><b>${f.n}</b><span class="sub">Salaire +${Math.round((f.x-1)*100)} %, ouvre des postes · coût <span class="num">${money(f.c)}</span></span></span>${i<S.car?'<span class="up">Obtenu</span>':`<button class="b go" data-act="form" ${i===S.car&&!S.ret?'':'disabled'}>Se former</button>`}</div>`).join('')}</div></section></div>
- <h2>Marché de l'emploi</h2><p class="lead">Une postulation par mois, environ 40 % de chances de réussite. En cas de refus, il faut attendre 3 mois.${S.apCd?' Prochaine postulation possible dans '+S.apCd+' mois.':''}</p>
- <div class="list">${JOBS.map((j,i)=>{const ok=S.car>=j.car&&S.m>=j.xp;return`<div class="row" style="--c:var(--accent)"><div class="who">${ico('user','--accent')}<div><b>${j.n}</b><span class="sub">${j.car?'Exige : '+FORM[j.car-1].n+' et ':'Exige : '}${Math.round(j.xp/12)} ans d'expérience</span></div></div><div class="px"><span class="num">${money(c.sal*j.x*carMult()*S.raise)}</span><span class="sub">brut par mois × 13</span></div>
- <div class="ctl">${S.job===i?'<span class="up">Votre poste</span>':`<button class="b go" data-act="apply" data-id="${i}" ${ok&&!S.ret&&((S.job<0&&i===0)||(!S.apCd&&i>S.job))?'':'disabled'}>${S.job<0&&i===0?'Reprendre un emploi':'Postuler'}</button>`}</div></div>`}).join('')}</div>
- ${S.job>=0&&!S.ret&&S.cos.length?`<div class="ctl l" style="margin-top:10px"><button class="b" data-act="indep">Quitter mon emploi pour diriger mes entreprises</button></div>`:''}
- <h2>Déménager</h2><p class="lead">Changer de canton coûte ${money(4000)}.</p>${cantCards('move')}`}
+function vVie(){const c=C(),a=age(),st=S.study,j=S.job,d=S.dip,sd=S.side?by(SIDE,S.side):null,fulltime=!!st;
+ const statut=S.ret?'Retraité'+ee():st?stName(st):j?jobTitle(j)+' chez '+j.emp:S.indep?'Chef'+(S.sex==='f'?'fe':'')+' d\'entreprise':S.chom>0?'Au chômage, encore '+S.chom+' mois d\'indemnités':'Sans emploi';
+ const log=away()?'Chambre d\'étudiant près de l\'université':S.home?'Chez vos parents':'Votre propre logement';
+ let h=`<h2>Parcours</h2><div class="grid2"><section class="panel"><h3>Votre situation</h3><table>
+ <tr><td>Statut</td><td>${statut}</td></tr><tr><td>Revenu brut mensuel</td><td class="num">${money(gross()+(sd&&!j?sd.w:0))}</td></tr>
+ <tr><td>Expérience professionnelle</td><td class="num">${(S.xp/12).toFixed(1).replace('.',',')} ans</td></tr>
+ <tr class="tot"><td>Logement</td><td>${log}</td></tr></table>
+ ${away()||S.ret?'':`<div class="ctl l" style="margin-top:10px"><button class="b" data-act="home" ${S.home?(a<18?'disabled':''):(a>=28?'disabled':'')}>${S.home?'Prendre votre propre logement':'Retourner chez vos parents'}</button></div><p class="sub">${S.home?'Chez vos parents, vous ne payez pas de loyer, seulement une pension de 20 % de votre revenu dès que vous gagnez votre vie. Possible jusqu\'à 28 ans.':'Loyer '+money(c.rent*S.infl)+' par mois dans votre canton.'}</p>`}</section>
+ <section class="panel"><h3>Vos diplômes</h3>${dipList().length?`<ul class="log">${dipList().map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Aucun diplôme pour l\'instant. Vous sortez de l\'école obligatoire.</p>'}</section></div>`;
+ if(st)h+=`<h2>Formation en cours</h2><div class="panel"><div class="who">${ico('user','--accent')}<div><b>${stName(st)}</b><span class="sub">Année ${st.y} sur ${st.n} · examens dans ${st.left} mois · chances de réussite ${Math.round((stP(st)-(sd?sd.ch:0)-(S.train?.03:0))*100)} %</span></div></div>
+ <table style="margin-top:8px">${stWage(st)?`<tr><td>Salaire brut</td><td class="num">${money(stWage(st))}</td></tr>`:''}${stTui(st)?`<tr><td>Taxes d'études</td><td class="num">${money(stTui(st))} par mois</td></tr>`:''}<tr class="tot"><td>Échecs aux examens</td><td class="num">${st.fails}</td></tr></table>
+ <p class="sub">${['ba','ma','med'].includes(st.k)?'À l\'université, deux échecs entraînent un échec définitif dans la filière. ':''}Pendant votre première formation, vos parents comblent vos fins de mois difficiles.</p>
+ <div class="ctl l"><button class="b" data-act="drop">${armed==='drop'?'Confirmer : tout arrêter':'Interrompre la formation'}</button></div></div>`;
+ if(!j&&!S.ret)h+=`<h2>Petits jobs</h2><p class="lead">Un petit job rapporte de l'argent à côté de vos études, mais il réduit vos chances aux examens.</p><div class="list">${SIDE.map(x=>`<div class="row" style="--c:var(--accent)"><div class="who">${ico('cart','--accent')}<div><b>${T(x.n)}</b><span class="sub">Dès ${x.min} ans · examens −${Math.round(x.ch*100)} points</span></div></div><div class="px"><span class="num">${money(x.w)}</span><span class="sub">par mois</span></div>
+ <div class="ctl">${S.side===x.id?`<span class="up">Votre job</span><button class="b" data-act="side" data-id="none">Arrêter</button>`:`<button class="b go" data-act="side" data-id="${x.id}" ${a>=x.min?'':'disabled'}>Prendre ce job</button>`}</div></div>`).join('')}</div>`;
+ if(!S.ret){h+=`<h2>Emploi</h2>`;
+  if(j)h+=`<div class="panel"><div class="who">${ico('user','--accent')}<div><b>${jobTitle(j)}</b><span class="sub">${j.emp} · ${by(FIELDS,j.f).n} · depuis ${dateLbl(j.since)}</span></div></div><table style="margin-top:8px"><tr class="tot"><td>Salaire brut, 13 fois par an</td><td class="num">${money(j.sal)}</td></tr></table>
+  <div class="ctl l" style="margin-top:8px"><button class="b" data-act="quit">${armed==='quit'?'Confirmer la démission':'Démissionner'}</button>${S.cos.length?`<button class="b" data-act="indep">Quitter pour diriger vos entreprises</button>`:''}</div></div>`;
+  h+=`<p class="lead" style="margin-top:10px">${fulltime?'Vous suivez une formation à plein temps. Pour accepter un emploi, il faut la terminer ou l\'interrompre.':'Les offres changent chaque mois. Vous pouvez postuler trois fois par mois : '+S.apN+' sur 3 utilisées. Vos chances dépendent de vos diplômes, de votre expérience, de vos langues et du permis.'}</p>
+  <div class="list">${S.offers.map((o,i)=>{const F=by(FIELDS,o.f),p=chance(o);return`<div class="row" style="--c:var(--accent)"><div class="who">${ico('bank','--accent')}<div><b>${jobTitle(o)}</b><span class="sub">${o.emp} · ${F.n}</span></div></div>
+  <div class="px"><span class="num">${money(salary(o.f,o.lvl,o.ef))}</span><span class="sub">brut × 13 · ${p?'chances '+Math.round(p*100)+' %':'qualification insuffisante'}</span></div>
+  <div class="ctl">${o.done?`<span class="${o.done===2?'up':'muted'}">${o.done===2?'Engagé'+ee():'Refusé'+ee()}</span>`:`<button class="b go" data-act="apply" data-id="${i}" ${p&&!fulltime&&S.apN<3?'':'disabled'}>Postuler</button>`}</div></div>`}).join('')}</div>`}
+ if(!S.ret&&!st){const rows=[];const row=(t,s,btn)=>rows.push(`<div class="row" style="--c:var(--accent)"><div class="who" style="grid-column:1/3">${ico('user','--accent')}<div><b>${t}</b><span class="sub">${s}</span></div></div><div class="ctl">${btn}</div></div>`);
+  const bt=(id,l)=>`<button class="b go" data-act="study" data-id="${id}">${l}</button>`;
+  if(!d.matu&&!d.cfc&&a<=19)row('Gymnase','3 ans, pas de salaire. La maturité gymnasiale ouvre l\'université et les EPF.',bt('gym','Entrer au gymnase'));
+  if(d.cfc&&!d.matu)row('Maturité professionnelle','1 an à plein temps après le CFC. Ouvre les hautes écoles spécialisées.',bt('matupro','S\'inscrire'));
+  if(d.matu==='gym'&&!d.ba)FIELDS.filter(f=>f.uni&&!S.ban[f.id]).forEach(f=>row('Université · '+f.n,f.id==='med'?'6 ans. La première année élimine la moitié des étudiants. Puis 5 ans de médecin assistant pour le titre FMH.':'Bachelor de 3 ans, puis master de 2 ans. Salaire de départ avec master : env. '+money(salary(f.id,5,1))+'.',f.uni.map(u=>bt((f.id==='med'?'med':'ba')+':'+f.id+':'+u,by(UNIS,u).s)).join('')));
+  if(d.ba&&!d.ma&&!S.ban[d.ba])row('Master · '+by(FIELDS,d.ba).n,'2 ans. Ouvre les postes de niveau supérieur dans votre domaine.',bt('ma:'+d.ba+':'+(S.uni||by(FIELDS,d.ba).uni[0]),'Commencer le master'));
+  if(d.ma==='droit'&&!d.av)row('Stage d\'avocat','2 ans payés '+money(3500)+', puis l\'examen du brevet, réputé difficile. Un avocat gagne 25 % de plus qu\'un juriste.',bt('av','Commencer le stage'));
+  if(d.ba&&!d.med&&!d.hep)row('Haute école pédagogique (HEP)','2 ans après un bachelor. Ouvre le métier d\'enseignant.',bt('hep','S\'inscrire'));
+  if(d.matu&&!d.hes)FIELDS.filter(f=>f.hes&&(d.cfc===f.id||d.matu==='gym')).forEach(f=>row(f.hes,'Bachelor HES de 3 ans.'+(f.id==='gastro'?' Taxes d\'études élevées : '+money(1500)+' par mois.':'')+' Salaire de départ : env. '+money(salary(f.id,4,1))+'.',bt('hes:'+f.id,'S\'inscrire')));
+  if(a<=30&&!d.cfc)FIELDS.filter(f=>f.app).forEach(f=>row('Apprentissage · '+f.n,(d.afp===f.id||d.matu?'CFC en 2 ans grâce à votre diplôme. ':'CFC en 3 ans, AFP en 2 ans. ')+'Salaire d\'apprenti de '+money(750)+' à '+money(1250)+'. Avec le CFC : env. '+money(salary(f.id,2,1))+'.',bt('cfc:'+f.id,'CFC')+(f.afp&&!d.afp?`<button class="b" data-act="study" data-id="afp:${f.id}">AFP</button>`:'')));
+  if(rows.length)h+=`<h2>Formations à plein temps</h2><p class="lead">Commencer une formation à plein temps met fin à votre emploi actuel.</p><div class="list">${rows.join('')}</div>`}
+ if(!S.ret){h+=`<h2>Formations en cours d'emploi</h2><p class="lead">Une formation à la fois, à côté de votre travail ou de vos études. Elle se paie en une fois à l'inscription.</p>`;
+  if(S.train){const x=by(TRAIN,S.train.id);h+=`<div class="panel"><b>${x.n}</b><span class="sub">En cours · encore ${S.train.left} mois</span></div>`}
+  else h+=`<div class="list">${TRAIN.filter(x=>!d[x.id]).map(x=>`<div class="row" style="--c:var(--accent)"><div class="who">${ico('calc','--accent')}<div><b>${x.n}</b><span class="sub">${x.d}</span></div></div><div class="px"><span class="num">${money(x.c)}</span><span class="sub">${x.mo} mois</span></div><div class="ctl"><button class="b go" data-act="train" data-id="${x.id}" ${x.ok()?'':'disabled'}>S'inscrire</button></div></div>`).join('')}</div>`}
+ return h+`<h2>Déménager</h2><p class="lead">Changer de canton coûte ${money(4000)} et modifie salaires, loyers, primes et impôts.</p>${cantCards('move')}`}
 function vMarket(k){const c=k==='s'?'--stock':'--crypto';
  return`<h2>${k==='s'?'Bourse suisse':'Crypto'}</h2><p class="lead">${k==='s'?'Les dividendes sont imposés comme un revenu. Les plus-values privées ne sont pas imposées, comme en Suisse. Frais de courtage : '+p1(fee())+'.':'Très volatil : un jeton peut perdre la moitié de sa valeur en quelques mois. Fractions autorisées. Frais : '+p1(fee())+'.'}</p>
  <div class="list">${A.filter(a=>a.k===k).map(a=>{const h=S.hist[a.id],p=S.px[a.id],ch=h.length>1?p/h[h.length-2]-1:0,q=S.hold[a.id],v=q*p;
@@ -455,7 +559,7 @@ function vClub(){if(!clubOpen())return`<h2>Participations</h2><div class="panel"
  <div class="px"><span class="num">${money(v)}</span><span class="sub">valeur du club · 5 % = ${money(v*.05)}</span></div>
  <div class="ctl"><button class="b go" data-act="clbuy" data-id="${c.id}" ${q<.999?'':'disabled'}>Acheter 5 %</button><button class="b" data-act="clsell" data-id="${c.id}" ${q?'':'disabled'}>Vendre 5 %</button></div>
  ${q?`<div class="own"><span>Votre part : <b class="num">${Math.round(q*100)} %</b></span><span>Valeur : <b class="num">${money(q*v)}</b></span><button class="b" data-act="transf" data-id="${c.id}" ${q>=.249?'':'disabled'}>Financer des transferts (${money(v*.04)})</button></div>`:''}</div>`}).join('')}</div>`}
-const loanCap=()=>Math.max(0,Math.min(250000,8*gross()+.3*(secVal('s')+secVal('c')+cosVal()))-S.loan);
+const loanCap=()=>age()<18?0:Math.max(0,Math.min(250000,8*gross()+.3*(secVal('s')+secVal('c')+cosVal()))-S.loan);
 function vBanque(){return`<h2>Banque et prévoyance</h2><p class="lead">Crédit privé à ${p1(B().loan)} par an, plafonné à CHF 250’000 selon votre salaire et vos actifs. Un découvert coûte 1 % par mois.</p>
  <h3>Votre banque</h3><p class="lead">Changer de banque est gratuit. Les conditions ci-dessous sont inventées pour le jeu et ne correspondent pas aux tarifs réels de ces banques.</p>
  <div class="cant" style="margin-bottom:12px">${BANKS.map(b=>`<button data-act="bank" data-id="${b.id}" aria-current="${S.bank===b.id}"><span class="who">${ico('bank','--cash')}<b style="font-size:15px">${bname(b)}</b></span><span>Frais de compte <span class="num">${money(b.fee)}</span>/mois</span><span>Intérêt d'épargne <span class="num">${p1(b.sav)}</span></span><span>Courtage <span class="num">${p1(b.brok)}</span></span><span>Hypothèque <span class="num">${(S.rate+b.hyp).toFixed(2).replace('.',',')} %</span></span><span>Crédit privé <span class="num">${p1(b.loan)}</span></span></button>`).join('')}</div>
@@ -465,7 +569,7 @@ function vBanque(){return`<h2>Banque et prévoyance</h2><p class="lead">Crédit 
  <p class="sub">Un versement 3a est déduit de votre revenu imposable. Le capital est bloqué et versé à 65 ans avec la LPP.</p>
  <div class="ctl l" style="margin-top:8px"><input id="q-p3" inputmode="decimal" value="${Math.round((S.cur==='EUR'?1/S.fx:1)*Math.max(0,CAP3A-S.p3y))}" style="width:120px" aria-label="Versement 3a en ${S.cur}"><span class="sub">${S.cur}</span><button class="b go" data-act="p3" ${S.ret?'disabled':''}>Verser en 3a</button></div></section></div>
  <section class="panel" style="margin-top:12px"><table><tr><td>Taux de change</td><td class="num">1 € = CHF ${S.fx.toFixed(3)}</td></tr><tr><td>Taux hypothécaire</td><td class="num">${p1(mrate()/100)}</td></tr><tr class="tot"><td>Rang</td><td>${rank(nw())}</td></tr></table>
- <div style="margin-top:12px"><button class="b" data-act="new">${armed?'Confirmer : tout effacer':'Nouvelle partie'}</button></div></section>`}
+ <div style="margin-top:12px"><button class="b" data-act="new">${armed===true?'Confirmer : tout effacer':'Nouvelle partie'}</button></div></section>`}
 function vTut(){if(S.tut<0||!TUT[S.tut])return'';const t=TUT[S.tut],last=S.tut===TUT.length-1;
  return`<section class="tut"><span class="sub">Tutoriel · étape ${S.tut+1} sur ${TUT.length}</span><h3>${t.h}</h3><p style="margin:0 0 10px;max-width:65ch">${t.p}</p><div class="ctl l"><button class="b go" data-act="tnext">${last?'Commencer à jouer':'Suivant'}</button>${last?'':'<button class="b" data-act="tskip">Passer le tutoriel</button>'}</div></section>`}
 function checkMis(){MIS.forEach((m,i)=>{if(!S.mis[i]&&m.ok()){S.mis[i]=1;S.log.unshift({d:dateLbl(S.m),t:'Mission accomplie : '+m.t+'.'})}})}
@@ -474,7 +578,7 @@ function vMis(){const todo=MIS.map((m,i)=>[m,i]).filter(x=>!S.mis[x[1]]),done=MI
 function vAide(){return`<h2>Aide</h2><div class="panel"><h3>Comment se joue un tour</h3><p style="margin:0 0 10px;max-width:65ch">Vous prenez vos décisions dans les onglets, puis vous appuyez sur « Mois suivant ». Le jeu verse votre salaire, prélève vos charges et vos impôts, fait bouger les marchés et calcule le résultat de vos entreprises. La partie se termine par un bilan à 65 ans, mais vous pouvez continuer ensuite.</p><button class="b go" data-act="help">Revoir le tutoriel</button></div>
  <div class="panel" style="margin-top:12px"><h3>Lexique</h3><dl class="lex">${LEX.map(l=>`<dt>${l[0]}</dt><dd>${l[1]}</dd>`).join('')}</dl></div>`}
 function render(){const v=nw(),on=!!S.canton;$('nw').textContent=money(v);
- $('meta').innerHTML=on?`<span>${dateLbl(S.m)} · ${age()} ans · ${C().n}</span><span>Liquidités <b class="num ${S.cash<0?'down':''}">${money(S.cash)}</b></span><span>Rang <b>${rank(v)}</b></span><span class="num">1 € = CHF ${S.fx.toFixed(3)}</span>`:'<span>Choisissez votre canton pour commencer.</span>';
+ $('meta').innerHTML=on?`<span>${S.name?esc(S.name)+' · ':''}${dateLbl(S.m)} · ${age()} ans · ${C().n}</span><span>Liquidités <b class="num ${S.cash<0?'down':''}">${money(S.cash)}</b></span><span>Rang <b>${rank(v)}</b></span><span class="num">1 € = CHF ${S.fx.toFixed(3)}</span>`:'<span>Choisissez votre canton pour commencer.</span>';
  $('cur-chf').setAttribute('aria-pressed',S.cur==='CHF');$('cur-eur').setAttribute('aria-pressed',S.cur==='EUR');
  $('tabs').innerHTML=on?TABS.map(t=>`<button role="tab" aria-selected="${S.tab===t[0]}" style="--c:var(${t[2]})" data-act="tab" data-id="${t[0]}">${t[1]}</button>`).join(''):'';
  const t=S.tab;if(on)checkMis();$('view').innerHTML=!on?vPick():vTut()+(t==='apercu'?vApercu():t==='vie'?vVie():t==='s'||t==='c'?vMarket(t):t==='immo'?vImmo():t==='biz'?vBiz():t==='club'?vClub():t==='aide'?vAide():vBanque());
@@ -489,55 +593,73 @@ function coach(d){const t=[],fx=fixed(),st=secVal('s'),cr=secVal('c'),fin=st+cr+
  t.push(v>=S.bm?'Vous êtes devant l\'épargnant ETF : '+money(v)+' contre '+money(S.bm)+'.':'L\'épargnant ETF est devant vous : '+money(S.bm)+' contre '+money(v)+'. Il ne fait rien d\'autre que verser chaque mois.');
  if(S.cash<3*fx)t.push('Réserve de sécurité trop basse. Visez 3 à 6 mois de charges, soit au moins '+money(3*fx)+', avant d\'investir davantage.');
  else if(S.cash>12*fx&&S.cash>.5*Math.max(1,v))t.push('Plus d\'un an de charges dort sur votre compte. L\'inflation le grignote : investissez une partie.');
- if(!S.ret&&S.job>=0&&S.p3last<CAP3A*.5)t.push('Pilier 3a peu utilisé l\'an dernier : '+money(S.p3last)+' sur '+money(CAP3A)+'. C\'est une déduction d\'impôt perdue.');
+ if(!S.ret&&S.job&&S.p3last<CAP3A*.5)t.push('Pilier 3a peu utilisé l\'an dernier : '+money(S.p3last)+' sur '+money(CAP3A)+'. C\'est une déduction d\'impôt perdue.');
  if(fin>5000&&cr/fin>.2)t.push(Math.round(cr/fin*100)+' % de vos placements sont en crypto. Une chute de moitié effacerait '+money(cr/2)+'.');
  const top=A.filter(a=>a.k==='s'&&a.id!=='SMI').map(a=>[a.n,S.hold[a.id]*S.px[a.id]]).sort((a,b)=>b[1]-a[1])[0];
  if(st>10000&&top[1]/st>.35)t.push(top[0]+' pèse '+Math.round(top[1]/st*100)+' % de votre portefeuille d\'actions. Une seule mauvaise nouvelle suffit : diversifiez ou passez par l\'ETF.');
  if(S.loan>0)t.push('Crédit privé de '+money(S.loan)+' à '+p1(B().loan)+'. Le rembourser rapporte plus sûrement que n\'importe quel placement.');
  S.cos.filter(co=>co.age>6&&co.avg<0).forEach(co=>t.push(esc(co.n)+' perd environ '+money(-co.avg)+' par mois. Réduisez l\'effectif, équipez l\'équipe ou vendez.'));
  if(t.length===1)t.push('Rien à signaler sur votre gestion cette année.');S.coach={d,tips:t.slice(0,6)}}
-function next(){if(S.over)return;S.m++;const mo=S.m%12,d=dateLbl(S.m),sh={s:0,c:0,p:0,b:1,r:0,fx:0},c=C(),log=t=>S.log.unshift({d,t});
- const r={soc:0,lpp:0,tax:0,div:0,rent:0,biz:0,club:0,build:0,int:0,ser:0,wtax:0,life:0,bfee:0,sav:0};
- if(S.apCd>0)S.apCd--;
- if(Math.random()<.3){const e=EV[Math.floor(Math.random()*EV.length)];e.f(sh);log(e.t)}
- if(Math.random()<.1){const e=LIFE[Math.floor(Math.random()*LIFE.length)],emp=!S.ret&&!S.chom&&S.job>=0;if(e.job){if(emp){S.chom=4;log(e.t)}}else if(!e.emp||emp){r.life=e.c;log(e.t+' '+money(e.c))}}
- if(mo===0){S.lam*=1.025;S.infl*=1.01;S.p3last=S.p3y;S.p3y=0;r.ser=335;if(!S.ret)S.raise*=1.012;log('Nouvelle année : les primes maladie augmentent de 2,5 %. Facture Serafe de CHF 335.')}
+function next(){if(S.over)return;S.m++;const mo=cal(),d=dateLbl(S.m),sh={s:0,c:0,p:0,b:1,r:0,fx:0},c=C(),a=age(),log=t=>S.log.unshift({d,t});
+ const r={sal:0,side:0,par:0,aid:0,soc:0,lpp:0,tax:0,div:0,rent:0,biz:0,club:0,build:0,int:0,ser:0,wtax:0,life:0,bfee:0,sav:0,tui:0,rent0:0,lam:0,vie:0};
+ if(Math.random()<.3){const e=rnd(EV);e.f(sh);if(a>=18)log(e.t)}
+ if(Math.random()<.1){const e=rnd(LIFE),emp=!!S.job&&!S.ret;if(e.job){if(emp&&S.xp>12){S.chomBase=S.job.sal;S.chom=12;S.job=null;log(e.t)}}else if(a>=18&&(!e.emp||emp)&&(!e.car||S.dip.permis)){r.life=e.c;log(e.t+' '+money(e.c))}}
+ if(mo===0){S.lam*=1.025;S.infl*=1.01;S.p3last=S.p3y;S.p3y=0;if(!S.home&&a>=18)r.ser=335;if(!S.ret){S.raise*=1.012;if(S.job)S.job.sal*=1.012}if(a>=18)log('Nouvelle année : les primes maladie augmentent de 2,5 %.'+(r.ser?' Facture Serafe de CHF 335.':''))}
  S.fx=clamp(S.fx*Math.exp(.01*z())+sh.fx,.8,1.15);S.rate=clamp(S.rate+sh.r,.8,4.5);
  const mk={s:.03*z()+sh.s,c:.07*z()+sh.c},etf0=S.px.SMI;
- A.forEach(a=>{S.px[a.id]=Math.max(a.p*.002,S.px[a.id]*Math.exp(a.mu+mk[a.k]+a.sg*z()));S.hist[a.id].push(S.px[a.id]);if(S.hist[a.id].length>40)S.hist[a.id].shift()});
+ A.forEach(x=>{S.px[x.id]=Math.max(x.p*.002,S.px[x.id]*Math.exp(x.mu+mk[x.k]+x.sg*z()));S.hist[x.id].push(S.px[x.id]);if(S.hist[x.id].length>40)S.hist[x.id].shift()});
  P.forEach(p=>S.pv[p.id]*=Math.exp(.002+.006*z()+sh.p));S.built.forEach(b=>b.v*=Math.exp(.002+.006*z()+sh.p));
  LAND.forEach(l=>{const o=S.land[l.id];if(o.done)return;o.v*=Math.exp(.0025+.008*z()+sh.p);
   if(o.own&&o.proj&&--o.proj.left<=0){const b=by(BUILD,o.proj.b),ov=b.c*Math.max(0,.06+.06*z());r.build-=ov;S.built.push({n:b.n+' à '+l.n.split(',')[0],v:(o.v+b.c)*1.12,y:b.y,mort:b.c*.75});o.own=false;o.done=true;o.proj=null;log('Chantier terminé : '+b.n+' à '+l.n.split(',')[0]+'. Dépassement de budget : '+money(ov)+'.')}});
- const g=gross(),dec=mo===11,dbl=dec&&!S.ret&&!S.chom&&S.job>=0;r.sal=g*(dbl?2:1);r.lblSal=S.ret?'Rente AVS':S.job<0?'Salaire (indépendant)':S.chom?'Indemnité de chômage':dbl?'Salaire brut et 13e salaire':'Salaire brut';
- if(!S.ret&&S.job>=0){r.soc=r.sal*.064;if(!S.chom){r.lpp=r.sal*.05;S.lpp+=r.lpp*2}}
+ if(!S.ret){studyTick(log);trainTick(log)}
+ if(S.sex==='m'&&S.m===41){S.army=4;log('École de recrues : quatre mois sous les drapeaux. Vous touchez l\'allocation pour perte de gain.')}
+ const dec=mo===11,st=S.study;let w=0,lbl='Aucun salaire',paid=false;
+ if(S.ret){w=AVS;lbl='Rente AVS'}
+ else if(S.job){w=S.job.sal;lbl='Salaire brut';paid=true;S.xp++;if(S.job.f==='med'&&S.dip.med&&!S.dip.fmh&&++S.assist>=60){S.dip.fmh=1;log('Après cinq ans comme médecin assistant'+ee()+', vous obtenez le titre de spécialiste FMH.')}}
+ else if(st&&stWage(st)){w=stWage(st);lbl=st.k==='av'?'Salaire de stagiaire':'Salaire d\'apprenti'+ee();paid=true}
+ else if(S.chom>0){w=.7*S.chomBase;lbl='Indemnité de chômage';if(!--S.chom)log('Vos indemnités de chômage sont épuisées.')}
+ if(dec&&paid){w*=2;lbl+=' et 13e salaire'}
+ if(S.army>0){w=Math.max(2070,.8*w);lbl='Allocation perte de gain (armée)';S.army--}
+ r.sal=w;r.lblSal=lbl;if(S.side&&!S.job&&!S.ret)r.side=by(SIDE,S.side).w;
+ const inc=r.sal+r.side;
+ if(!S.ret&&a>=18)r.soc=inc*.064;
+ if(S.job&&a>=25&&S.job.sal*13>22680){r.lpp=r.sal*.05;S.lpp+=r.lpp*2}
  S.lpp*=1+.0125/12;S.p3*=1.003;
- A.forEach(a=>r.div+=S.hold[a.id]*S.px[a.id]*a.dv/12);
+ if(S.home&&a>=28&&!S.ret){S.home=false;log('À 28 ans, vous quittez le domicile de vos parents.')}
+ if(away()){r.rent0=850*S.infl;r.vie=950*S.infl;r.lblRent='Chambre d\'étudiant';if(a<25)r.par=1400}
+ else if(S.home){r.vie=(a<18?350:900)*S.infl;r.rent0=inc>2500?Math.max(500,.2*inc):0;r.lblRent='Pension versée à vos parents';if((st||a<18)&&a<25&&inc<700)r.par=r.vie}
+ else{r.rent0=c.rent*S.infl;r.vie=VIE*S.infl+.15*Math.max(0,inc-6000*S.infl);r.lblRent='Loyer'}
+ r.lam=a<18?0:c.lam*S.lam*(a<26?.75:1);if(st)r.tui=stTui(st);
+ A.forEach(x=>r.div+=S.hold[x.id]*S.px[x.id]*x.dv/12);
  P.forEach(p=>{const o=S.props[p.id];if(o.n)r.rent+=o.n*S.pv[p.id]*(p.y/12-.01/12)-o.mort*mrate()/1200});
  S.built.forEach(b=>r.rent+=b.v*(b.y/12-.01/12)-b.mort*mrate()/1200);
  S.cos.forEach(co=>{const s=by(SEC,co.s);co.age++;if(co.rep<1)co.rep=Math.min(1,co.rep+.02);
-  const W=co.emp+co.app.reduce((t,a)=>t+(a.t==='CFC'?.3:.22),0);
-  const ca=s.rev*Math.min(Math.pow(W,.97),dem(co))*(1+mb(s)*Math.min(1,co.mach/co.emp))*Math.min(1,co.rep)*(S.job<0&&!S.ret?1.15:1)*Math.max(.2,sh.b+s.sg*z());
-  const ch=co.emp*s.wage*1.15+co.app.reduce((t,a)=>t+(a.t==='CFC'?1000:750)*1.1,0)+s.loc*(1+co.emp/6)+ca*(s.cogs+.05)+co.mach*s.mc*.008,pr=ca-ch;
+  const W=co.emp+co.app.reduce((t,x)=>t+(x.t==='CFC'?.3:.22),0);
+  const ca=s.rev*Math.min(Math.pow(W,.97),dem(co))*(1+mb(s)*Math.min(1,co.mach/co.emp))*Math.min(1,co.rep)*(S.indep&&!S.job&&!S.ret?1.15:1)*Math.max(.2,sh.b+s.sg*z());
+  const ch=co.emp*s.wage*1.15+co.app.reduce((t,x)=>t+(x.t==='CFC'?1000:750)*1.1,0)+s.loc*(1+co.emp/6)+ca*(s.cogs+.05)+co.mach*s.mc*.008,pr=ca-ch;
   co.last={ca,ch,pr};co.avg=co.age===1?pr:.85*co.avg+.15*pr;co.caAvg=co.age===1?ca:.85*co.caAvg+.15*ca;r.biz+=pr;
-  co.app=co.app.filter(a=>{if(--a.left>0)return true;co.emp++;S.grad++;co.rep=Math.min(1.6,co.rep+(a.t==='CFC'?.03:.015));log(esc(co.n)+' : votre apprenti obtient son '+a.t+' et rejoint l\'équipe.');return false})});
- if(mo===5){const tb=CLUBS.map(k=>[k,S.clubS[k.id]+.25*z()]).sort((a,b)=>b[1]-a[1]);
+  co.app=co.app.filter(x=>{if(--x.left>0)return true;co.emp++;S.grad++;co.rep=Math.min(1.6,co.rep+(x.t==='CFC'?.03:.015));log(esc(co.n)+' : votre apprenti obtient son '+x.t+' et rejoint l\'équipe.');return false})});
+ if(mo===5){const tb=CLUBS.map(k=>[k,S.clubS[k.id]+.25*z()]).sort((x,y)=>y[1]-x[1]);
   tb.forEach(([k],i)=>{const perf=1-i/(tb.length-1),q=S.club[k.id];if(q){const res=S.clubV[k.id]*(-.08+.2*perf)*q;r.club+=res;log('Fin de saison : '+k.n+' termine '+(i+1)+(i?'e':'er')+'. Votre part du résultat : '+money(res)+'.')}
    S.clubV[k.id]*=1+(perf-.5)*.25;S.clubS[k.id]=clamp(.92*S.clubS[k.id]+.08*.55,.2,1)})}
- r.bfee=B().fee;r.sav=Math.max(0,Math.min(S.cash,250000))*B().sav/12;
- let tx=r.sal-r.soc-r.lpp+r.div+r.sav+Math.max(0,r.rent)+Math.max(0,r.biz);const u=Math.min(S.ded,tx);tx-=u;S.ded-=u;r.tax=tx*taxRate(tx);
- r.rent0=c.rent*S.infl;r.lam=c.lam*S.lam;r.vie=VIE*S.infl;
+ if(a>=18)r.bfee=B().fee;r.sav=Math.max(0,Math.min(S.cash,250000))*(B().sav+(a<25?.01:0))/12;
+ const base=inc-r.soc-r.lpp;let tx=base+r.div+r.sav+Math.max(0,r.rent)+Math.max(0,r.biz);const u=Math.min(S.ded,tx);tx-=u;S.ded-=u;r.tax=tx*taxRate(tx);
  r.int=S.loan*B().loan/12+(S.cash<0?-S.cash*.01:0);
  if(dec)r.wtax=Math.max(0,nw()-100000)*c.w;
- r.tot=r.sal-r.soc-r.lpp-r.tax-r.rent0-r.lam-r.vie+r.div+r.rent+r.biz+r.club+r.build-r.int-r.ser-r.wtax+r.life+r.sav-r.bfee;S.cash+=r.tot;S.rep=r;
- const bs=S.ret?AVS:c.sal*S.raise*(dec?2:1),bn=S.ret?bs:bs*(1-.114);
- S.bm=Math.max(0,S.bm)*(S.px.SMI/etf0+A[0].dv/12)+bn-bn*taxRate(bn)-r.rent0-r.lam-r.vie-r.ser;if(dec)S.bm-=Math.max(0,S.bm-100000)*c.w;
- if(S.chom>0){S.chom--;if(!S.chom)log('Vous avez retrouvé un emploi.')}
- if(S.m===480){const pay=(S.lpp+S.p3)*.93,bl=c.sal*S.raise*.1*12*40*.75*.93;S.cash+=pay;S.bm+=bl;S.lpp=S.p3=0;S.ret=true;S.chom=0;if(S.job<0)S.job=0;log('65 ans : retraite. Votre LPP et votre 3a sont versés, soit '+money(pay)+' après impôt. Vous touchez désormais la rente AVS.')}
+ const flow=inc+r.par+r.aid-r.soc-r.lpp-r.rent0-r.lam-r.vie-r.tui-r.ser+r.life;
+ r.tot=flow-r.tax+r.div+r.rent+r.biz+r.club+r.build-r.int-r.wtax+r.sav-r.bfee;
+ if(st&&a<30&&S.cash+r.tot<0){const x=-(S.cash+r.tot);r.par+=x;r.tot+=x}
+ if(a>=18&&!st&&!S.ret&&S.cash+r.tot<0&&nw()+r.tot<1000&&!S.cos.length&&S.loan<=0&&propGross()===0&&landVal()===0){r.aid=-(S.cash+r.tot);r.tot+=r.aid;if(!(S.aidM>S.m-12)){S.aidM=S.m;log('Sans revenu suffisant ni fortune, vous touchez l\'aide sociale. Elle couvre le minimum : cherchez un emploi ou une formation.')}}
+ S.cash+=r.tot;S.rep=r;
+ S.bm=S.bm*(a>=18&&S.bm>0?S.px.SMI/etf0+A[0].dv/12:1)+flow-base*taxRate(base);
+ if((r.aid||(st&&a<30))&&S.bm<0)S.bm=0;if(dec)S.bm-=Math.max(0,S.bm-100000)*c.w;
+ if(S.m===588){const pl=S.lpp*.93,pay=pl+S.p3*.93;S.cash+=pay;S.bm+=pl;S.lpp=S.p3=0;S.ret=true;S.chom=0;S.job=null;S.study=null;S.train=null;S.side=null;log('65 ans : retraite. Votre LPP et votre 3a sont versés, soit '+money(pay)+' après impôt. Vous touchez désormais la rente AVS.')}
+ if(!S.ret)genOffers();
  const v=nw();S.nw.push(v);S.bmH.push(S.bm);if(S.nw.length>600){S.nw.shift();S.bmH.shift()}
- if(S.m===480)S.final={nw:v,bm:S.bm};
- if(mo===0)coach(d);
+ if(S.m===588)S.final={nw:v,bm:S.bm};
+ if(mo===0&&a>=18)coach(d);
  if(v>=1e6&&!S.won){S.won=true;S.wonAge=age();log('Vous êtes millionnaire.')}
- if(v<0){S.over=true;S.tab='apercu';log('Faillite personnelle : l\'office des poursuites saisit vos actifs.')}
+ if(v<-3000&&a>=18){S.over=true;S.tab='apercu';log('Faillite personnelle : l\'office des poursuites saisit vos actifs.')}
  if(S.log.length>80)S.log.length=80;return r}
 function act(a,id){
  if(a==='tab'){S.tab=id;toast('')}
@@ -546,16 +668,24 @@ function act(a,id){
  else if(a==='tnext'){S.tut++;if(S.tut>=TUT.length)S.tut=-1;else S.tab=TUT[S.tut].tab}
  else if(a==='tskip'){S.tut=-1}
  else if(a==='bank'){S.bank=id;toast('Votre banque : '+bname(B())+'.')}
- else if(a==='new'){if(armed||S.over){S=fresh();armed=false;toast('Nouvelle partie.')}else{armed=true}}
- else if(a==='pick'){S.canton=id;S.tut=0;S.tab='apercu';S.log.unshift({d:dateLbl(0),t:'Vous vous installez à '+C().city+' avec CHF 20’000 d\'économies.'});toast('Bienvenue à '+C().city+'.')}
+ else if(a==='new'){if(armed===true||S.over){S=fresh();armed=false;toast('Nouvelle partie.')}else{armed=true}}
+ else if(a==='sex'){S.sex=id==='f'?'f':'m';S.name=(($('pname')||{}).value||'').trim().slice(0,20)}
+ else if(a==='pick'){S.canton=id;S.tut=0;S.tab='apercu';genOffers();S.log.unshift({d:dateLbl(0),t:'Vous avez 16 ans, vous vivez chez vos parents à '+C().city+' et vous terminez l\'école obligatoire.'});toast('Bienvenue à '+C().city+'.')}
  else if(S.over){toast('Partie terminée. Lancez une nouvelle partie.',1)}
  else if(a==='next'||a==='year'){let t=0,n=a==='year'?12:1;while(n--&&!S.over)t+=next().tot;
   toast(S.over?'Partie terminée.':S.cash<0?'Compte à découvert : vendez un actif ou empruntez.':(a==='year'?'Résultat sur 12 mois : ':'Résultat du mois : ')+money(t)+'.',S.over||S.cash<0)}
  else if(a==='move'){if(id===S.canton)toast('Vous y habitez déjà.',1);else if(pay(4000,'déménager')){S.canton=id;toast('Vous déménagez à '+C().city+'.')}}
- else if(a==='form'){const f=FORM[S.car];if(f&&pay(f.c)){S.car++;toast(f.n+' obtenu.')}}
- else if(a==='apply'){const i=+id,j=JOBS[i];if(S.job<0&&i===0){S.job=0;toast('Vous reprenez un emploi salarié.')}
-  else if(Math.random()<.4){S.job=i;S.chom=0;toast('Engagé comme '+j.n+'. Nouveau salaire brut : '+money(gross())+'.')}else{S.apCd=3;toast('Candidature refusée pour '+j.n+'. Nouvelle tentative possible dans 3 mois.',1)}}
- else if(a==='indep'){S.job=-1;S.chom=0;toast('Vous quittez votre emploi et dirigez vos entreprises à plein temps.')}
+ else if(a==='side'){if(id==='none'){S.side=null;toast('Vous arrêtez votre petit job.')}else{const x=by(SIDE,id);if(x&&age()>=x.min&&!S.job&&!S.ret){S.side=id;toast('Nouveau petit job : '+T(x.n)+', '+money(x.w)+' par mois.')}}}
+ else if(a==='home'){if(S.home){if(age()>=18){S.home=false;toast('Vous emménagez dans votre propre logement.')}}else if(age()<28){S.home=true;toast('Vous retournez vivre chez vos parents.')}}
+ else if(a==='study'){const[k,f,u]=id.split(':');if(!S.study&&!S.ret){startStudy(k,f,u);toast('Inscription confirmée : '+stName(S.study)+'.')}}
+ else if(a==='drop'){if(armed==='drop'){S.study=null;armed=false;toast('Formation interrompue.')}else armed='drop'}
+ else if(a==='quit'){if(armed==='quit'){S.job=null;armed=false;toast('Vous avez démissionné.')}else armed='quit'}
+ else if(a==='apply'){const o=S.offers[+id],p=o?chance(o):0;if(!o||o.done||!p||S.study||S.ret)return false;
+  if(S.apN>=3)toast('Trois postulations par mois au maximum.',1);
+  else{S.apN++;if(Math.random()<p){S.job={f:o.f,lvl:o.lvl,emp:o.emp,sal:salary(o.f,o.lvl,o.ef),since:S.m};o.done=2;S.chom=0;S.indep=false;S.side=null;toast('Engagé'+ee()+' comme '+jobTitle(o)+' chez '+o.emp+'. Salaire brut : '+money(S.job.sal)+'.')}else{o.done=1;toast('Candidature refusée chez '+o.emp+'. Tentez une autre offre.',1)}}}
+ else if(a==='train'){const x=by(TRAIN,id);if(S.train)toast('Terminez d\'abord votre formation en cours.',1);else if(x&&x.ok()&&!S.dip[id]&&pay(x.c,'cette formation')){S.bm-=x.c;S.train={id,left:x.mo};toast('Inscription confirmée : '+x.n+', '+x.mo+' mois.')}}
+ else if(a==='indep'){if(S.cos.length){S.job=null;S.indep=true;toast('Vous quittez votre emploi et dirigez vos entreprises à plein temps.')}}
+ else if(['buy','max','pbuy','lbuy','build','cocreate','borrow','clbuy','p3'].includes(a)&&age()<18){toast('Il faut avoir 18 ans pour cela. D\'ici là, votre argent reste sur votre compte d\'épargne.',1)}
  else if(a==='buy')buy(by(A,id),qty(id));
  else if(a==='sell')sell(by(A,id),qty(id));
  else if(a==='sellall')sell(by(A,id),S.hold[id]);
@@ -578,7 +708,7 @@ function act(a,id){
   else if(a==='cfc'||a==='afp'){if(co.app.length<1+Math.floor(co.emp/3)){co.app.push({t:a.toUpperCase(),left:a==='cfc'?36:24});toast('Apprenti '+a.toUpperCase()+' engagé.')}}
   else if(a==='mach'){if(co.mach>=co.emp)toast('Chaque employé est déjà équipé. Engagez avant d\'acheter.',1);else if(pay(s.mc,s.mn.toLowerCase())){co.mach++;toast('Acheté : '+s.mn+'.')}}
   else if(a==='msell'){if(co.mach){co.mach--;S.cash+=s.mc*.5;toast('Revendu à moitié prix : '+money(s.mc*.5)+'.')}}
-  else{const g=coVal(co);S.cash+=g;S.cos.splice(+id,1);if(!S.cos.length&&S.job<0)S.job=0;toast('Entreprise vendue pour '+money(g)+'.')}}
+  else{const g=coVal(co);S.cash+=g;S.cos.splice(+id,1);if(!S.cos.length)S.indep=false;toast('Entreprise vendue pour '+money(g)+'.')}}
  else if(a==='clbuy'||a==='clsell'||a==='transf'){const k=by(CLUBS,id),v=S.clubV[id];
   if(!clubOpen()&&a!=='clsell')toast('Participations pas encore ouvertes.',1);
   else if(a==='clbuy'){if(S.club[id]<.999&&pay(v*.05,'5 % du club')){S.club[id]=Math.round((S.club[id]+.05)*100)/100;toast('Vous détenez '+Math.round(S.club[id]*100)+' % de '+k.n+'.')}}
@@ -588,9 +718,9 @@ function act(a,id){
  else if(a==='borrow'||a==='repay'){let x=qty('loan')*(S.cur==='EUR'?S.fx:1);if(!x)toast('Entrez un montant valable.',1);
   else if(a==='borrow'){x=Math.min(x,loanCap());if(x<1)toast('Capacité d\'emprunt épuisée.',1);else{S.loan+=x;S.cash+=x;toast('Emprunté : '+money(x)+'.')}}
   else{x=Math.min(x,S.loan,Math.max(0,S.cash));if(x<1)toast('Rien à rembourser avec vos liquidités actuelles.',1);else{S.loan-=x;S.cash-=x;toast('Remboursé : '+money(x)+'.')}}}}
-document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;if(el.dataset.act!=='new')armed=false;if(act(el.dataset.act,el.dataset.id)!==false)render()});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const k=el.dataset.act;if(armed&&armed!==(k==='new'?true:k))armed=false;if(act(el.dataset.act,el.dataset.id)!==false)render()});
 function start(d){let s=d&&d.S;if(!s){try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}}
- const f=fresh();S=s&&s.v===3&&s.px&&A.every(a=>s.px[a.id]>0)&&Array.isArray(s.cos)?Object.assign(f,s):f;render()}
+ const f=fresh();S=s&&s.v===4&&s.px&&A.every(a=>s.px[a.id]>0)&&Array.isArray(s.cos)?Object.assign(f,s):f;render()}
 window.claude?.hot?.snapshot?.(()=>({S}));
 window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
 </script>

@@ -10,7 +10,7 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Icônes : `icon-180.png`, `icon-192.png`, `icon-512.png`. Manifeste : `manifest.webmanifest`.
 
 ## Sauvegardes des joueurs
-- La partie est dans `localStorage`, clé `fortune-leman-3`, avec `v:3` dans l'état.
+- La partie est dans `localStorage`, clé `fortune-leman-4`, avec `v:4` dans l'état.
 - Un nouveau champ d'état doit avoir une valeur par défaut dans `fresh()` : `start()` fusionne l'ancienne sauvegarde par-dessus.
 - Si un changement casse les anciennes sauvegardes, prévenir le propriétaire avant de pousser, puis changer la clé et `v`.
 
@@ -22,3 +22,9 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Les textes du jeu vouvoient le joueur.
 - Pas de vrais logos ni de photos. Les chiffres (salaires, impôts, cours, conditions des banques, valeurs des clubs) sont des ordres de grandeur inventés, et le jeu le dit.
 - But du propriétaire : un jeu qui entraîne à investir et à gérer son argent en Suisse.
+
+## Parcours de vie
+- La partie commence à 16 ans (août 2027) et finit par un bilan à 65 ans. `cal()` donne le mois civil, `age()` l'âge.
+- Formations à plein temps dans `S.study` (apprentissage CFC ou AFP, gymnase, maturité pro, université, HES, stage d'avocat, HEP), diplômes dans `S.dip`, emploi dans `S.job`, offres du mois dans `S.offers`.
+- `qlvl(domaine)` donne le niveau de qualification de 0 à 6, `T()` accorde les noms de métiers au féminin.
+- Avant 18 ans, pas d'investissement. Les parents et l'aide sociale empêchent la faillite quand le joueur n'a ni dette ni actif.
