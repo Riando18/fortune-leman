@@ -100,3 +100,12 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Emploi : 10 offres par mois, chacune avec un site d'origine `src`. `vTemp()` propose des missions temporaires (`S.job.tmp` mois restants) et des stages (`S.job.stage`, bonus dans `S.stg[domaine]`). La fin de mission est traitée dans `next()`.
 - Onglet Vie, « Loisirs et achats » (`vLoisirs()`) : abonnements `ABO` (formules `[nom, prix, prix étudiant]`, choisis dans `S.abo`, coût ajouté à `r.subs`), sorties `OUT` (compteur du mois dans `S.out`), achats `GOODS` (`S.own`). Situations de boîte de nuit `mad_*` après une soirée (`S.clubM`).
 - Prix relevés en octobre 2026 : Netflix, Disney+, Spotify, Apple Music et Deezer viennent de comparateurs suisses ; Prime Video, blue Sport, DAZN et NonStop Gym sont des estimations (`est:1`).
+
+## Employeurs, permis, animaux et crédit
+- Employeurs : `isBig(nom)` (petite entreprise si le nom correspond à `SMALLRX`), `perkOf(nom)` renvoie l'avantage du personnel (`ag` chez CFF : transports gratuits ; `bank` ; `food` ; `tel`), `perk(clé)` teste l'employeur courant (`curEmp()`, emploi ou apprentissage). `empInfo()` l'affiche.
+- Grande entreprise : la moitié du brevet, du diplôme ES, du diplôme fédéral et des langues est payée (`empPays()`, `tcost()`), avec un engagement de deux ans dans `S.bond` (remboursement facturé en cas de démission). Apprentis : +3 points aux examens (`S.study.bon`). Petite entreprise : six mois d'expérience en plus à la fin du CFC (dans `track()`).
+- Contrats : une offre sur cinq est un CDD de 12 mois (`o.cdd`, puis `S.job.tmp` et `S.job.cdd`).
+- Permis de conduire par étapes dans Vie privée (`vPermis()`, état `S.pc`, actions `pc` et `pcl`) : premiers secours, test de la vue, théorie, sensibilisation, leçons (`MONI`, `PACKS`, prix selon le canton), examen pratique (`pcP()`). L'ancienne formation `permis` de `TRAIN` est masquée.
+- Paiement en plusieurs fois : `credit(libellé, montant, mensualités)`, refusé avec des poursuites ou deux factures en retard. Utilisé pour les achats, les leçons et le vétérinaire. Le leasing est refusé de la même façon.
+- Animaux : `PETS`, adoptés dans `S.pets` (deux au plus), coût mensuel dans `r.subs`, impôt sur les chiens en mars, situation `veto`.
+- Livraison Uber Eats : trois petits business (`livv`, `livt`, `livc`, ce dernier avec `car:1`). Athlétisme : championnats suisses et Diamond League dans `spSeason()`.
