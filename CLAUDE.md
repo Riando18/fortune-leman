@@ -109,3 +109,8 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Paiement en plusieurs fois : `credit(libellé, montant, mensualités)`, refusé avec des poursuites ou deux factures en retard. Utilisé pour les achats, les leçons et le vétérinaire. Le leasing est refusé de la même façon.
 - Animaux : `PETS`, adoptés dans `S.pets` (deux au plus), coût mensuel dans `r.subs`, impôt sur les chiens en mars, situation `veto`.
 - Livraison Uber Eats : trois petits business (`livv`, `livt`, `livc`, ce dernier avec `car:1`). Athlétisme : championnats suisses et Diamond League dans `spSeason()`.
+
+## Téléphone et factures du ménage
+- Téléphone, en tête de l'onglet Loisirs et achats (`vTel()`) : opérateurs `OPS` (prix estimés), abonnement dans `S.tel` (`op`, `i`, `since`, `promo`, `loy`), appareil dans `S.ph`, modèles `PHONES` (`g` : capacités et prix). Rabais : Black Friday en novembre et fin d'année en décembre (`telSale()`), jeunes et étudiants, fidélité après 24 mois (`telDisc()` garde le meilleur). `telCost()` : gratuit chez Swisscom pour son personnel, et les parents paient jusqu'à CHF 35 tant que le joueur vit chez eux sans gagner CHF 1'500 (`telPar()`). `telTick()` gère l'usure de l'appareil et l'avis de fin de prise en charge.
+- Factures du ménage (logement à soi, dès 18 ans) : `payB()` dans `next()` règle chaque facture si les liquidités suffisent et envoie un e-mail, sinon la met en attente dans `S.bills`. Serafe en janvier, taxe communale sur les déchets en mars, électricité, plus les sacs taxés chaque mois.
+- Pas de comptes joueurs ni de synchronisation : le site est statique (GitHub Pages). Une connexion par e-mail ou Google exigerait un service externe (Firebase ou Supabase) créé par le propriétaire.
