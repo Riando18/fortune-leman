@@ -41,3 +41,5 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Réglages : onglet `aide` (bouton « Réglages » de l'en-tête), rendu par `vAide()`. Thème dans `localStorage` sous `fortune-leman-theme` (hors de l'état de partie), appliqué par `setTheme()` via l'attribut `data-theme`.
 - Avant le début de la partie (menu ou création du personnage), `body.pre` masque l'en-tête, les onglets et la barre du bas.
 - Menu de démarrage : `menu` (variable hors état, vraie à chaque lancement) affiche `vMenu()` avec Continuer, Charger un emplacement et Nouvelle partie. Dans un test Node, mettre `menu=false` après le chargement du script.
+- Onglet Guide (`vGuideTab()`) : `LEARN` explique chaque écran, `SOL` donne un plan par objectif, chaque étape pouvant porter un test d'état qui coche l'étape. Ajouter une entrée `SOL` quand une nouvelle mécanique peut bloquer un joueur. Le lexique `LEX` s'y affiche aussi.
+- Sauvegarde : `autoSave` (préférence `fortune-leman-auto`, hors état). En mode manuel, seul `save(true)` écrit.
