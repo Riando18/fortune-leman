@@ -168,3 +168,8 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Justice : `S.recJ` (casier de mineur, effacé à 18 ans par un moment dans `next()`), `S.record` (adulte, à vie dans le jeu : simplification voulue par le propriétaire, le droit suisse prévoit des délais), `S.brac` (bracelet électronique à la place de la prison pour une récidive quand le joueur a un emploi ou une formation ; révoqué en prison s'il les perd ; sorties et voyages bloqués). `chance()` : ×0,6 avec un casier, ×0,78 avec un casier de mineur ; candidatures d'apprentissage : −22 et −12 points.
 - Création du personnage : un conseil recommande de commencer entre 16 et 18 ans.
 - La mention légale `.fine` (© et avertissement) n'apparaît que sur le menu de démarrage (`body.atmenu`, posé dans `render()`).
+
+## Honneur et amitiés
+- `S.hon` (0 à 100, 50 au départ, `Hh(x)` pour le modifier), affiché dans Vie privée. Effets : coefficient sur `chance()` (de −12 % à +12 %), contacts perdus sous 30 et gagnés dès 78, réputation des entreprises du joueur (`co.rep`) qui s'use sous 35 et monte dès 70.
+- Situations : `am_freq` puis `am_bande2` (mauvaises fréquentations, drapeau `S.fl.bande`), `am_assoc` puis `am_assoc2` (affaire avec un ami, `S.fl.assoc` : contrat `c`, issue `r` tirée une fois parmi ok, flop, trahi), `am_trahir`, `am_vente`, `am_alibi`, `am_parole`.
+- La mention légale `.fine` ne s'affiche que sur le menu de démarrage (`render()`).
