@@ -87,7 +87,7 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - `T()` accorde les titres au féminin : tester chaque nouveau titre avec `S.sex='f'`.
 
 ## Âge de départ, anniversaire et cadeaux
-- Le joueur choisit son âge de départ (16 à 50 ans, `S.age0`) et sa date de naissance (`S.bd` : jour et mois). Dès 18 ans, une étape de plus demande son parcours (`PROFS`, stocké dans `S.prof`). `applyStart()`, appelé au choix du canton, en déduit diplômes, expérience, emploi, économies, logement, 2e pilier et obligations militaires.
+- Le joueur choisit son âge de départ (16 à 50 ans, `S.age0`) et sa date de naissance (`S.bd` : jour et mois). Dès 18 ans, une étape de plus demande son parcours (`PROFS`, stocké dans `S.prof` ; `zero` : aucune expérience, ni emploi ni économies), et `applyStart()` l'explique dans un moment « Votre point de départ ». `applyStart()`, appelé au choix du canton, en déduit diplômes, expérience, emploi, économies, logement, 2e pilier et obligations militaires.
 - Le temps reste compté depuis 16 ans : un départ à l'âge A pose `S.m = S.m0 = (A − 16) × 12`. Le calendrier commence toujours en août 2027 : `dateLbl()` et `yrNow()` retranchent `S.m0`. Ne jamais calculer une année ou un âge à partir de `S.m` à la main : utiliser `age()`, `ageAt(mois)`, `dateLbl()`, `yrNow()`.
 - L'âge change le mois de naissance (`bk()` : décalage par rapport à août). `track()` fête l'anniversaire ce mois-là et y déclenche `recap()`. La retraite reste à `S.m === 588`.
 - Cadeaux : `vGifts()` dans Vie privée, action `gift`, dernier cadeau par destinataire dans `S.gifts`. Situation `noel` en novembre et décembre.
