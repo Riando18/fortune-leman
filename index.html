@@ -144,6 +144,7 @@ tr.tot td{border-bottom:0;font-weight:600}
 @keyframes inDraw{to{stroke-dashoffset:0}}
 @keyframes inUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes inOut{to{opacity:0;visibility:hidden}}
+.fine{display:none}body.atmenu .fine{display:block}
 @media (prefers-reduced-motion:reduce){#intro{display:none}}
 @media (prefers-reduced-motion:reduce){#view.fade,.fl-up,.fl-down{animation:none}}
 .score{display:flex;gap:16px;align-items:center}.score>div:last-child{display:flex;flex-direction:column;min-width:0}
@@ -1969,6 +1970,7 @@ function render(){const v=nw(),on=!!S.canton;if(on&&!menu)gdTick();$('nw').textC
  $('nav').innerHTML=NAV.map(n=>{const b=n[0]==='priv'?unread():n[0]==='plus'?S.achNew:0;return`<button data-act="nav" data-id="${n[0]}" ${G===n?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${n[3]}</svg>${n[1]}${b?`<span class="bdg">${b}</span>`:''}</button>`}).join('');
  const vk=S.tab+S.vsub;$('view').className=vk!==lastV?'fade':'';lastV=vk;$('nw').className='nw'+(flash?' fl-'+flash:'');flash='';
  const t=S.tab;if(on)checkMis();$('view').innerHTML=menu?(S.tab==='aide'?vAide():vMenu()):!on?(S.tab==='aide'?vAide():vPick()):(S.dream?vTut():'')+vDream()+vGd()+vMom()+vAbs2()+vSit()+(t==='apercu'?vApercu():t==='vie'?vVie():t==='s'||t==='c'?vMarket(t):t==='immo'?vImmo():t==='biz'?vBiz():t==='club'?vClub():t==='aide'?vAide():t==='mail'?vMail():t==='priv'?vPriv():t==='guide'?vGuideTab():t==='loisirs'?vLoisirs():t==='bilan'?vBilan():t==='succes'?vSucces():vBanque());
+ try{document.body.classList.toggle('atmenu',!!menu&&S.tab!=='aide')}catch(e){}
  $('next').disabled=$('year').disabled=S.over||!on||menu;try{document.querySelectorAll('.gd-hi').forEach(e=>e.classList.remove('gd-hi'));const g=on&&!menu&&S.gd>=0&&S.dream&&gdStep(),el=g&&g.sel&&document.querySelector(g.sel);if(el&&S.tab===g.tab){el.classList.add('gd-hi');if(gdScroll&&g.sel!=='#next'){gdScroll=false;setTimeout(()=>el.scrollIntoView({block:'center',behavior:'smooth'}),60)}}}catch(e){}try{document.body.classList.toggle('pre',menu||!on)}catch(e){}save()}
 function qty(id){const v=parseFloat(String(($('q-'+id)||{}).value||'').replace(',','.').replace(/[’'\s]/g,''));return isFinite(v)&&v>0?v:0}
 function pay(c,what){if(c>S.cash){toast('Liquidités insuffisantes : il faut '+money(c)+(what?' pour '+what:'')+'.',1);return false}S.cash-=c;return true}

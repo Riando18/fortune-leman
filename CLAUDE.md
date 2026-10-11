@@ -167,3 +167,4 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Guide : cinquième étape sur la sauvegarde (`S.fl.sav`), bouton « Passer cette étape » (`gdnext`).
 - Justice : `S.recJ` (casier de mineur, effacé à 18 ans par un moment dans `next()`), `S.record` (adulte, à vie dans le jeu : simplification voulue par le propriétaire, le droit suisse prévoit des délais), `S.brac` (bracelet électronique à la place de la prison pour une récidive quand le joueur a un emploi ou une formation ; révoqué en prison s'il les perd ; sorties et voyages bloqués). `chance()` : ×0,6 avec un casier, ×0,78 avec un casier de mineur ; candidatures d'apprentissage : −22 et −12 points.
 - Création du personnage : un conseil recommande de commencer entre 16 et 18 ans.
+- La mention légale `.fine` (© et avertissement) n'apparaît que sur le menu de démarrage (`body.atmenu`, posé dans `render()`).
