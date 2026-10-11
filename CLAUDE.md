@@ -129,3 +129,8 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Biens loués sur Airbnb : `bnb:1` dans `P`, rendement multiplié chaque mois par `bnbK()` (saison et hasard). `start()` complète `S.px`, `S.hold`, `S.pv` et `S.props` pour les titres et les biens ajoutés après une sauvegarde.
 - Titres liés à l'intelligence artificielle : `AIQ`, `NVDA`, `MSFT`. Branche `dess` (dessinateur en architecture, CFC en 4 ans, sans AFP). Secteur `par` (parfumerie).
 - Situations : `video_soiree`, `arnaque_sms`, `faux_bail`, `combine` (escroquer : amende, casier, prison en cas de récidive), `medecin`.
+
+## Clubs de football
+- Listes par division avec le canton de chaque club : `FSL` (Super League), `FCL` (Challenge League), `FPL` (Promotion League), `F1` (1re ligue), `F2I` (2e ligue interrégionale), `FLOC` (clubs régionaux, de la 5e à la 2e ligue, tirés dans le canton du joueur), `FAB` (étranger). `footPool(échelon)` choisit la liste. Compositions de la saison 2025-2026 : 1re ligue et Challenge League vérifiées sur Wikipédia, 2e ligue inter d'après la saison 2024-2025, Promotion League et clubs régionaux de mémoire.
+- Footballeur : `footAssign()` donne un club à chaque changement d'échelon (`S.sp.club`, canton `cc`, échelon `ct`), `footOffers()` propose jusqu'à quatre clubs (`S.sp.of`, renouvelés en juin), action `spclub` pour signer, au plus tous les six mois. Un club d'un autre canton paie 8 % de plus (`S.sp.k`) mais coûte des trajets (`footTrav()`, gratuits avec un abonnement général) et du bien-être.
+- Agence : chaque talent a un club (`agClub()`), mis à jour à chaque transfert et changement de palier.
