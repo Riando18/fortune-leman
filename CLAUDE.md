@@ -149,3 +149,4 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - Accueil en trois sous-pages (`HSUB`, `S.hsub` : res, mis, jour). `vApercu0()` renvoie un tableau de trois morceaux.
 - `locEmp(nom, canton)` remplace les employeurs liés à un lieu (hôpital, banque cantonale, État, ville, transports) par ceux du canton, dans `genOffers()` et `jgen()`.
 - Branches ajoutées : `route`, `sani`, `peint`, `bois`, `boul` (écoles vaudoises d'après la liste officielle : EPSIC, CEPM, ETML, EPM). Les titres composés avec trait d'union ont leur féminin dans `FEMW`.
+- Place d'apprentissage : action `appapply` (`cfc:branche` ou `afp:branche`), candidature dans `S.pend` avec `app:{k,f,afo}`, puis même chaîne qu'un emploi (entretien, proposition). `oacc` signe le contrat et appelle `startStudy()` avec l'entreprise. L'action `study` directe reste pour le gymnase, les hautes écoles et les tests Node.
