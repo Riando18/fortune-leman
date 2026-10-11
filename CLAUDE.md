@@ -173,3 +173,8 @@ En ligne : https://riando18.github.io/fortune-leman/ (GitHub Pages, branche `mai
 - `S.hon` (0 à 100, 50 au départ, `Hh(x)` pour le modifier), affiché dans Vie privée. Effets : coefficient sur `chance()` (de −12 % à +12 %), contacts perdus sous 30 et gagnés dès 78, réputation des entreprises du joueur (`co.rep`) qui s'use sous 35 et monte dès 70.
 - Situations : `am_freq` puis `am_bande2` (mauvaises fréquentations, drapeau `S.fl.bande`), `am_assoc` puis `am_assoc2` (affaire avec un ami, `S.fl.assoc` : contrat `c`, issue `r` tirée une fois parmi ok, flop, trahi), `am_trahir`, `am_vente`, `am_alibi`, `am_parole`.
 - La mention légale `.fine` ne s'affiche que sur le menu de démarrage (`render()`).
+
+## Business en ligne
+- Parcours, Revenus (`vOnline()`), compatible avec un emploi, dès 18 ans avec un compte. État `S.web` créé par `W()` : compétences `sk` (formations `WEBF` : mk, ec, crea, et `gourou` qui n'apprend rien), formation en cours `learn`, boutique `drop`, formation vendue `crs`. `webTick()` tourne après `indTick()` et ajoute le résultat à `r.hus` (imposé, cotisations).
+- Dropshipping : budget publicitaire `WADS`, marge de CHF 22 par commande, abonnement de CHF 39, note `rep`, mois viral ou compte publicitaire suspendu. Mesure d'octobre 2026 : perte sans formation, quelques centaines de francs par mois avec les deux formations.
+- Formation vendue : prix fixé à la création (`WPR`), qualité `q` selon diplôme, expérience et honneur, audience `aud`, ventes mensuelles avec un e-mail listant les virements, coaching (`co`, CHF 190 par élève pendant trois mois), demandes de remboursement `ref` (action `webref` : rembourser ou refuser ; sans réponse après deux mois, litige bancaire). Actions regroupées dans `webAct()`.
