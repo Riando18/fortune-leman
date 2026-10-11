@@ -134,6 +134,17 @@ tr.tot td{border-bottom:0;font-weight:600}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes flup{0%{color:var(--up)}100%{color:inherit}}@keyframes fldn{0%{color:var(--down)}100%{color:inherit}}
 #view.fade{animation:fade .22s ease-out}.fl-up{animation:flup .9s ease-out}.fl-down{animation:fldn .9s ease-out}
+#intro{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:inOut .5s ease 2.5s forwards}
+#intro svg{animation:inPop .6s cubic-bezier(.2,1.4,.4,1) both}
+#intro .l1{stroke-dasharray:60;stroke-dashoffset:60;animation:inDraw .8s ease .45s forwards}
+#intro .l2{stroke-dasharray:40;stroke-dashoffset:40;animation:inDraw .7s ease 1s forwards}
+#intro b{font-size:34px;letter-spacing:-.02em;color:var(--ink);opacity:0;animation:inUp .6s ease 1.2s forwards}
+#intro span{color:var(--muted);font-size:15px;opacity:0;animation:inUp .6s ease 1.55s forwards}
+@keyframes inPop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+@keyframes inDraw{to{stroke-dashoffset:0}}
+@keyframes inUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes inOut{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){#intro{display:none}}
 @media (prefers-reduced-motion:reduce){#view.fade,.fl-up,.fl-down{animation:none}}
 .score{display:flex;gap:16px;align-items:center}.score>div:last-child{display:flex;flex-direction:column;min-width:0}
 .ring{--p:0;flex:none;width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:0}
@@ -156,6 +167,8 @@ svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
 
 </head>
 <body>
+<div id="intro" aria-hidden="true" onclick="this.remove()"><svg width="112" height="112" viewBox="0 0 48 48"><rect width="48" height="48" rx="11" fill="var(--accent)"/><path class="l1" d="M8 30l9-11 6 6 8-12 9 13" stroke="var(--on-accent)" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path class="l2" d="M9 38c4-3 7 3 11 0s7 3 11 0 6 2 8 0" stroke="var(--on-accent)" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/></svg><b>Fortune Léman</b><span>Un jeu de Riando</span></div>
+<script>setTimeout(function(){var i=document.getElementById('intro');if(i)i.remove()},3100)</script>
 <div class="wrap">
   <header class="top">
     <div class="who" style="align-items:flex-start">
