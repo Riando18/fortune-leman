@@ -12,7 +12,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-512.png">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}.find-hi{outline:2px solid var(--accent);outline-offset:4px;border-radius:12px;transition:outline-color .6s}
+</style>
 <title>Fortune Léman</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -2628,8 +2629,8 @@ const bnbCity=p=>(p.n.match(/ à ([^(]+)/)||[0,'votre ville'])[1].trim();
 const pC=p=>p.c||((p.n.match(/\((\w\w)\)/)||[])[1])||{p2:'FR',p3:'NE',p4:'BE',p5:'VD',p6:'BS',p7:'GE',p8:'ZH',p15:'TI',p17:'ZG'}[p.id]||'VD';
 const pT=p=>/chalet/i.test(p.n)?'ch':p.bnb?'bnb':/^Studio/.test(p.n)?'st':/^2\.5/.test(p.n)?'2':/^3\.5/.test(p.n)?'3':/^4\.5/.test(p.n)?'4':'x';
 const IMF=()=>S.imF||(S.imF={c:S.canton||'VD',t:'all'});
-const immoVis=p=>(S.props[p.id]&&S.props[p.id].n>0)||((IMF().c==='all'||pC(p)===IMF().c)&&(IMF().t==='all'||pT(p)===IMF().t));
-function vImF(){const f=IMF(),cs=[...new Set(P.map(pC))];return`<div class="ctl l" style="flex-wrap:wrap;margin-bottom:6px">${[['all','Toute la Suisse']].concat(cs.map(c=>[c,c])).map(x=>`<button class="b${f.c===x[0]?' go':''}" data-act="imf" data-id="c:${x[0]}">${x[1]}</button>`).join('')}</div><div class="ctl l" style="flex-wrap:wrap;margin-bottom:10px">${[['all','Tous'],['st','Studios'],['2','2.5 pièces'],['3','3.5 pièces'],['4','4.5 pièces'],['ch','Chalets'],['bnb','Studios en station'],['x','Immeubles']].map(x=>`<button class="b${f.t===x[0]?' go':''}" data-act="imf" data-id="t:${x[0]}">${x[1]}</button>`).join('')}</div><p class="sub">${P.filter(immoVis).length} biens affichés. Prix à titre d'ordre de grandeur.</p>`}
+const immoVis=p=>(S.props[p.id]&&S.props[p.id].n>0)||((IMF().c==='all'||pC(p)===IMF().c)&&(IMF().t==='all'||pT(p)===IMF().t)&&(!IMF().q||norm(p.n).includes(IMF().q)));
+function vImF(){const f=IMF(),cs=[...new Set(P.map(pC))];return`${f.q?`<div class="ctl l" style="margin-bottom:6px"><span class="sub">Recherche : « ${esc(f.q)} »</span><button class="b" data-act="imf" data-id="q:">Effacer</button></div>`:''}<div class="ctl l" style="flex-wrap:wrap;margin-bottom:6px">${[['all','Toute la Suisse']].concat(cs.map(c=>[c,c])).map(x=>`<button class="b${f.c===x[0]?' go':''}" data-act="imf" data-id="c:${x[0]}">${x[1]}</button>`).join('')}</div><div class="ctl l" style="flex-wrap:wrap;margin-bottom:10px">${[['all','Tous'],['st','Studios'],['2','2.5 pièces'],['3','3.5 pièces'],['4','4.5 pièces'],['ch','Chalets'],['bnb','Studios en station'],['x','Immeubles']].map(x=>`<button class="b${f.t===x[0]?' go':''}" data-act="imf" data-id="t:${x[0]}">${x[1]}</button>`).join('')}</div><p class="sub">${P.filter(immoVis).length} biens affichés. Prix à titre d'ordre de grandeur.</p>`}
 function bnbCalc(p){const L=BL()[p.id];if(!L)return null;const ref=bnbRef(p)*(1+(Math.min(L.cap,bnbMax(p))-2)*.18),sea=[.8,.75,.85,.9,.95,1.15,1.3,1.3,1,.9,.8,1.05][cal()],occ=clamp(.55*Math.pow(ref/L.pr,1.4)*sea*(.6+L.rt/12.5),.03,.88),n=Math.round(occ*30),stays=Math.max(1,Math.round(n/2.6)),inc=n*L.pr*.97-stays*50-200;return{n,occ,inc:Math.round(inc*S.infl)}}
 function bnbAct(a,id){const [pid,v]=id.split(':'),p=by(P,pid);if(!p||!S.props[pid]||!S.props[pid].n)return false;const L=BL();
  if(a==='bnbon'){if(L[pid])delete L[pid];else{if(S.liveOwn===pid&&S.props[pid].n<2){toast('Vous habitez ce logement : achetez-en un deuxième pour le mettre sur Airbnb.',1);return false}L[pid]={pr:100,cap:4,rt:4.6,n:0}}return true}
@@ -2694,11 +2695,59 @@ const IDX=[
  ['Démarches : naturalisation et permis','naturalisation nationalite suisse permis','vsub:sit'],['Aide : chômage, ORP, aide sociale','chomage orp aide sociale service social','vsub:help'],['Sport : carrière sportive','sport football hockey club boxe','vsub:sport'],['Revenus : activité indépendante','independant moniteur agence','vsub:ind'],['Revenus : petits jobs et business','petit job business en ligne dropshipping garage revenus','vsub:rev'],
  ['Jeu : messagerie','mail email messagerie','tab:mail'],['Jeu : réglages et sauvegarde','reglages sauvegarde theme son','tab:aide'],['Jeu : guide','guide aide tutoriel','tab:guide'],['Jeu : ma vie et succès','score bilan succes histoire','tab:bilan']];
 const FCH=['Emploi','Formation','Métiers','Logement','Immobilier','Véhicule','Magasin','Téléphone','Loisirs','Argent','Investir','Entreprise','Revenus','Famille','Justice','Démarches','Aide','Sport'];
+const IDXH={
+ 'Emploi : chercher un emploi':['Rechercher un poste',()=>S.job?'Vous êtes '+jobTitle(S.job).toLowerCase()+' chez '+S.job.emp+'.':S.offers.filter(o=>chance(o)>0).length+' offres à votre portée ce mois · '+S.apN+' candidature'+(S.apN>1?'s':'')+' sur '+maxAp(),()=>!S.acct?'Ouvrez d\'abord un compte en banque.':!S.mail.addr?'Créez d\'abord votre adresse e-mail.':''],
+ 'Emploi : médias (journaliste, réalisateur)':['Médias',()=>{const n=medAds().list.length;return n?n+' poste'+(n>1?'s':'')+' ouvert'+(n>1?'s':'')+' ce mois':'Aucun poste ouvert ce mois'},()=>age()<16?'Dès 16 ans.':''],
+ 'Emploi : CV et LinkedIn':['Votre CV',()=>S.cv?S.cv.sk.length+' compétence'+(S.cv.sk.length>1?'s':'')+' sur votre CV':'Pas encore de CV : −4 points à chaque candidature',null],
+ 'Formation : apprentissage et études':['Formations à plein temps',()=>S.study?'En cours : '+stName(S.study):dipList().length?'Diplômes : '+dipList().slice(0,3).join(', '):'Aucun diplôme pour l\'instant',null],
+ 'Métiers : guides des parcours':['Métiers',()=>MET.length+' parcours détaillés, étape par étape',null],
+ 'Logement : louer, déménager':['Déménager',()=>S.home?'Vous vivez chez vos parents.':S.street?'Vous êtes sans logement.':'Vous avez votre propre logement.',()=>age()<18?'Dès 18 ans.':''],
+ 'Immobilier : acheter un bien':['Appartements et immeubles',()=>{const n=P.filter(p=>S.props[p.id]&&S.props[p.id].n>0).length;return n?n+' bien'+(n>1?'s':'')+' en votre possession':P.length+' biens en vente, de '+money(Math.min(...P.map(p=>S.pv[p.id]||p.v)))},()=>age()<18?'Dès 18 ans.':''],
+ 'Immobilier : louer sur Airbnb':['Appartements et immeubles',()=>{const n=Object.keys(S.bnbL||{}).length;return n?n+' annonce'+(n>1?'s':'')+' en ligne':'Achetez un bien, puis publiez-le sous sa fiche'},()=>age()<18?'Dès 18 ans.':''],
+ 'Immobilier : agence et locataires':['Gestion de vos locations',()=>S.im&&S.im.ag?'Une agence gère vos locations':'Vous gérez vos locataires vous-même',()=>!P.some(p=>S.props[p.id]&&S.props[p.id].n>0)?'Il faut d\'abord un bien à louer.':''],
+ 'Loisirs : week-ends et voyages':['Week-ends en Airbnb',null,null],
+ 'Véhicule : voiture, leasing, assurance':['Voiture',()=>S.car?S.car.n:'Pas de voiture',()=>!S.dip.permis?'Il faut d\'abord le permis de conduire.':''],
+ 'Véhicule : moto et scooter':['Scooter et moto',()=>S.moto?S.moto.n||'Un deux-roues':'Pas de deux-roues',null],
+ 'Véhicule : location':['Louer un véhicule',()=>S.rv?'Location en cours':'Caution rendue si le véhicule revient intact',()=>age()<18?'Dès 18 ans.':''],
+ 'Véhicule : permis de conduire':['Permis de conduire',()=>S.dip.permis?'Permis obtenu':'Pas encore de permis',()=>age()<17?'Dès 17 ans.':''],
+ 'Téléphone : abonnement et appareil':['Téléphone',()=>S.tel?'Abonnement en cours':'Pas d\'abonnement : −4 points aux candidatures',null],
+ 'Magasin : jeux vidéo et électronique':['Électronique et jeux vidéo',()=>storeSaleLbl()||'Fnac, Interdiscount, MediaMarkt',null],
+ 'Loisirs : abonnements et sorties':['Abonnements',null,null],
+ 'Loisirs : hobbys':['Hobbys',()=>(S.hob||[]).length?(S.hob||[]).length+' hobby'+((S.hob||[]).length>1?'s':''):'Aucun hobby',null],
+ 'Loisirs : jeux d\'argent':['Jeux d\'argent',null,()=>age()<18?'Interdit avant 18 ans.':''],
+ 'Magasin : commandes en ligne':['Achats',null,null],
+ 'Argent : banque, épargne, TWINT':['Banque et prévoyance',()=>'Compte '+money(S.cash)+(S.sv?' · épargne '+money(S.sv):''),null],
+ 'Argent : factures, poursuites, impôts':['',()=>S.bills.length?S.bills.length+' facture'+(S.bills.length>1?'s':'')+' en attente · '+money(S.bills.reduce((t,b)=>t+b.amt,0)):'Aucune facture en attente',null],
+ 'Investir : bourse':['',null,()=>age()<18?'Dès 18 ans.':''],
+ 'Investir : crypto':['',null,()=>age()<18?'Dès 18 ans.':''],
+ 'Entreprise : créer une entreprise':['Créer une entreprise',()=>S.cos.length?S.cos.length+' entreprise'+(S.cos.length>1?'s':''):'Aucune entreprise',()=>age()<18?'Dès 18 ans.':!S.bizAcct?'Il faut d\'abord un compte commercial (Argent, Banque).':''],
+ 'Entreprise : sponsoring et concurrents':['Vos entreprises',null,()=>!S.cos.length?'Il faut d\'abord une entreprise.':''],
+ 'Entreprise : assistant ou assistante':['Assistant ou assistante',()=>S.asst?'Engagé'+(S.asst.f==='f'?'e':''):'',()=>!S.cos.length&&!S.ind&&!(S.job&&S.job.lvl>=5)?'Pour les patrons, les indépendants et les cadres.':''],
+ 'Entreprise : fonder une banque':['Fonder votre banque',null,()=>age()<30?'Dès 30 ans, avec CHF 15 millions.':''],
+ 'Justice : avocat, plainte, tribunal':['Avocat et justice',()=>S.ju&&S.ju.cs&&S.ju.cs.length?S.ju.cs.length+' procédure'+(S.ju.cs.length>1?'s':'')+' en cours':'Aucune procédure',null],
+ 'Démarches : votations':['Votations',()=>S.vote?'Matériel de vote reçu':'Prochains objets en mars, juin, septembre ou novembre',()=>!canVoteF()&&!canVoteC()?'Il faut la nationalité suisse et 18 ans.':''],
+ 'Famille et proches : réseau de contacts':['Votre réseau',()=>S.net.length+' contact'+(S.net.length>1?'s':''),null],
+ 'Famille et proches : couple, enfants, allocations':['Couple et famille',()=>(S.partner?'En couple':'Célibataire')+(S.kids.length?' · '+S.kids.length+' enfant'+(S.kids.length>1?'s':''):''),null],
+ 'Démarches : naturalisation et permis':['Statut en Suisse',()=>S.ch?'Vous êtes suisse.':'Permis '+(S.permit||'B'),null],
+ 'Aide : chômage, ORP, aide sociale':['Besoin d\'aide ?',()=>S.chom>0?S.chom+' mois d\'indemnités restants':'',null],
+ 'Sport : carrière sportive':['Sport',()=>S.sp?'Carrière en cours':'Aucune carrière sportive',null],
+ 'Revenus : activité indépendante':['Indépendant',null,()=>age()<18?'Dès 18 ans.':''],
+ 'Revenus : petits jobs et business':['Petits jobs',null,null],
+ 'Jeu : messagerie':['',()=>unread()?unread()+' message'+(unread()>1?'s':'')+' non lu'+(unread()>1?'s':''):'Tout est lu',null],
+ 'Jeu : réglages et sauvegarde':['',null,null],'Jeu : guide':['',null,null],'Jeu : ma vie et succès':['',null,null]};
+let findTgt=null;
+const fSafe=f=>{try{return f?f()||'':''}catch(e){return''}};
 function vFind(){const q=norm(S.fq||''),R_=q?IDX.filter(x=>norm(x[0]+' '+x[1]).includes(q)||q.split(' ').filter(w=>w.length>2).some(w=>norm(x[0]+' '+x[1]).includes(w))):[];
- return`<h2>Recherche</h2><p class="lead">Tapez un mot, ou touchez une catégorie : emploi, logement, véhicule, magasin, argent…</p><div class="ctl l"><input class="txt" id="find-q" maxlength="40" value="${esc(S.fq||'')}" placeholder="Que cherchez-vous ?" aria-label="Recherche" style="flex:1;min-width:0"><button class="b go" data-act="find">Chercher</button></div>
- <div class="ctl l" style="margin-top:8px;flex-wrap:wrap">${FCH.map(c=>`<button class="b" data-act="findc" data-id="${c}">${c}</button>`).join('')}</div>
- ${q?`<div class="list" style="margin-top:12px">${R_.length?R_.map(x=>`<div class="row" style="--c:var(--accent)"><div class="who" style="grid-column:1/3"><div><b>${x[0]}</b></div></div><div class="ctl"><button class="b go" data-act="findgo" data-id="${x[2]}">Ouvrir</button></div></div>`).join(''):'<p class="muted">Rien trouvé. Essayez un autre mot.</p>'}</div>`:''}`}
-function findAct(a,id){if(a==='find'){S.fq=(($('find-q')||{}).value||'').trim().slice(0,40);S.tab='find';return true}if(a==='findc'){S.fq=id;S.tab='find';return true}if(a==='findgo'){const [k,v]=id.split(':');if(k==='vsub'){S.vsub=v;S.tab='vie'}else S.tab=v;try{window.scrollTo(0,0)}catch(e){}return true}return false}
+ const nP=q.length>=3?P.filter(p=>norm(p.n).includes(q)).length:0;
+ const row=(t,sub,lock,act,id,lbl)=>`<div class="row" style="--c:var(--accent)"><div class="who" style="grid-column:1/3"><div><b>${t}</b>${sub?`<span class="sub">${sub}</span>`:''}${lock?`<span class="sub" style="color:var(--down)">${lock}</span>`:''}</div></div><div class="ctl"><button class="b go" data-act="${act}" data-id="${esc(id)}">${lbl||'Ouvrir'}</button></div></div>`;
+ const res=R_.map(x=>{const h=IDXH[x[0]]||[];return row(x[0],esc(fSafe(h[1])),esc(fSafe(h[2])),'findgo',x[2]+'|'+(h[0]||''))});
+ if(nP)res.unshift(row('Immobilier : '+nP+' bien'+(nP>1?'s':'')+' pour « '+esc(S.fq)+' »','Studios, appartements et chalets dont le nom contient votre recherche',fSafe(()=>age()<18?'Achat dès 18 ans.':''),'findimm',q,'Voir'));
+ if(q.length>=3&&!S.ret&&!FCH.some(c=>norm(c)===q)&&FIELDS.some(f=>f.t.concat(...Object.values(ALT[f.id]||{})).some(t=>t&&norm(t).includes(q))))res.push(row('Emploi : chercher « '+esc(S.fq)+' » dans les offres','Toute la Suisse, avec vos chances pour chaque poste',fSafe(IDXH['Emploi : chercher un emploi'][2]),'findjob',S.fq,'Chercher'));
+ return`<h2>Recherche</h2><p class="lead">Tapez un mot ou touchez une catégorie. Chaque résultat vous dit où vous en êtes et vous emmène directement au bon endroit. Un métier, une ville ou un quartier lance aussi la recherche dans les offres d'emploi et l'immobilier.</p><div class="ctl l"><input class="txt" id="find-q" maxlength="40" value="${esc(S.fq||'')}" placeholder="Un métier, une ville, un sujet…" aria-label="Recherche" style="flex:1;min-width:0"><button class="b go" data-act="find">Chercher</button></div>
+ <div class="ctl l" style="margin-top:8px;flex-wrap:wrap">${FCH.map(c=>`<button class="b${norm(c)===q?' go':''}" data-act="findc" data-id="${c}">${c}</button>`).join('')}</div>
+ ${q?`<div class="list" style="margin-top:12px">${res.length?res.join(''):'<p class="muted">Rien trouvé. Essayez un autre mot ou une catégorie.</p>'}</div>`:''}`}
+function findScroll(){const t=findTgt;findTgt=null;if(!t)return;setTimeout(()=>{try{const e=[...document.querySelectorAll('h2,h3,b')].find(x=>x.textContent.trim().startsWith(t));if(e){const hd=document.querySelector('header');window.scrollTo({top:Math.max(0,e.getBoundingClientRect().top+scrollY-(hd?hd.getBoundingClientRect().height:90)-24),behavior:'smooth'});const c=e.closest('section,.panel,.row')||e;c.classList.add('find-hi');setTimeout(()=>c.classList.remove('find-hi'),1800)}}catch(e){}},80)}
+function findAct(a,id){if(a==='find'){S.fq=(($('find-q')||{}).value||'').trim().slice(0,40);S.tab='find';return true}if(a==='findc'){S.fq=id;S.tab='find';return true}if(a==='findgo'){const [d,h]=id.split('|'),[k,v]=d.split(':');if(k==='vsub'){S.vsub=v;S.tab='vie'}else S.tab=v;if(v==='apercu')S.hsub='res';try{window.scrollTo(0,0)}catch(e){}findTgt=h||null;findScroll();return true}if(a==='findimm'){S.imF={c:'all',t:'all',q:id};S.tab='immo';try{window.scrollTo(0,0)}catch(e){}findTgt='Appartements et immeubles';findScroll();return true}if(a==='findjob'){jgen(id,'');S.vsub='emploi';S.tab='vie';try{window.scrollTo(0,0)}catch(e){}findTgt='Rechercher un poste';findScroll();return true}return false}
 function vRent(){if(age()<18)return'';const v=S.rv;return`<div class="panel" style="margin:8px 0 12px"><b>Louer un véhicule</b><span class="sub">Une caution est bloquée et rendue au retour si le véhicule n'a rien. ${v?'Location en cours : '+RENTV.find(x=>x[0]===v.k)[1].toLowerCase()+'.':''}</span><div class="ctl l" style="flex-wrap:wrap;margin-top:6px">${RENTV.map(x=>`<button class="b" data-act="rv" data-id="${x[0]}" ${!v&&(x[0]==='scooter'?!!(S.p2r&&(S.p2r.A1||S.p2r.A)):S.dip.permis)?'':'disabled'}>${x[1]} · ${money(x[2]*S.infl)} + caution ${money(x[3]*S.infl)}</button>`).join('')}</div></div>`}
 function vAsst(){if(!S.cos.length&&!S.ind&&!(S.job&&S.job.lvl>=5))return'';return`<div class="panel" style="margin-bottom:12px"><h3>Assistant ou assistante</h3><p class="sub">${S.asst?asLbl()+', depuis '+dateLbl(S.asst.since)+'. Factures réglées à temps, agenda tenu, clients mieux suivis.':'Pour '+money(5500*S.infl)+' par mois : vos factures sont réglées à temps, vos clients ont toujours quelqu\'un au bout du fil, et vous respirez.'}</p><div class="ctl l"><button class="b${S.asst?'':' go'}" data-act="asst">${S.asst?'Se séparer':'Engager'}</button></div></div>`}
 const vFindBox=()=>`<div class="ctl l" style="margin-bottom:10px"><input class="txt" id="find-q" maxlength="40" placeholder="🔍 Rechercher : appartement, Airbnb, voiture, emploi…" aria-label="Recherche" style="flex:1;min-width:0"><button class="b" data-act="find">OK</button></div>`;
@@ -3146,7 +3195,7 @@ function vDue(){if(!(S.bills.length||S.owe>0)||S.dueSkip===S.m||S.ret&&!S.bills.
  ${S.owe>0?`<p style="margin:8px 0 0">Dettes en poursuite : <b class="num">${money(S.owe)}</b>. Tant qu'elles courent, votre salaire est saisi au-delà du minimum vital, et l'inscription au registre bloque crédit, leasing et nouveau bail.</p>`:''}
  <div class="ctl l" style="margin-top:10px">${S.bills.length>1?`<button class="b go" data-act="payall" ${S.cash>=tot?'':'disabled'}>Tout payer · ${money(tot)}</button>`:''}${S.owe>0?`<button class="b go" data-act="payowe" ${S.cash>0?'':'disabled'}>Rembourser ce que je peux</button>`:''}<button class="b" data-act="dueskip">Laisser courir ce mois</button></div>
  <p class="sub" style="margin-top:8px">Trois choix pour chaque ligne. Payer tout de suite coûte le montant affiché. Un arrangement de paiement l'étale sur six mois, avec 6 % de frais, et arrête la procédure. Laisser courir ajoute 25 % et ${money(70)} de frais au moment de la poursuite, puis cinq ans d'inscription au registre. ${S.bills.some(b=>S.cash<b.amt)?'Vous n\'avez pas de quoi tout régler : payez d\'abord les amendes, puis les plus anciennes.':''}</p></section>`}
-function vApercu(){const p=vApercu0(),h=S.over||S.final?'res':S.hsub;return h==='mis'?p[1]:h==='jour'?p[2]:vStreet()+vFindBox()+vDue()+vCap()+p[0]}
+function vApercu(){const p=vApercu0(),h=S.over||S.final?'res':S.hsub;return h==='mis'?p[1]:h==='jour'?p[2]:vStreet()+vDue()+vCap()+p[0]}
 function vApercu0(){const parts=[['Liquidités','--cash',Math.max(0,S.cash)],['Bourse','--stock',secVal('s')],['Crypto','--crypto',secVal('c')],['Immobilier et terrains','--immo',Math.max(0,propGross()-propMort()+landVal())],['Entreprises','--biz',cosVal()],['Clubs','--club',clubVal()]];
  const tot=parts.reduce((t,p)=>t+p[2],0)||1,f=S.final;
  return[`${S.over?`<div class="banner">Faillite personnelle. Vos dettes dépassent vos actifs. <button class="b" data-act="tab" data-id="bilan">Voir le bilan de votre vie</button> <button class="b" data-act="new">Recommencer</button></div>`:''}
@@ -3625,7 +3674,7 @@ function act(a,id){
  else if(a==='jupj'||a==='juopen'){if(juAct(a,id)===false)return false}
  else if(a==='rv'){if(rvAct(id)===false)return false}
  else if(a==='asst'){if(asAct()===false)return false}
- else if(['find','findc','findgo'].includes(a)){if(findAct(a,id)===false)return false}
+ else if(['find','findc','findgo','findimm','findjob'].includes(a)){if(findAct(a,id)===false)return false}
  else if(a==='imf'){const [k,v]=id.split(':');IMF()[k]=v}
  else if(a==='frd'){if(frdAct()===false)return false}
  else if(a==='minbet'||a==='minid'){if(minGam(a)===false)return false}
