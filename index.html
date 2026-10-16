@@ -1768,18 +1768,22 @@ const OPS=[
  {id:'salt',n:'Salt',p:[['Start',25],['Swiss',40],['Europe',60]]},
  {id:'wingo',n:'Wingo, sur le réseau Swisscom',p:[['Swiss',25]]},
  {id:'yallo',n:'yallo, sur le réseau Sunrise',p:[['Swiss',22]]}];
-const PHONES=[
- {id:'ip18pm',o:'Apple',n:'iPhone 18 Pro Max',g:[[256,1299],[512,1499],[1024,1699]]},
- {id:'ip18p',o:'Apple',n:'iPhone 18 Pro',g:[[256,1099],[512,1299]]},
- {id:'ip18',o:'Apple',n:'iPhone 18',g:[[256,849],[512,1049]]},
- {id:'ip17',o:'Apple',n:'iPhone 17, modèle de l\'an dernier',g:[[256,699],[512,899]]},
- {id:'ip16e',o:'Apple',n:'iPhone 16e',g:[[128,549],[256,649]]},
- {id:'s26u',o:'Android',n:'Samsung Galaxy S26 Ultra',g:[[256,1249],[512,1369]]},
- {id:'s26',o:'Android',n:'Samsung Galaxy S26',g:[[128,799],[256,859]]},
- {id:'px10',o:'Android',n:'Google Pixel 10',g:[[128,699],[256,799]]},
- {id:'xi',o:'Android',n:'Xiaomi 15T',g:[[256,499]]},
- {id:'a57',o:'Android',n:'Samsung Galaxy A57',g:[[128,399],[256,449]]},
- {id:'occ',o:'Occasion',n:'Smartphone reconditionné',g:[[128,249]]}];
+const phGen=(b,y0,mo)=>b+yrNow()-y0-(cal()<mo?1:0);
+const phNew=mo=>{const d=(cal()-mo+12)%12;return d<=1};
+function PHONES(){const a=phGen(18,2026,8),e=phGen(17,2026,1),s=phGen(26,2026,1),px=phGen(10,2025,7),x=phGen(15,2025,8),ga=phGen(57,2026,2);return[
+ {id:'ippm',o:'Apple',n:'iPhone '+a+' Pro Max',nw:phNew(8),g:[[256,1299],[512,1499],[1024,1699]]},
+ {id:'ipp',o:'Apple',n:'iPhone '+a+' Pro',nw:phNew(8),g:[[256,1099],[512,1299]]},
+ {id:'ip',o:'Apple',n:'iPhone '+a,nw:phNew(8),g:[[256,849],[512,1049]]},
+ {id:'ipo',o:'Apple',n:'iPhone '+(a-1)+', modèle de l\'an dernier',g:[[256,699],[512,899]]},
+ {id:'ipe',o:'Apple',n:'iPhone '+e+'e',nw:phNew(1),g:[[128,549],[256,649]]},
+ {id:'sxu',o:'Android',n:'Samsung Galaxy S'+s+' Ultra',nw:phNew(1),g:[[256,1249],[512,1369]]},
+ {id:'sx',o:'Android',n:'Samsung Galaxy S'+s,nw:phNew(1),g:[[128,799],[256,859]]},
+ {id:'sxo',o:'Android',n:'Samsung Galaxy S'+(s-1)+', modèle de l\'an dernier',g:[[128,599],[256,659]]},
+ {id:'px',o:'Android',n:'Google Pixel '+px,nw:phNew(7),g:[[128,699],[256,799]]},
+ {id:'xi',o:'Android',n:'Xiaomi '+x+'T',nw:phNew(8),g:[[256,499]]},
+ {id:'ga',o:'Android',n:'Samsung Galaxy A'+ga,nw:phNew(2),g:[[128,399],[256,449]]},
+ {id:'occ',o:'Occasion',n:'Smartphone reconditionné, modèle d\'il y a trois ans',g:[[128,249]]}]}
+const PHLAUNCH=[[8,()=>'Apple présente l\'iPhone '+phGen(18,2026,8)+' et l\'iPhone '+phGen(18,2026,8)+' Pro. Le modèle de l\'an dernier baisse de prix.'],[1,()=>'Samsung présente le Galaxy S'+phGen(26,2026,1)+', et Apple un nouvel iPhone '+phGen(17,2026,1)+'e moins cher.'],[7,()=>'Google présente le Pixel '+phGen(10,2025,7)+'.']];
 const gbL=g=>g>=1024?g/1024+' To':g+' Go';
 const telSale=()=>cal()===10?['Black Friday',.5,.15]:cal()===11?['Offre de fin d\'année',.3,.08]:null;
 const telYoung=()=>!!S.study||age()<26;
@@ -1791,7 +1795,7 @@ const telPar=()=>S.home&&gross()<1500&&age()<25;
 const telCost=()=>!S.tel?0:devCost()+(perk('tel')&&S.tel.op==='swisscom'?0:telPar()?Math.max(0,telPrice()-35*S.infl):telPrice());
 const phPrice=(p,gi)=>Math.round(p.g[gi][1]*S.infl*(1-(telSale()?telSale()[2]:0)));
 const phOld=()=>S.ph?Math.round(S.ph.v*Math.max(.08,.6-.015*(S.m-S.ph.m))):0;
-function telTick(log){if(S.ph&&S.m-S.ph.m>=72&&R(.15)){mom('📵','Votre téléphone rend l\'âme','Après '+Math.floor((S.m-S.ph.m)/12)+' ans, l\'écran reste noir. Sans téléphone, vous êtes difficile à joindre pour un employeur : il en faut un autre, même d\'occasion.');S.ph=null}
+function telTick(log){PHLAUNCH.forEach(([mo,t])=>{if(cal()===mo&&age()>=14)log('📱 '+t())});if(S.ph&&S.m-S.ph.m>=72&&R(.15)){mom('📵','Votre téléphone rend l\'âme','Après '+Math.floor((S.m-S.ph.m)/12)+' ans, l\'écran reste noir. Sans téléphone, vous êtes difficile à joindre pour un employeur : il en faut un autre, même d\'occasion.');S.ph=null}
  Jj((S.ph?(S.m-S.ph.m>48?-.15:S.m-S.ph.m<12?.15:0):-.5)+(S.tel?0:-.3));
  if(S.tel&&S.tel.par&&!telPar()){S.tel.par=0;log('Vos parents ne paient plus votre abonnement de téléphone : il est maintenant à votre charge, '+money(telPrice())+' par mois. Vous pouvez en changer sous Vie, Loisirs et achats.')}else if(S.tel&&telPar())S.tel.par=1}
 function vTel(){const t=S.tel,sale=telSale(),d=telDisc(),ph=S.ph,loy=telLoyal();
@@ -1801,7 +1805,7 @@ function vTel(){const t=S.tel,sale=telSale(),d=telDisc(),ph=S.ph,loy=telLoyal();
  <div class="list">${OPS.map(o=>`<div class="row" style="--c:var(--stock)"><div class="who" style="grid-column:1/3">${ico('cart','--stock')}<div><b>${o.n}</b><span class="sub">${o.id==='swisscom'?'Le réseau le plus cher, et le mieux noté.':o.id==='sunrise'?'Bon réseau, prix intermédiaires.':o.id==='salt'?'Le moins cher des trois grands opérateurs.':'Marque à bas prix : même réseau, sans boutique ni conseiller.'}</span></div></div><div class="ctl">${o.p.map((p,i)=>{const cur=t&&t.op===o.id&&t.i===i,pr=telBase(o.id,i)*(1-Math.max(sale?sale[1]:0,telYoung()?.2:0));return`<button class="b${cur?' go':''}" data-act="tel" data-id="${o.id}:${i}">${p[0]} · ${money(pr)}</button>`}).join('')}</div></div>`).join('')}</div>
  <h3 style="margin:14px 0 6px">Acheter un téléphone</h3><p class="sub" style="margin:0 0 8px">${sale?`<b class="up">${sale[0]} : −${Math.round(sale[2]*100)} % sur les appareils.</b> `:''}Le prix dépend du modèle et de la mémoire. Votre ancien appareil est repris${ph?' pour '+money(phOld()):''}. Modèles et prix de 2026, estimés : au fil des années, lisez « le dernier modèle ».</p>
  <div class="ctl l" style="margin-bottom:8px"><button class="b${phMode===''?' go':''}" data-act="phmode" data-id="">Payer comptant</button><button class="b${phMode==='c'?' go':''}" data-act="phmode" data-id="c">En 24 mensualités, +8 %</button>${t?`<button class="b${phMode==='o'?' go':''}" data-act="phmode" data-id="o">Avec l'abonnement ${by(OPS,t.op).n.split(',')[0]}, 24 mois sans intérêts</button>`:''}${loy?`<button class="b${phMode==='l'?' go':''}" data-act="phmode" data-id="l">Offre de fidélité : −${money(200*S.infl)}</button>`:''}</div>
- <div class="list">${PHONES.map(p=>`<div class="row" style="--c:var(--cash)"><div class="who" style="grid-column:1/3">${ico('cart','--cash')}<div><b>${p.n}</b><span class="sub">${p.o}</span></div></div><div class="ctl">${p.g.map((g,i)=>{const pr=Math.max(0,phPrice(p,i)-(phMode==='l'&&loy?200*S.infl:0));return`<button class="b" data-act="phbuy" data-id="${p.id}:${i}">${gbL(g[0])} · ${phMode==='o'&&t?money(Math.round(pr*devK(t.op)/24))+' par mois':money(pr)}</button>`}).join('')}</div></div>`).join('')}</div>`}
+ <div class="list">${PHONES().map(p=>`<div class="row" style="--c:var(--cash)"><div class="who" style="grid-column:1/3">${ico('cart','--cash')}<div><b>${p.n}${p.nw?' · nouveau':''}</b><span class="sub">${p.o}</span></div></div><div class="ctl">${p.g.map((g,i)=>{const pr=Math.max(0,phPrice(p,i)-(phMode==='l'&&loy?200*S.infl:0));return`<button class="b" data-act="phbuy" data-id="${p.id}:${i}">${gbL(g[0])} · ${phMode==='o'&&t?money(Math.round(pr*devK(t.op)/24))+' par mois':money(pr)}</button>`}).join('')}</div></div>`).join('')}</div>`}
 // activités indépendantes : moniteur de conduite et agence d'agents
 const NETS=[['insta','Instagram',300],['tiktok','TikTok',250],['fb','Facebook',200],['li','LinkedIn',350]];
 const NETB={moni:{tiktok:.25,insta:.2,fb:.15,li:.03},sport:{li:.25,insta:.2,tiktok:.1,fb:.05},manne:{insta:.3,tiktok:.25,li:.1,fb:.05}};
@@ -3154,7 +3158,7 @@ const clubVal=()=>CLUBS.reduce((t,c)=>t+S.club[c.id]*S.clubV[c.id],0);
 const nw=()=>(S.dep||0)+(S.sv||0)+(S.wal||0)+S.cash+secVal('s')+secVal('c')+propGross()-propMort()+landVal()+cosVal()+clubVal()+bankVal()-S.loan;
 const rank=v=>v<1e4?'Débutant':v<1e5?'Épargnant':v<1e6?'Investisseur':v<1e7?'Millionnaire':v<1e8?'Magnat':'Légende de la place financière';
 const cal=()=>(S.m+7)%12;
-const dateLbl=m=>MOIS[(m+7)%12]+' '+(2027+Math.floor((m-(S.m0||0)+7)/12));
+const dateLbl=m=>MOIS[((m+7)%12+12)%12]+' '+(2027+Math.floor((m-(S.m0||0)+7)/12));
 const yrNow=()=>2027+Math.floor((S.m-(S.m0||0)+7)/12);
 const bk=()=>S.bd?(S.bd.m+5)%12:0;
 const ageAt=m=>{const k=bk();return 16+Math.floor(k?(m-k+12)/12:m/12)};
@@ -3766,7 +3770,7 @@ function act(a,id){
  else if(a==='phmode'){phMode=id||''}
  else if(a==='telx'){if(S.tel){if(devCost())bill('Solde de votre appareil ('+S.tel.dev.n+') après résiliation',Math.round(S.tel.dev.amt*S.tel.dev.left),0);S.tel=null;toast('Abonnement résilié. Sans numéro, les employeurs auront du mal à vous joindre.',1)}}
  else if(a==='tel'){const[op,i]=id.split(':'),o=by(OPS,op);if(!o||!o.p[+i])return false;const same=S.tel&&S.tel.op===op,sale=telSale();if(!same&&devCost())bill('Solde de votre appareil ('+S.tel.dev.n+') après changement d\'opérateur',Math.round(S.tel.dev.amt*S.tel.dev.left),0);S.tel={dev:same?S.tel.dev:null,op,i:+i,since:same?S.tel.since:S.m,loy:same?S.tel.loy:0,promo:sale&&!same?{n:sale[0],pct:sale[1],until:S.m+12}:same?S.tel.promo:null,par:telPar()?1:0};toast(o.n.split(',')[0]+' · '+o.p[+i][0]+' : '+money(telPrice())+' par mois'+(sale&&!same?', avec le rabais '+sale[0]+' pendant un an.':'.'))}
- else if(a==='phbuy'){const[pid,gi]=id.split(':'),ph=by(PHONES,pid);if(!ph||!ph.g[+gi])return false;const loy=phMode==='l'&&telLoyal(),price=Math.max(0,phPrice(ph,+gi)-(loy?200*S.infl:0)),old=phOld(),net=Math.max(0,price-old),nm=ph.n.split(',')[0];
+ else if(a==='phbuy'){const[pid,gi]=id.split(':'),ph=by(PHONES(),pid);if(!ph||!ph.g[+gi])return false;const loy=phMode==='l'&&telLoyal(),price=Math.max(0,phPrice(ph,+gi)-(loy?200*S.infl:0)),old=phOld(),net=Math.max(0,price-old),nm=ph.n.split(',')[0];
   if(phMode==='o'){if(!S.tel||devCost())return toast(S.tel?'Un appareil est déjà en cours de paiement avec cet abonnement.':'Il faut un abonnement.',1),false;const amt=Math.round(net*devK(S.tel.op)/24*100)/100;S.tel.dev={n:nm,amt,left:24};S.ph={n:nm,gb:ph.g[+gi][0],m:S.m,v:price};Jj(clamp(1.5+price/(500*S.infl),2,5));mail(by(OPS,S.tel.op).n.split(',')[0],'Votre nouvel appareil · '+nm,hello()+'Votre '+nm+' est payé en 24 mensualités de '+money(amt)+', ajoutées à votre abonnement de '+money(telPrice())+' : '+money(telPrice()+amt)+' par mois en tout. Si vous résiliez avant la fin, le solde de l\'appareil devient dû en une fois.');toast(nm+' : '+money(amt)+' par mois en plus de l\'abonnement, soit '+money(telPrice()+amt)+' au total.')}
   else if(phMode==='c'?credit(nm+', 24 mensualités',net,24):pay(net,nm)){if(loy)S.tel.loy=S.m;mail(ph.o==='Apple'?'Apple Store':'Digitec','Confirmation de commande · '+nm,hello()+'Votre '+nm+' '+gbL(ph.g[+gi][0])+' est en route.\n\nMontant : '+money(net)+(old?' après reprise de votre ancien appareil.':'.')+'\n\nMerci de votre confiance.');S.ph={n:nm,gb:ph.g[+gi][0],m:S.m,v:price};Jj(clamp(1.5+price/(500*S.infl),2,5));toast(nm+' '+gbL(ph.g[+gi][0])+' : à vous'+(old?', après reprise de l\'ancien pour '+money(old):'')+'.')}}
  else if(a==='pet'){const x=by(PETS,id);if(x&&S.pets.length<2&&pay(x.c*S.infl,'les frais d\'adoption')){const n=rnd(PETN.filter(n=>!S.pets.some(p=>p.n===n)));S.pets.push({k:id,n,m:S.m,l:Math.round(x.life*(.85+.3*Math.random()))});Jj(6);story('Adoption de '+n+', votre '+x.n.toLowerCase());toast(n+' rejoint la famille.')}}
